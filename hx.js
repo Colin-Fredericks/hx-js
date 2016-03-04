@@ -188,7 +188,6 @@ var HXGlobalJS = (function() {
     /***********************************/
     
     var allFootnotes = $('span[class^="hx-footnote"]');
-    console.log(allFootnotes);
     
     if(allFootnotes.length){
         var myNumber, thisFootnote, footnoteComponents, destinationComponent;
@@ -248,9 +247,6 @@ var HXGlobalJS = (function() {
     
     // This set is for matched sliders, where one is the
     // thumbnails and one is the full-sized image and/or text.
-    var navslider = $('.hx-navslider');
-    var bigslider = $('.hx-bigslider');
-    
     if(navslider.length && bigslider.length){
         // If there are no options set, make an options object and set the defaults.
         if (typeof hxSlickNavOptions === 'undefined') { var hxSlickNavOptions = {}; }
@@ -310,66 +306,71 @@ var HXGlobalJS = (function() {
     }
 
 
+    /***********************************/
+    // Various utility functions.
+    /***********************************/
+
+    // Turns a page URL in edX into an external asset url,
+    // because we can't use /static/ from within javascript.
+    // Pass 'complete' for the whole thing, 'site' for the site, or 'partial' for without the site.
+    function getAssetURL(windowURL, option){
+
+        // Match the site in case we need it for something later.
+        var courseSiteURL = windowURL.match(/https:\/\/.+.org\//)[0];
+    
+        if(option == 'site'){ return courseSiteURL; }
+
+        // Switch from course to asset
+        var staticFolderURL = windowURL.replace('courses/course', 'asset');
+
+        // Ditch everything after courseware
+        var finalLocation = staticFolderURL.indexOf('/courseware/');
+        staticFolderURL = staticFolderURL.slice(0, finalLocation);
+
+        // Switch from courseware to type
+        staticFolderURL = staticFolderURL + '+type@asset+block/';
+    
+        if(option == 'partial'){ return staticFolderURL.replace(courseSiteURL, ''); }
+    
+        return staticFolderURL;
+    }
+
+    // Gets the institution, course ID, and course run from the URL.
+    function getCourseInfo(windowURL){
+        var partialURL = getAssetURL(windowURL, 'partial');
+        var courseInfo = {};
+    
+        // get the part from the colon to the first +
+        partialURL = partialURL.split(':')[1];
+        courseInfo.institution = partialURL.split('+')[0];
+        courseInfo.id = partialURL.split('+')[1];
+        courseInfo.run = partialURL.split('+')[2];
+    
+        return courseInfo;
+
+    }
+
+    // Takes in all the classes, as from a className function.
+    // Returns the number attached to the important class.
+    function getClassNumber(className, importantClass){
+        var allClasses = className.split(/\s+/);
+        for(var i = 0; i < allClasses.length; i++){
+            if(allClasses[i].indexOf(importantClass) === 0){
+                return allClasses[i].slice(importantClass.length);
+            }
+        }
+        return -1;
+    }
+
 
     // Functions that we would like to make public. Return as function: external name
     // Nothing here right now.
-    return {}
+    return {
+        getAssetURL: getAssetURL,
+        getCourseInfo: getCourseInfo,
+        getClassNumber: getClassNumber
+    }
 
 });
 
 
-/***********************************/
-// Various utility functions.
-/***********************************/
-
-// Turns a page URL in edX into an external asset url,
-// because we can't use /static/ from within javascript.
-// Pass 'complete' for the whole thing, 'site' for the site, or 'partial' for without the site.
-function getAssetURL(windowURL, option){
-
-    // Match the site in case we need it for something later.
-    var courseSiteURL = windowURL.match(/https:\/\/.+.org\//)[0];
-    
-    if(option == 'site'){ return courseSiteURL; }
-
-    // Switch from course to asset
-    var staticFolderURL = windowURL.replace('courses/course', 'asset');
-
-    // Ditch everything after courseware
-    var finalLocation = staticFolderURL.indexOf('/courseware/');
-    staticFolderURL = staticFolderURL.slice(0, finalLocation);
-
-    // Switch from courseware to type
-    staticFolderURL = staticFolderURL + '+type@asset+block/';
-    
-    if(option == 'partial'){ return staticFolderURL.replace(courseSiteURL, ''); }
-    
-    return staticFolderURL;
-}
-
-// Gets the institution, course ID, and course run from the URL.
-function getCourseInfo(windowURL){
-    var partialURL = getAssetURL(windowURL, 'partial');
-    var courseInfo = {};
-    
-    // get the part from the colon to the first +
-    partialURL = partialURL.split(':')[1];
-    courseInfo.institution = partialURL.split('+')[0];
-    courseInfo.id = partialURL.split('+')[1];
-    courseInfo.run = partialURL.split('+')[2];
-    
-    return courseInfo;
-
-}
-
-// Takes in all the classes, as from a className function.
-// Returns the number attached to the important class.
-function getClassNumber(className, importantClass){
-    var allClasses = className.split(/\s+/);
-    for(var i = 0; i < allClasses.length; i++){
-        if(allClasses[i].indexOf(importantClass) === 0){
-            return allClasses[i].slice(importantClass.length);
-        }
-    }
-    return -1;
-}
