@@ -1,0 +1,333 @@
+@import url("slick.css");
+@import url("slick-theme.css");
+
+/* For boxes of material separated from the regular text. */
+/* Use h4 for headers inside. */
+.hx-bluebox {
+	border: 2px solid #008;
+	margin: 50px;
+	padding: 10px;
+	background-color: #fff;
+	background: linear-gradient(to bottom, rgba(255,255,255,1) 5%, rgba(210,235,249,1) 100%);
+}
+
+/* For right-hand sidebars. Same styling as the blue boxes. */
+/* Use h4 for headers inside. */
+.hx-sidebar {
+	border: 2px solid #008;
+	margin: 0px 30px 30px 30px;
+	padding: 10px 10px 0px 10px;
+	background-color: #fff;
+	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(210,235,249,1) 100%);
+	float: right;
+	width: 45%;
+}
+
+/* For boxes that contain big quote marks in the background. Stylish. */
+.hx-excerpt {
+	border: 2px solid #999;
+	margin: 50px;
+	padding: 10px;
+	background-color: #fff;
+
+    background-image: url(quote-right.gif);
+    background-repeat: no-repeat;
+    background-position: bottom right;
+
+	background: linear-gradient(to bottom, rgba(255,255,255,1) 5%, rgba(220,220,220,1) 100%);
+}
+
+/* Helps with above. */
+.hx-excerpt p {
+    background-image: url(quote-left.gif);
+    background-repeat: no-repeat;
+    margin-top: 0;
+    padding: 1em 60px 0;
+    min-height: 37px;
+}
+/* Helps with above. */
+.hx-excerpt p + p {
+    padding-top: 0;
+    background-image: none;
+}
+
+/* Using a 75-pixel tall image as a drop cap. */
+.hx-icon-dropcap {
+	float: left;
+	height: 75px;
+	padding: 4px 8px 3px 0px;
+}
+
+/* Using a single letter as a drop cap. */
+/* Surround first letter with <span class="hx-dropcap"></span> */
+span.hx-dropcap {
+    float: left;
+    color: #339;
+    font-size: 48px;
+    margin-top: -4px;
+    margin-bottom: -16px;
+    padding-top: 0px;
+    padding-right: 4px;
+    padding-left: 2px;
+    font-family: serif;
+    font-weight: bold;
+}
+
+/* Image that hangs over the top few lines of a paragraph on the right. */
+.hx-hangright {
+	float: right;
+	padding: 4px 0px 3px 8px;
+}
+
+/* Image that hangs over the top few lines of a paragraph on the left. */
+/* A lot like dropcap. */
+.hx-hangleft {
+	float: left;
+	padding: 4px 8px 3px 0px;
+}
+
+/* For centering images. */
+img.hx-centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* For centering paragraphs. Using sparingly. */
+p.hx-centered {
+    text-align: center;
+}
+
+/* Fancy header - no lowercase, all caps. */
+h3.hx-smallcaps, h4.hx-smallcaps {
+    font-variant: small-caps;
+}
+
+/* Super-bold white-on-color right-justified header */
+/* Can be combined with smallcaps. */
+.hx-superbold {
+    background-color: #08b;
+    color: white;
+    text-align: right;
+    padding-right: 4px;
+}
+
+h3.hx-superbold {
+    font-size: 1.8em !important;
+}
+
+h4.hx-superbold {
+    font-size: 1.5em !important;
+}
+
+/* Header with an underline that goes most of the way across. */
+/* Can be combined with smallcaps. */
+
+.hx-underline {
+    border-bottom: 1px solid #189;
+    width: 600px;
+}
+
+/*********************************************/
+/* This block is for the Slick image slider. */
+/*********************************************/
+.hx-sliderbox{
+    background-color: #FFF;
+    border-top: 4px groove #189;
+    border-bottom: 4px ridge #189;
+    border-left: none;
+    border-right: none;
+    padding: 0px 25px 0px 25px;
+    margin-bottom: 15px;
+}
+
+.hx-slidertext{
+    color:black !important;
+    margin: 4px 2px 4px 2px !important;
+    padding: 2px;
+}
+
+.hx-slider > p {
+    color:black !important;
+    margin: 4px 2px 4px 2px !important;
+    padding: 2px;
+}
+
+.slick-prev:before, .slick-next:before { 
+    color: #189 !important;
+}
+/************** End Block *******************/
+
+
+/* Standard image caption */
+/* Use <p><small class="hx-caption">Text</small></p> */
+p > small.hx-caption {
+    font-style: italic;
+}
+
+/* For clickable images that pop up dialog boxes. */
+.hx-popup-content{
+	background-color: #000000;
+	display: none;
+}
+
+/* For clickable images that pop up dialog boxes. */
+.hx-popup-dialog .ui-dialog-titlebar-close {
+    display: none;
+}
+
+/* For clickable images that pop up dialog boxes. */
+/* Not doing anything here yet, but this is how we change the orange if we want to. */
+.hx-popup-dialog .ui-dialog-titlebar {}
+
+/* Placeholder. */
+.hx-footnote-style {
+    font-size: small !important;
+}
+
+/* Add image HRs */
+/*
+hr.hx-fancy {
+    background:url(hxFancyHR.gif) repeat-x top left;
+    border: 0;
+}
+*/
+
+
+/***************************************/
+/* This whole block is for video links.*/
+/***************************************/
+
+#hx-vidlinks-static {	
+}
+
+#hx-vidlinks-live {	
+}
+
+.hx-link-text-live {
+}
+
+.hx-vidlink_bl {
+	display: none;
+	opacity: 0.7;
+	background-color: black;
+	
+	font-size: 16px;
+	color: white;
+	
+	position: absolute;
+	bottom: 50px;
+	
+	padding: 4px;
+	border: 2px solid grey;
+	margin: 2px;
+	
+	border-radius: 4px;
+	box-shadow: 2px 2px 4px #111;
+}
+
+.hx-vidlink_br {
+	display: none;
+	opacity: 0.7;
+	background-color: black;
+	
+	font-size: 16px;
+	color: white;
+	
+	position: absolute;
+	bottom: 50px;
+	right: 5px;
+	
+	padding: 4px;
+	border: 2px solid grey;
+	margin: 2px;
+	
+	border-radius: 4px;
+	box-shadow: 2px 2px 4px #111;
+}
+
+.hx-vidlink_tl {
+	display: none;
+	opacity: 0.7;
+	background-color: black;
+	
+	font-size: 16px;
+	color: white;
+	
+	position: absolute;
+	top: 5px;
+	
+	padding: 4px;
+	border: 2px solid grey;
+	margin: 2px;
+	
+	border-radius: 4px;
+	box-shadow: 2px 2px 4px #111;
+}
+
+.hx-vidlink_tr {
+	display: none;
+	opacity: 0.7;
+	background-color: black;
+	
+	font-size: 16px;
+	color: white;
+	
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	
+	padding: 4px;
+	border: 2px solid grey;
+	margin: 2px;
+	
+	border-radius: 4px;
+	box-shadow: 2px 2px 4px #111;
+}
+
+.hx-vidlink-static {
+	display: list-item;
+}
+
+.hx-vidlink_bl a:link {
+	color: white;
+}
+
+.hx-vidlink_tl a:link {
+	color: white;
+}
+
+.hx-vidlink_tr a:link {
+	color: white;
+}
+
+.hx-vidlink_br a:link {
+	color: white;
+}
+
+.hx-vidlink_bl a:visited {
+	color: white;
+}
+
+.hx-vidlink_tl a:visited {
+	color: white;
+}
+
+.hx-vidlink_tr a:visited {
+	color: white;
+}
+
+.hx-vidlink_br a:visited {
+	color: white;
+}
+
+.hx-link-positioner {
+	position: relative !important;
+}
+
+
+.hx-boldlink {
+	font-weight: bold !important;
+}
+
+/*********** End Block **********/
