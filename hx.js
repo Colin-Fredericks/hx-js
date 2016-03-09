@@ -244,7 +244,7 @@ var HXGlobalJS = (function() {
             dots: true,
             infinite: true,
             slidesToShow: 3,
-            slidesToScroll: 1
+            slidesToScroll: 3
         };
         
         if(typeof hxSlickOptions === 'undefined') { var hxSlickOptions = false; }
@@ -263,7 +263,7 @@ var HXGlobalJS = (function() {
             catch(err){
                 console.log('waiting for Slick to load');
             }
-        }, 100);
+        }, 200);
     }
 
 
@@ -315,7 +315,7 @@ var HXGlobalJS = (function() {
             catch(err){
                 console.log('waiting for Slick to load');
             }
-        }, 100);
+        }, 200);
     }
 
     
@@ -379,8 +379,6 @@ var HXGlobalJS = (function() {
     // Sets the default options for something if they're not already defined.
     // Prioritizes local options, then global options in /static/, then the ones in this file.
     function setDefaultOptions(localOptions, globalOptions, fallbackOptions){
-        
-        console.log('setting default options');
         
         if (!localOptions && !globalOptions) {
             return fallbackOptions;
