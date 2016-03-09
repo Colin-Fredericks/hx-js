@@ -36,12 +36,12 @@ var HXGlobalJS = (function() {
     /**************************************/
     
     
-    $.getScript(courseAssetURL + 'hxOptions.js')
+    $.getScript(courseAssetURL + 'hxGlobalOptions.js')
         .done(function(){
             console.log('Course standard options loaded');
         })
         .fail(function(){
-            console.log('hxOptions.js not found. Using default options.');
+            console.log('hxGlobalOptions.js not found. Using default options.');
     });
 
 
@@ -239,7 +239,7 @@ var HXGlobalJS = (function() {
         console.log('found slider');
 
         // Default options for Slick image slider
-        var defaultSlickOptions {
+        var defaultSlickOptions = {
             arrows: true,
             dots: true,
             infinite: true,
@@ -247,6 +247,8 @@ var HXGlobalJS = (function() {
             slidesToScroll: 1
         };
         
+        if(typeof hxSlickOptions === 'undefined') { var hxSlickOptions = false; }
+        if(typeof hxGlobalSlickOptions === 'undefined') { var hxGlobalSlickOptions = false; }
         var slickOptions = setDefaultOptions(hxSlickOptions, hxGlobalSlickOptions, defaultSlickOptions);        
         
         // Wait for Slick to actually load, which can take a little while.
@@ -283,7 +285,7 @@ var HXGlobalJS = (function() {
         // Default options for single big image slider paired to nav.
         var defaultSlickBigOptions = {
             asNavFor: '.hx-navslider',
-            hxSlickBigOptions.arrows: false,
+            arrows: false,
             dots: true,
             fade:  true,
             adaptiveHeight: true,
@@ -291,6 +293,11 @@ var HXGlobalJS = (function() {
             slidesToScroll: 1
         };
 
+        
+        if(typeof hxSlickNavOptions === 'undefined') { var hxSlickNavOptions = false; }
+        if(typeof hxGlobalSlickNavOptions === 'undefined') { var hxGlobalSlickNavOptions = false; }
+        if(typeof hxSlickBigOptions === 'undefined') { var hxSlickBigOptions = false; }
+        if(typeof hxGlobalSlickBigOptions === 'undefined') { var hxGlobalSlickBigOptions = false; }
         
         var slickNavOptions = setDefaultOptions(hxSlickNavOptions, hxGlobalSlickNavOptions, defaultSlickNavOptions);        
         var slickBigOptions = setDefaultOptions(hxSlickBigOptions, hxGlobalSlickBigOptions, defaultSlickBigOptions);        
@@ -375,11 +382,11 @@ var HXGlobalJS = (function() {
         
         console.log('setting default options');
         
-        if (typeof localOptions === 'undefined' && globalOptions === 'undefined') {
+        if (!localOptions && !globalOptions) {
             return fallbackOptions;
-        } else if (typeof localOptions === 'undefined') {
+        } else if (!localOptions) {
             var localOptions = $.extend({}, fallbackOptions, globalOptions);
-        } else if (typeof globalOptions === 'undefined') {
+        } else if (!globalOptions) {
             localOptions = $.extend({}, localOptions, fallbackOptions);
         } else {
             localOptions = $.extend({}, localOptions, globalOptions);
