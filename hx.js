@@ -1,5 +1,4 @@
 // Make sure we're only running once.
-// The "if" bracket closes at end of file.
 if(typeof hxjsIsRunning === 'undefined'){
 
     var hxjsIsRunning = true;
@@ -392,7 +391,6 @@ var HXGlobalJS = (function() {
         }
         
         return localOptions;
-
     }
 
 
