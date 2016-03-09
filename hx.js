@@ -1,6 +1,6 @@
 // Make sure we're only running once.
 // The "if" bracket closes at end of file.
-if(typeof hxjsIsRunning == 'undefined'){
+if(typeof hxjsIsRunning === 'undefined'){
 
     var hxjsIsRunning = true;
 
@@ -36,6 +36,15 @@ var HXGlobalJS = (function() {
     /**************************************/
     
     
+    $.getScript(courseAssetURL + 'hxOptions.js')
+        .done(function(){
+            console.log('Course standard options loaded');
+        })
+        .fail(function(){
+            console.log('hxOptions.js not found. Using default options.');
+    });
+
+
     var slider = $('.hx-slider');
     var navslider = $('.hx-navslider');
     var bigslider = $('.hx-bigslider');
@@ -219,22 +228,32 @@ var HXGlobalJS = (function() {
     }
     
 
-
     /***********************************/
     // Stuff for the Slick image slider.
     /***********************************/
 
+
     // Only do slider things if there are actually sliders to create.
     if(slider.length){
-        // If there are no options set, make an options object and set the defaults.
-        if (typeof hxSlickOptions === 'undefined') { var hxSlickOptions = {}; }
-        hxSlickOptions = setSlickOptions(hxSlickOptions);
+ 
+        console.log('found slider');
+
+        // Default options for Slick image slider
+        var defaultSlickOptions {
+            arrows: true,
+            dots: true,
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1
+        };
+        
+        var slickOptions = setDefaultOptions(hxSlickOptions, hxGlobalSlickOptions, defaultSlickOptions);        
         
         // Wait for Slick to actually load, which can take a little while.
         var waitforSlick = setInterval(function(){
             try {
-                // Add loop to handle multiple sliders.
-                slider.slick(hxSlickOptions);
+                // In future, add loop to handle multiple sliders.
+                slider.slick(slickOptions);
                 clearInterval(waitforSlick);
                 console.log('creating slider');
                 Logger.log('harvardx.' + courseLogID + '.globaljs', {'Slick Image Slider': 'created'});
@@ -244,22 +263,43 @@ var HXGlobalJS = (function() {
             }
         }, 100);
     }
-    
+
+
     // This set is for matched sliders, where one is the
     // thumbnails and one is the full-sized image and/or text.
     if(navslider.length && bigslider.length){
-        // If there are no options set, make an options object and set the defaults.
-        if (typeof hxSlickNavOptions === 'undefined') { var hxSlickNavOptions = {}; }
-        hxSlickNavOptions = setSlickNavOptions(hxSlickNavOptions);
-        if (typeof hxSlickBigOptions === 'undefined') { var hxSlickBigOptions = {}; }
-        hxSlickBigOptions = setSlickBigOptions(hxSlickBigOptions);
+    
+        console.log('found paired sliders');
+
+        // Default options for image slider navigation
+        var defaultSlickNavOptions = {
+            asNavFor: '.hx-bigslider',
+            variableWidth: true,
+            focusOnSelect: true,
+            slidesToShow: 3,
+            slidesToScroll: 1
+        };
+    
+        // Default options for single big image slider paired to nav.
+        var defaultSlickBigOptions = {
+            asNavFor: '.hx-navslider',
+            hxSlickBigOptions.arrows: false,
+            dots: true,
+            fade:  true,
+            adaptiveHeight: true,
+            slidesToShow: 1,
+            slidesToScroll: 1
+        };
+
         
-        // Add loop to handle multiple pairs.
+        var slickNavOptions = setDefaultOptions(hxSlickNavOptions, hxGlobalSlickNavOptions, defaultSlickNavOptions);        
+        var slickBigOptions = setDefaultOptions(hxSlickBigOptions, hxGlobalSlickBigOptions, defaultSlickBigOptions);        
+
         var waitforSlickNav = setInterval(function(){
             try {
-                // Add loop to handle multiple pairs.                
-                navslider.slick(hxSlickNavOptions);
-                bigslider.slick(hxSlickBigOptions);
+                // In future, add loop to handle multiple pairs.         
+                navslider.slick(slickNavOptions);
+                bigslider.slick(slickBigOptions);
                 
                 clearInterval(waitforSlickNav);
                 console.log('creating paired slider');
@@ -272,39 +312,6 @@ var HXGlobalJS = (function() {
     }
 
     
-    //Utility functions for Slick.
-    function setSlickOptions(hxSlickOptions){
-        // Sets default image slider options if any of them have not been included in the HTML.
-        if (typeof hxSlickOptions.arrows === 'undefined') { hxSlickOptions.arrows = true; }
-        if (typeof hxSlickOptions.dots === 'undefined') { hxSlickOptions.dots = true; }
-        if (typeof hxSlickOptions.infinite === 'undefined') { hxSlickOptions.infinite = true; }
-        if (typeof hxSlickOptions.slidesToShow === 'undefined') { hxSlickOptions.slidesToShow = 3; }
-        if (typeof hxSlickOptions.slidesToScroll === 'undefined') { hxSlickOptions.slidesToScroll = 3; }
-        return hxSlickOptions;
-    }
-
-    function setSlickNavOptions(hxSlickNavOptions){
-        // Sets default image slider options if any of them have not been included in the HTML.
-        if (typeof hxSlickNavOptions.asNavFor === 'undefined') { hxSlickNavOptions.asNavFor = '.hx-bigslider'; }
-        if (typeof hxSlickNavOptions.variableWidth === 'undefined') { hxSlickNavOptions.variableWidth = true; }
-        if (typeof hxSlickNavOptions.focusOnSelect === 'undefined') { hxSlickNavOptions.focusOnSelect = true; }
-        if (typeof hxSlickNavOptions.slidesToShow === 'undefined') { hxSlickNavOptions.slidesToShow = 3; }
-        if (typeof hxSlickNavOptions.slidesToScroll === 'undefined') { hxSlickNavOptions.slidesToScroll = 1; }
-        return hxSlickNavOptions;
-    }
-
-    function setSlickBigOptions(hxSlickBigOptions){
-        // Sets default image slider options if any of them have not been included in the HTML.
-        if (typeof hxSlickNavOptions.asNavFor === 'undefined') { hxSlickNavOptions.asNavFor = '.hx-navslider'; }
-        if (typeof hxSlickBigOptions.arrows === 'undefined') { hxSlickBigOptions.arrows = false; }
-        if (typeof hxSlickBigOptions.dots === 'undefined') { hxSlickBigOptions.dots = true; }
-        if (typeof hxSlickBigOptions.fade === 'undefined') { hxSlickBigOptions.fade = true; }
-        if (typeof hxSlickBigOptions.adaptiveHeight === 'undefined') { hxSlickBigOptions.adaptiveHeight = true; }
-        if (typeof hxSlickBigOptions.slidesToShow === 'undefined') { hxSlickBigOptions.slidesToShow = 1; }
-        if (typeof hxSlickBigOptions.slidesToScroll === 'undefined') { hxSlickBigOptions.slidesToScroll = 1; }
-        return hxSlickBigOptions;
-    }
-
 
     /***********************************/
     // Various utility functions.
@@ -361,15 +368,35 @@ var HXGlobalJS = (function() {
         }
         return -1;
     }
+    
+    // Sets the default options for something if they're not already defined.
+    // Prioritizes local options, then global options in /static/, then the ones in this file.
+    function setDefaultOptions(localOptions, globalOptions, fallbackOptions){
+        
+        console.log('setting default options');
+        
+        if (typeof localOptions === 'undefined' && globalOptions === 'undefined') {
+            return fallbackOptions;
+        } else if (typeof localOptions === 'undefined') {
+            var localOptions = $.extend({}, fallbackOptions, globalOptions);
+        } else if (typeof globalOptions === 'undefined') {
+            localOptions = $.extend({}, localOptions, fallbackOptions);
+        } else {
+            localOptions = $.extend({}, localOptions, globalOptions);
+            localOptions = $.extend({}, localOptions, fallbackOptions);
+        }
+        
+        return localOptions;
+
+    }
 
 
-    // Functions that we would like to make public. Return as function: external name
-    // Nothing here right now.
+    // Functions that we would like to make public. Return as... function: external_name
     return {
         getAssetURL: getAssetURL,
         getCourseInfo: getCourseInfo,
         getClassNumber: getClassNumber
-    }
+    };
 
 });
 
