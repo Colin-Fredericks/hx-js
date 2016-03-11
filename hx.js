@@ -23,6 +23,8 @@ var HXGlobalJS = (function() {
     /**************************************/
     
     
+    // This is the course-wide options file.
+    // It overrides defaults in this file, and is overridden by local options.
     $.getScript(courseAssetURL + 'hxGlobalOptions.js')
         .done(function(){
             console.log('Course standard options loaded');
@@ -31,12 +33,12 @@ var HXGlobalJS = (function() {
             console.log('hxGlobalOptions.js not found. Using default options.');
     });
 
-
+    
+    // If there's a slider, load the Slick plugin.
     var slider = $('.hx-slider');
     var navslider = $('.hx-navslider');
     var bigslider = $('.hx-bigslider');
     
-    /* The "Slick" slider */
     if(slider.length || (navslider.length && bigslider.length)){
         $.getScript(courseAssetURL + 'slick.js', function(){
             console.log('Slick image slider loaded');
@@ -44,7 +46,7 @@ var HXGlobalJS = (function() {
     }
     
     
-    /* Video links! As per the ones on Grape Ape. */
+    // In-Video links! As per the ones on Grape Ape.
     var vidlinks = $('.hx-vidlinks');
     if(vidlinks.length){
         $.getScript(courseAssetURL + 'HXVideoLinks.js', function(){
@@ -53,6 +55,20 @@ var HXGlobalJS = (function() {
         });
     }
 
+
+    // Placeholder: Intro.js walkthroughs
+
+
+    // Placeholder: Pop-up assessments
+
+
+    // Placeholder: TOC maker
+
+
+    // Placeholder: UTC Clock
+
+
+    // Placeholder: Audio player
 
 
     /**************************************/
