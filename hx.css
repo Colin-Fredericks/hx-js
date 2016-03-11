@@ -154,6 +154,18 @@ h4.hx-superbold {
     padding: 2px;
 }
 
+.hx-navslider > p {
+    color:black !important;
+    margin: 4px 2px 4px 2px !important;
+    padding: 2px;
+}
+
+.hx-bigslider > p {
+    color:black !important;
+    margin: 4px 2px 4px 2px !important;
+    padding: 2px;
+}
+
 .slick-prev:before, .slick-next:before { 
     color: #189 !important;
 }
