@@ -1,15 +1,3 @@
-// Make sure we're only running once.
-if(typeof hxjsIsRunning === 'undefined'){
-
-    var hxjsIsRunning = true;
-
-    $(document).ready(function() {
-        console.log('Enabling HX.js');
-        HXGlobalJS();
-    });
-
-}
-
 var HXGlobalJS = (function() {
 
 
@@ -403,4 +391,16 @@ var HXGlobalJS = (function() {
 
 });
 
+
+// Make sure we're only running once.
+if(typeof hxjsIsRunning === 'undefined'){
+
+    var hxjsIsRunning = true;
+
+    $(document).ready(function() {
+        console.log('Enabling HX.js');
+        HXGlobalJS();
+    });
+
+}
 
