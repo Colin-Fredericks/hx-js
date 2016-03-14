@@ -1,5 +1,48 @@
 var HXGlobalJS = (function() {
 
+
+    /***********************************************/
+    // Setting all the default options.
+    // Can be overwritten in hxGlobalOptions.js
+    // for course-wide defaults.
+    /***********************************************/
+
+    var hxDefaultOptions = {
+        showUTCClock: false,
+        hxOpenDiscussion: false,
+
+        // Highlighter: Yellow highlights that start turned off and go back to transparent afterward.
+        highlightColor: '#ff0',
+        highlightBackground: 'rgba(0,0,0,0)',
+        highlightState: true,
+
+        slickOptions: {
+            arrows: true,
+            dots: true,
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 3
+        },
+        // Default options for image slider navigation
+        slickNavOptions: {
+            asNavFor: '.hx-bigslider',
+            variableWidth: true,
+            focusOnSelect: true,
+            slidesToShow: 3,
+            slidesToScroll: 1
+        },
+        // Default options for single big image slider paired to nav.
+        slickBigOptions: {
+            asNavFor: '.hx-navslider',
+            arrows: false,
+            dots: true,
+            fade:  true,
+            adaptiveHeight: true,
+            slidesToShow: 1,
+            slidesToScroll: 1
+        },
+    };
+
     /***********************************************/
     // Get course external URL and related info.
     // Good for logging and grabbing scripts/images.
@@ -30,8 +73,11 @@ var HXGlobalJS = (function() {
         })
         .fail(function(){
             logThatThing('hxGlobalOptions.js not found. Using default options.');
+            var hxGlobalOptions = {};
     });
-
+    
+    if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
+    var hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);        
     
     // If there's a slider, load the Slick plugin.
     var slider = $('.hx-slider');
@@ -65,8 +111,7 @@ var HXGlobalJS = (function() {
 
 
     // UTC Clock (currently an iframe from TimeAndDate.com)
-    if (typeof hxShowUTCClock === 'undefined') { var hxShowUTCClock = false; }
-    if(hxShowUTCClock){
+    if(hxOptions.showUTCClock){
         var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" frameborder="0" width="90" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>'
         var hxClockSpot = $('.course-tabs');
         hxClockSpot.append(hxClockFrame);
@@ -96,19 +141,15 @@ var HXGlobalJS = (function() {
     // Stuff for a highlight toggle button.
     /**************************************/
 
-    // Set the defaults: yellow highlights that start turned off and go back to transparent afterward.
-    if (typeof hxHighlightColor === 'undefined') { var hxHighlightColor = '#ff0'; }
-    if (typeof hxHighlightBackground === 'undefined') { var hxHighlightBackground = 'rgba(0,0,0,0)'; }
-    if (typeof hxHighlightState === 'undefined') { var hxHighlightState = true; }
-    
     // Syntax: Create a button with the class "highlighter" and spans with the class "highlight"
     $( '.highlighter' ).on('click tap', function() {
-        if ( hxHighlightState ) {
+        if ( hxOptions.highlightState ) {
             $( '.highlight' ).animate( { backgroundColor: hxHighlightColor }, 200 );
         } else {
             $( '.highlight' ).animate( { backgroundColor: hxHighlightBackground }, 200 );
         }
-        hxHighlightState = !hxHighlightState;
+        hxOptions.highlightState = !hxOptions.highlightState;
+        
         Logger.log('harvardx.' + courseLogID + '.globaljs', {'Highlight Button': 'pressed'});
     });
 
@@ -119,8 +160,7 @@ var HXGlobalJS = (function() {
     
     // To use, put "var hxOpenDiscussion = true" in a script tag on your page.
     
-    if (typeof hxOpenDiscussion === 'undefined') { var hxOpenDiscussion = false; }
-    if(hxOpenDiscussion){
+    if(hxOptions.hxOpenDiscussion){
         $(".discussion-show.control-button").click();
         Logger.log('harvardx.' + courseLogID + '.globaljs', {'Discussion': 'auto-opened'});
     }
@@ -241,30 +281,16 @@ var HXGlobalJS = (function() {
     // Stuff for the Slick image slider.
     /***********************************/
 
-
     // Only do slider things if there are actually sliders to create.
     if(slider.length){
  
         logThatThing('found slider');
 
-        // Default options for Slick image slider
-        var defaultSlickOptions = {
-            arrows: true,
-            dots: true,
-            infinite: true,
-            slidesToShow: 3,
-            slidesToScroll: 3
-        };
-        
-        if(typeof hxSlickOptions === 'undefined') { var hxSlickOptions = false; }
-        if(typeof hxGlobalSlickOptions === 'undefined') { var hxGlobalSlickOptions = false; }
-        var slickOptions = setDefaultOptions(hxSlickOptions, hxGlobalSlickOptions, defaultSlickOptions);        
-        
         // Wait for Slick to actually load, which can take a little while.
         var waitforSlick = setInterval(function(){
             try {
                 // In future, add loop to handle multiple sliders.
-                slider.slick(slickOptions);
+                slider.slick(hxOptions.slickOptions);
                 clearInterval(waitforSlick);
                 logThatThing('creating slider');
                 Logger.log('harvardx.' + courseLogID + '.globaljs', {'Slick Image Slider': 'created'});
@@ -281,41 +307,12 @@ var HXGlobalJS = (function() {
     if(navslider.length && bigslider.length){
     
         logThatThing('found paired sliders');
-
-        // Default options for image slider navigation
-        var defaultSlickNavOptions = {
-            asNavFor: '.hx-bigslider',
-            variableWidth: true,
-            focusOnSelect: true,
-            slidesToShow: 3,
-            slidesToScroll: 1
-        };
-    
-        // Default options for single big image slider paired to nav.
-        var defaultSlickBigOptions = {
-            asNavFor: '.hx-navslider',
-            arrows: false,
-            dots: true,
-            fade:  true,
-            adaptiveHeight: true,
-            slidesToShow: 1,
-            slidesToScroll: 1
-        };
-
         
-        if(typeof hxSlickNavOptions === 'undefined') { var hxSlickNavOptions = false; }
-        if(typeof hxGlobalSlickNavOptions === 'undefined') { var hxGlobalSlickNavOptions = false; }
-        if(typeof hxSlickBigOptions === 'undefined') { var hxSlickBigOptions = false; }
-        if(typeof hxGlobalSlickBigOptions === 'undefined') { var hxGlobalSlickBigOptions = false; }
-        
-        var slickNavOptions = setDefaultOptions(hxSlickNavOptions, hxGlobalSlickNavOptions, defaultSlickNavOptions);        
-        var slickBigOptions = setDefaultOptions(hxSlickBigOptions, hxGlobalSlickBigOptions, defaultSlickBigOptions);        
-
         var waitforSlickNav = setInterval(function(){
             try {
                 // In future, add loop to handle multiple pairs.         
-                navslider.slick(slickNavOptions);
-                bigslider.slick(slickBigOptions);
+                navslider.slick(hxOptions.slickNavOptions);
+                bigslider.slick(hxOptions.slickBigOptions);
                 
                 clearInterval(waitforSlickNav);
                 logThatThing('creating paired slider');
@@ -387,17 +384,18 @@ var HXGlobalJS = (function() {
     
     // Sets the default options for something if they're not already defined.
     // Prioritizes local options, then global options in /static/, then the ones in this file.
+    // Does deep copy (clone)
     function setDefaultOptions(localOptions, globalOptions, fallbackOptions){
         
         if (!localOptions && !globalOptions) {
             return fallbackOptions;
         } else if (!localOptions) {
-            var localOptions = $.extend({}, fallbackOptions, globalOptions);
+            var localOptions = $.extend(true, {}, fallbackOptions, globalOptions);
         } else if (!globalOptions) {
-            localOptions = $.extend({}, localOptions, fallbackOptions);
+            localOptions = $.extend(true, {}, localOptions, fallbackOptions);
         } else {
-            localOptions = $.extend({}, localOptions, globalOptions);
-            localOptions = $.extend({}, localOptions, fallbackOptions);
+            localOptions = $.extend(true, {}, localOptions, globalOptions);
+            localOptions = $.extend(true, {}, localOptions, fallbackOptions);
         }
         
         return localOptions;

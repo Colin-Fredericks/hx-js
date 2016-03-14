@@ -6,20 +6,16 @@
 // version of this file from the GitHub repository.
 /********************************************/
 
-var hxShowUTCClock = true;
+var hxGlobalOptions = {
+    showUTCClock: true,
 
+    /********************************************/
+    // Slick Image Slider Options
+    /********************************************/
+    slickOptions: {},
+    slickNavOptions: {},
+    slickBigOptions: {},
 
-/********************************************/
-// Slick Image Slider Options
-/********************************************/
-
-var hxGlobalSlickOptions = {
 };
 
-// Nav slider paired to single big image
-var hxGlobalSlickNavOptions = {
-};
 
-// Single big image slider paired to nav.
-var hxGlobalSlickBigOptions = {
-};
