@@ -1,18 +1,24 @@
 var HXGlobalJS = (function() {
 
-
+    // Send logs both to the console and to the official edX logamajig.
+    function logThatThing(ThatThing){
+        console.log(JSON.stringify(ThatThing));
+        Logger.log(courseLogID + '.hxjs', ThatThing);
+    }
+    
+    
     /***********************************************/
     // Get course external URL and related info.
     // Good for logging and grabbing scripts/images.
     /***********************************************/
     
     var courseAssetURL = getAssetURL(window.location.href, 'complete');
-    console.log(courseAssetURL);
+    logThatThing(courseAssetURL);
 
     var CourseInfo = getCourseInfo(window.location.href);
     var courseLogID = CourseInfo.institution + '.' + CourseInfo.id + '_' + CourseInfo.run;
     
-    console.log('course log id: ' + courseLogID);
+    logThatThing('course log id: ' + courseLogID);
     Logger.log('harvardx.' + courseLogID + '.globaljs', {'Global Javascript': 'loaded'});
         
 
@@ -22,15 +28,14 @@ var HXGlobalJS = (function() {
     // Only do it if we need them.
     /**************************************/
     
-    
     // This is the course-wide options file.
     // It overrides defaults in this file, and is overridden by local options.
     $.getScript(courseAssetURL + 'hxGlobalOptions.js')
         .done(function(){
-            console.log('Course standard options loaded');
+            logThatThing('Course standard options loaded');
         })
         .fail(function(){
-            console.log('hxGlobalOptions.js not found. Using default options.');
+            logThatThing('hxGlobalOptions.js not found. Using default options.');
     });
 
     
@@ -41,7 +46,7 @@ var HXGlobalJS = (function() {
     
     if(slider.length || (navslider.length && bigslider.length)){
         $.getScript(courseAssetURL + 'slick.js', function(){
-            console.log('Slick image slider loaded');
+            logThatThing('Slick image slider loaded');
         });
     }
     
@@ -50,7 +55,7 @@ var HXGlobalJS = (function() {
     var vidlinks = $('.hx-vidlinks');
     if(vidlinks.length){
         $.getScript(courseAssetURL + 'HXVideoLinks.js', function(){
-            console.log('HX Video Links loaded');
+            logThatThing('HX Video Links loaded');
             HXVideoLinks();
         });
     }
@@ -78,7 +83,7 @@ var HXGlobalJS = (function() {
     // Stuff for a visibility toggle button.
     // Button classes start with "hx-togglebutton#"
     // Target classes start with "hx-toggletarget#"
-    // # is a number. 
+    // # is a number, not a pound sign. 
     /**************************************/
 
     $('[class^=hx-togglebutton]').on('click tap', function() {
@@ -116,6 +121,7 @@ var HXGlobalJS = (function() {
     /*****************************************/
     
     // To use, put "var hxOpenDiscussion = true" in a script tag on your page.
+    
     if (typeof hxOpenDiscussion === 'undefined') { var hxOpenDiscussion = false; }
     if(hxOpenDiscussion){
         $(".discussion-show.control-button").click();
@@ -242,7 +248,7 @@ var HXGlobalJS = (function() {
     // Only do slider things if there are actually sliders to create.
     if(slider.length){
  
-        console.log('found slider');
+        logThatThing('found slider');
 
         // Default options for Slick image slider
         var defaultSlickOptions = {
@@ -263,11 +269,11 @@ var HXGlobalJS = (function() {
                 // In future, add loop to handle multiple sliders.
                 slider.slick(slickOptions);
                 clearInterval(waitforSlick);
-                console.log('creating slider');
+                logThatThing('creating slider');
                 Logger.log('harvardx.' + courseLogID + '.globaljs', {'Slick Image Slider': 'created'});
             }
             catch(err){
-                console.log('waiting for Slick to load');
+                logThatThing('waiting for Slick to load');
             }
         }, 200);
     }
@@ -277,7 +283,7 @@ var HXGlobalJS = (function() {
     // thumbnails and one is the full-sized image and/or text.
     if(navslider.length && bigslider.length){
     
-        console.log('found paired sliders');
+        logThatThing('found paired sliders');
 
         // Default options for image slider navigation
         var defaultSlickNavOptions = {
@@ -315,11 +321,11 @@ var HXGlobalJS = (function() {
                 bigslider.slick(slickBigOptions);
                 
                 clearInterval(waitforSlickNav);
-                console.log('creating paired slider');
+                logThatThing('creating paired slider');
                 Logger.log('harvardx.' + courseLogID + '.globaljs', {'Slick Paired Slider': 'created'});
             }
             catch(err){
-                console.log('waiting for Slick to load');
+                logThatThing('waiting for Slick to load');
             }
         }, 200);
     }
@@ -399,7 +405,7 @@ var HXGlobalJS = (function() {
         
         return localOptions;
     }
-
+    
     // Konami Code
     (function($) {
 
@@ -445,7 +451,7 @@ if(typeof hxjsIsRunning === 'undefined'){
     var hxjsIsRunning = true;
 
     $(document).ready(function() {
-        console.log('Enabling HX.js');
+        logThatThing('Enabling HX.js');
         HXGlobalJS();
     });
 
