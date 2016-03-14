@@ -447,13 +447,6 @@ var HXGlobalJS = (function() {
         Logger.log(courseLogID + '.hxjs', ThatThing);
     }
 
-    // Functions that we would like to make public. Return as... function: external_name
-    return {
-        getAssetURL: getAssetURL,
-        getCourseInfo: getCourseInfo,
-        getClassNumber: getClassNumber
-    };
-
 });
 
 
