@@ -1,12 +1,5 @@
 var HXGlobalJS = (function() {
 
-    // Send logs both to the console and to the official edX logamajig.
-    function logThatThing(ThatThing){
-        console.log(JSON.stringify(ThatThing));
-        Logger.log(courseLogID + '.hxjs', ThatThing);
-    }
-    
-    
     /***********************************************/
     // Get course external URL and related info.
     // Good for logging and grabbing scripts/images.
@@ -18,6 +11,7 @@ var HXGlobalJS = (function() {
     var CourseInfo = getCourseInfo(window.location.href);
     var courseLogID = CourseInfo.institution + '.' + CourseInfo.id + '_' + CourseInfo.run;
     
+    logThatThing('Enabling HX.js');
     logThatThing('course log id: ' + courseLogID);
     Logger.log('harvardx.' + courseLogID + '.globaljs', {'Global Javascript': 'loaded'});
         
@@ -439,6 +433,12 @@ var HXGlobalJS = (function() {
     });
 
 
+    // Send logs both to the console and to the official edX logamajig.
+    function logThatThing(ThatThing){
+        console.log(JSON.stringify(ThatThing));
+        Logger.log(courseLogID + '.hxjs', ThatThing);
+    }
+
     // Functions that we would like to make public. Return as... function: external_name
     return {
         getAssetURL: getAssetURL,
@@ -455,7 +455,6 @@ if(typeof hxjsIsRunning === 'undefined'){
     var hxjsIsRunning = true;
 
     $(document).ready(function() {
-        logThatThing('Enabling HX.js');
         HXGlobalJS();
     });
 
