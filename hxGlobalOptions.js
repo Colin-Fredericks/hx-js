@@ -7,6 +7,7 @@
 /********************************************/
 
 var hxGlobalOptions = {
+    hasGlobalOptions: true,
     showUTCClock: true,
 
     /********************************************/

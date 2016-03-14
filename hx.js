@@ -63,7 +63,8 @@ var HXGlobalJS = (function() {
     // Only do it if we need them.
     /**************************************/
     
-    // Check for local options object.    
+    // Check for local options object.
+    console.log(hxLocalOptions);
     if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
 
     // This is the course-wide options file.
@@ -72,11 +73,13 @@ var HXGlobalJS = (function() {
         .done(function(){
             logThatThing({'Course options': 'loaded'});
             var hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);
+            console.log(hxOptions);
             keepGoing(hxOptions);
         })
         .fail(function(){
             logThatThing({'Course options': 'default'});
             var hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);        
+            console.log(hxOptions);
             keepGoing(hxOptions);
     });
     
@@ -396,19 +399,23 @@ var HXGlobalJS = (function() {
     // Prioritizes local options, then global options in /static/, then the ones in this file.
     // Does deep copy (clone)
     function setDefaultOptions(localOptions, globalOptions, fallbackOptions){
+        console.log(localOptions);
+        console.log(globalOptions);
+        console.log(fallbackOptions);
+
+        var tempOptions = {};
         
         if (!localOptions && !globalOptions) {
             return fallbackOptions;
         } else if (!localOptions) {
-            var localOptions = $.extend(true, {}, fallbackOptions, globalOptions);
+            tempOptions = $.extend(true, {}, fallbackOptions, globalOptions);
         } else if (!globalOptions) {
-            localOptions = $.extend(true, {}, localOptions, fallbackOptions);
+            tempOptions = $.extend(true, {}, fallbackOptions, localOptions);
         } else {
-            localOptions = $.extend(true, {}, localOptions, globalOptions);
-            localOptions = $.extend(true, {}, localOptions, fallbackOptions);
+            tempOptions = $.extend(true, {}, fallbackOptions, globalOptions, localOptions);
         }
         
-        return localOptions;
+        return tempOptions;
     }
     
     // Konami Code
