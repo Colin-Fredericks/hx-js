@@ -65,7 +65,10 @@ var HXGlobalJS = (function() {
     // Placeholder: TOC maker
 
 
-    // Placeholder: UTC Clock
+    // UTC Clock (currently an iframe from TimeAndDate.com)
+    var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" frameborder="0" width="90" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>'
+    var hxClockSpot = $('.course-tabs');
+    hxClockSpot.append(hxClockFrame);
 
 
     // Placeholder: Audio player
@@ -396,6 +399,34 @@ var HXGlobalJS = (function() {
         
         return localOptions;
     }
+
+    // Konami Code
+    (function($) {
+
+        $.fn.hxKonami = function(callback, code) {
+            if(code == undefined) code = "38,38,40,40,37,39,37,39,66,65";
+        
+            return this.each(function() {
+                var kkeys = [];
+                $(this).keydown(function(e){
+                    kkeys.push( e.keyCode );
+                    while (kkeys.length > code.split(',').length) {
+                        kkeys.shift();
+                    }
+                    if ( kkeys.toString().indexOf( code ) >= 0 ){
+                        kkeys = [];
+                        callback(e);
+                    }
+                });
+            });
+        }
+
+    })(jQuery);
+    
+    // Should probably add code to make sure this doesn't get run multiple times.
+    $(window).hxKonami(function(){
+        alert('+30 Lives');
+    });
 
 
     // Functions that we would like to make public. Return as... function: external_name
