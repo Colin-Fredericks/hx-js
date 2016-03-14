@@ -54,276 +54,275 @@ var HXGlobalJS = (function() {
     var CourseInfo = getCourseInfo(window.location.href);
     var courseLogID = CourseInfo.institution + '.' + CourseInfo.id + '_' + CourseInfo.run;
     
-    logThatThing('Enabling HX.js');
-    logThatThing('course log id: ' + courseLogID);
-    Logger.log('harvardx.' + courseLogID + '.globaljs', {'Global Javascript': 'loaded'});
-        
+    logThatThing({'HX.js': 'enabled'});
+    logThatThing({'course log id': courseLogID});
 
     /**************************************/
-    // Load outside scripts. 
+    // Pre-load outside scripts. 
     // Must be in Files & Uploads.
     // Only do it if we need them.
     /**************************************/
     
+    // Check for local options object.    
+    if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
+
     // This is the course-wide options file.
     // It overrides defaults in this file, and is overridden by local options.
     $.getScript(courseAssetURL + 'hxGlobalOptions.js')
         .done(function(){
-            logThatThing('Course standard options loaded');
+            logThatThing({'Course options': 'loaded'});
+            var hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);
+            keepGoing(hxOptions);
         })
         .fail(function(){
-            logThatThing('hxGlobalOptions.js not found. Using default options.');
-            var hxGlobalOptions = {};
+            logThatThing({'Course options': 'default'});
+            var hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);        
+            keepGoing(hxOptions);
     });
     
-    if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
-    var hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);        
+    // Once we have the options, we're ready to proceed.
+    function keepGoing(hxOptions){
     
-    // If there's a slider, load the Slick plugin.
-    var slider = $('.hx-slider');
-    var navslider = $('.hx-navslider');
-    var bigslider = $('.hx-bigslider');
+        // If there's a slider, load the Slick plugin.
+        var slider = $('.hx-slider');
+        var navslider = $('.hx-navslider');
+        var bigslider = $('.hx-bigslider');
     
-    if(slider.length || (navslider.length && bigslider.length)){
-        $.getScript(courseAssetURL + 'slick.js', function(){
-            logThatThing('Slick image slider loaded');
-        });
-    }
-    
-    
-    // In-Video links! As per the ones on Grape Ape.
-    var vidlinks = $('.hx-vidlinks');
-    if(vidlinks.length){
-        $.getScript(courseAssetURL + 'HXVideoLinks.js', function(){
-            logThatThing('HX Video Links loaded');
-            HXVideoLinks();
-        });
-    }
-
-
-    // Placeholder: Intro.js walkthroughs
-
-
-    // Placeholder: Pop-up assessments
-
-
-    // Placeholder: TOC maker
-
-
-    // UTC Clock (currently an iframe from TimeAndDate.com)
-    if(hxOptions.showUTCClock){
-        var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" frameborder="0" width="90" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>'
-        var hxClockSpot = $('.course-tabs');
-        hxClockSpot.append(hxClockFrame);
-    }
-
-
-    // Placeholder: Audio player
-
-
-    /**************************************/
-    // Stuff for a visibility toggle button.
-    // Button classes start with "hx-togglebutton#"
-    // Target classes start with "hx-toggletarget#"
-    // # is a number, not a pound sign. 
-    /**************************************/
-
-    $('[class^=hx-togglebutton]').on('click tap', function() {
-        var myNumber = getClassNumber(this.className, 'hx-togglebutton');
-        
-        $('.hx-toggletarget'+myNumber).slideToggle('fast');
-        
-        Logger.log('harvardx.' + courseLogID + '.globaljs', {'Toggle Button': 'pressed'});
-    });
-
-
-    /**************************************/
-    // Stuff for a highlight toggle button.
-    /**************************************/
-
-    // Syntax: Create a button with the class "highlighter" and spans with the class "highlight"
-    $( '.highlighter' ).on('click tap', function() {
-        if ( hxOptions.highlightState ) {
-            $( '.highlight' ).animate( { backgroundColor: hxHighlightColor }, 200 );
-        } else {
-            $( '.highlight' ).animate( { backgroundColor: hxHighlightBackground }, 200 );
+        if(slider.length || (navslider.length && bigslider.length)){
+            $.getScript(courseAssetURL + 'slick.js', function(){
+                logThatThing({'Slick image slider': 'loaded'});
+            });
         }
-        hxOptions.highlightState = !hxOptions.highlightState;
-        
-        Logger.log('harvardx.' + courseLogID + '.globaljs', {'Highlight Button': 'pressed'});
-    });
-
-
-    /*****************************************/
-    // Stuff to make forums expand right away.
-    /*****************************************/
     
-    // To use, put "var hxOpenDiscussion = true" in a script tag on your page.
     
-    if(hxOptions.hxOpenDiscussion){
-        $(".discussion-show.control-button").click();
-        Logger.log('harvardx.' + courseLogID + '.globaljs', {'Discussion': 'auto-opened'});
-    }
-
-
-    /*******************************************/
-    // Clickable images that pop up dialog boxes.
-    // Clickable area has id "MyID" and class "hx-popup-opener"
-    // Target div has class "MyID hx-popup-content"
-    // Don't put other classes first.
-    /*******************************************/
-    
-    var popUpOpener = $('.hx-popup-opener');
-    
-    if(popUpOpener.length){
-    
-        // First, create lists of areas for the purpose of accessibility.
-        $('map').each(function(index){
-        
-            // Make a list element from each area's title
-            var tempList = [];
-            $(this).find('area').each(function(index){
-                
-                tempList.push('<li class="'
-                    + this.className.split(/\s+/)[0]
-                    + ' hx-popup-opener" title="'
-                    + this.title 
-                    + '"><a href="javascript:;">' 
-                    + this.title 
-                    + '</a></li>'
-                );
+        // In-Video links! As per the ones on Grape Ape.
+        var vidlinks = $('.hx-vidlinks');
+        if(vidlinks.length){
+            $.getScript(courseAssetURL + 'HXVideoLinks.js', function(){
+                logThatThing({'HX Video Links': 'loaded'});
+                HXVideoLinks();
             });
-            
-            // Make that list into a big string and wrap it with UL
-            var listHTML = '<ul>' + tempList.join('') + '</ul>';
-            listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
-            
-            // Append the list right after the map.
-            $(this).after(listHTML);
-        });
-        
-        // Get the list of popup openers again so we can bind properly.
-        popUpOpener = $('.hx-popup-opener');
-
-        // Create the dialogue if we click on the right areas or links.
-        popUpOpener.on('click tap', function(){
-            
-            var myClass = this.className;
-            var boxName = myClass.split(/\s+/)[0];
- 
-            $('div.'+boxName).dialog({
-                dialogClass: "hx-popup-dialog",
-                title: $(this).attr('title'),
-                show: {
-                    effect: 'fade',
-                    duration: 200,
-                },
-                hide: {
-                    effect: 'fade',
-                    duration: 100,
-                },
-                buttons: { "Close": function() { $(this).dialog("close"); } },
-            }, function(boxName){
-                $('div.'+boxName).css({'display':''});
-                alert(boxName);
-            });
-            
-            Logger.log('harvardx.' + courseLogID + '.globaljs', {
-                'Pop-up Dialog': 'opened',
-                'Dialog': boxName
-            });
-        });
-        
-    }
-
-
-    /***********************************/
-    // Auto-generation of footnotes.
-    // Finds <span class="hx-footnote#">[#]</span>
-    // Links to <div class="hx-footnote-target#">
-    // Does some rearranging and formatting.
-    // Must have HTML component with h3 header "Footnotes"
-    /***********************************/
-    
-    var allFootnotes = $('span[class^="hx-footnote"]');
-    
-    if(allFootnotes.length){
-        var myNumber, thisFootnote, footnoteComponents, destinationComponent;
-        
-        for(var i = 0; i < allFootnotes.length; i++){
-
-            thisFootnote = allFootnotes[i];
-            thisNumber = getClassNumber(thisFootnote.className, 'hx-footnote');
-            thisTarget = $('div.hx-footnote-target'+thisNumber);
-
-            // Style the footnote marker
-            $(thisFootnote).addClass('hx-footnote-style');
-            $(thisFootnote).wrap('<sup></sup>');
-
-            // Move the footnote target divs to the appropriate location
-            footnoteComponents = $('h3:contains("Footnote")');
-            destinationComponent = $(footnoteComponents[footnoteComponents.length-1]).parent();
-            $(thisTarget).detach().appendTo(destinationComponent);
-
-            // Add links to the footnote markers
-            $(thisFootnote).wrap('<a href="#hxfoot'+thisNumber+'" name="hxfootback'+thisNumber+'"></a>').wrap();
-
-            // Add targets and back-links to the footnotes
-            thisTarget.prepend('<a name="hxfoot'+thisNumber+'"></a>');
-            thisTarget.append('<p><a href="#hxfootback'+thisNumber+'">(back)</a></p>');
-
         }
-        
-    }
     
-
-    /***********************************/
-    // Stuff for the Slick image slider.
-    /***********************************/
-
-    // Only do slider things if there are actually sliders to create.
-    if(slider.length){
- 
-        logThatThing('found slider');
-
-        // Wait for Slick to actually load, which can take a little while.
-        var waitforSlick = setInterval(function(){
-            try {
-                // In future, add loop to handle multiple sliders.
-                slider.slick(hxOptions.slickOptions);
-                clearInterval(waitforSlick);
-                logThatThing('creating slider');
-                Logger.log('harvardx.' + courseLogID + '.globaljs', {'Slick Image Slider': 'created'});
-            }
-            catch(err){
-                logThatThing('waiting for Slick to load');
-            }
-        }, 200);
-    }
+        // Placeholder: Intro.js walkthroughs
 
 
-    // This set is for matched sliders, where one is the
-    // thumbnails and one is the full-sized image and/or text.
-    if(navslider.length && bigslider.length){
+        // Placeholder: Pop-up assessments
     
-        logThatThing('found paired sliders');
+        // Placeholder: TOC maker
+
+
+        // UTC Clock (currently an iframe from TimeAndDate.com)
+        if(hxOptions.showUTCClock){
+            var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" frameborder="0" width="90" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>'
+            var hxClockSpot = $('.course-tabs');
+            hxClockSpot.append(hxClockFrame);
+        }
+
+
+        // Placeholder: Audio player
+
+
+        /**************************************/
+        // Stuff for a visibility toggle button.
+        // Button classes start with "hx-togglebutton#"
+        // Target classes start with "hx-toggletarget#"
+        // # is a number, not a pound sign. 
+        /**************************************/
+
+        $('[class^=hx-togglebutton]').on('click tap', function() {
+            var myNumber = getClassNumber(this.className, 'hx-togglebutton');
         
-        var waitforSlickNav = setInterval(function(){
-            try {
-                // In future, add loop to handle multiple pairs.         
-                navslider.slick(hxOptions.slickNavOptions);
-                bigslider.slick(hxOptions.slickBigOptions);
+            $('.hx-toggletarget'+myNumber).slideToggle('fast');
+        
+            logThatThing({'Toggle Button': 'pressed'});
+        });
+
+
+        /**************************************/
+        // Stuff for a highlight toggle button.
+        /**************************************/
+
+        // Syntax: Create a button with the class "highlighter" and spans with the class "highlight"
+        $( '.highlighter' ).on('click tap', function() {
+            if ( hxOptions.highlightState ) {
+                $( '.highlight' ).animate( { backgroundColor: hxHighlightColor }, 200 );
+            } else {
+                $( '.highlight' ).animate( { backgroundColor: hxHighlightBackground }, 200 );
+            }
+            hxOptions.highlightState = !hxOptions.highlightState;
+        
+            logThatThing({'Highlight Button': 'pressed'});
+        });
+
+
+        /*****************************************/
+        // Stuff to make forums expand right away.
+        /*****************************************/
+    
+        // To use, put "var hxOpenDiscussion = true" in a script tag on your page.
+    
+        if(hxOptions.hxOpenDiscussion){
+            $(".discussion-show.control-button").click();
+            logThatThing({'Discussion': 'auto-opened'});
+        }
+
+
+        /*******************************************/
+        // Clickable images that pop up dialog boxes.
+        // Clickable area has id "MyID" and class "hx-popup-opener"
+        // Target div has class "MyID hx-popup-content"
+        // Don't put other classes first.
+        /*******************************************/
+    
+        var popUpOpener = $('.hx-popup-opener');
+    
+        if(popUpOpener.length){
+    
+            // First, create lists of areas for the purpose of accessibility.
+            $('map').each(function(index){
+        
+                // Make a list element from each area's title
+                var tempList = [];
+                $(this).find('area').each(function(index){
                 
-                clearInterval(waitforSlickNav);
-                logThatThing('creating paired slider');
-                Logger.log('harvardx.' + courseLogID + '.globaljs', {'Slick Paired Slider': 'created'});
-            }
-            catch(err){
-                logThatThing('waiting for Slick to load');
-            }
-        }, 200);
-    }
+                    tempList.push('<li class="'
+                        + this.className.split(/\s+/)[0]
+                        + ' hx-popup-opener" title="'
+                        + this.title 
+                        + '"><a href="javascript:;">' 
+                        + this.title 
+                        + '</a></li>'
+                    );
+                });
+            
+                // Make that list into a big string and wrap it with UL
+                var listHTML = '<ul>' + tempList.join('') + '</ul>';
+                listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
+            
+                // Append the list right after the map.
+                $(this).after(listHTML);
+            });
+        
+            // Get the list of popup openers again so we can bind properly.
+            popUpOpener = $('.hx-popup-opener');
 
+            // Create the dialogue if we click on the right areas or links.
+            popUpOpener.on('click tap', function(){
+            
+                var myClass = this.className;
+                var boxName = myClass.split(/\s+/)[0];
+ 
+                $('div.'+boxName).dialog({
+                    dialogClass: "hx-popup-dialog",
+                    title: $(this).attr('title'),
+                    show: {
+                        effect: 'fade',
+                        duration: 200,
+                    },
+                    hide: {
+                        effect: 'fade',
+                        duration: 100,
+                    },
+                    buttons: { "Close": function() { $(this).dialog("close"); } },
+                }, function(boxName){
+                    $('div.'+boxName).css({'display':''});
+                    alert(boxName);
+                });
+            
+                logThatThing({
+                    'Pop-up Dialog': 'opened',
+                    'Dialog': boxName
+                });
+            });
+        
+        }
+
+
+        /***********************************/
+        // Auto-generation of footnotes.
+        // Finds <span class="hx-footnote#">[#]</span>
+        // Links to <div class="hx-footnote-target#">
+        // Does some rearranging and formatting.
+        // Must have HTML component with h3 header "Footnotes"
+        /***********************************/
+    
+        var allFootnotes = $('span[class^="hx-footnote"]');
+    
+        if(allFootnotes.length){
+            var myNumber, thisFootnote, footnoteComponents, destinationComponent;
+        
+            for(var i = 0; i < allFootnotes.length; i++){
+
+                thisFootnote = allFootnotes[i];
+                thisNumber = getClassNumber(thisFootnote.className, 'hx-footnote');
+                thisTarget = $('div.hx-footnote-target'+thisNumber);
+
+                // Style the footnote marker
+                $(thisFootnote).addClass('hx-footnote-style');
+                $(thisFootnote).wrap('<sup></sup>');
+
+                // Move the footnote target divs to the appropriate location
+                footnoteComponents = $('h3:contains("Footnote")');
+                destinationComponent = $(footnoteComponents[footnoteComponents.length-1]).parent();
+                $(thisTarget).detach().appendTo(destinationComponent);
+
+                // Add links to the footnote markers
+                $(thisFootnote).wrap('<a href="#hxfoot'+thisNumber+'" name="hxfootback'+thisNumber+'"></a>').wrap();
+
+                // Add targets and back-links to the footnotes
+                thisTarget.prepend('<a name="hxfoot'+thisNumber+'"></a>');
+                thisTarget.append('<p><a href="#hxfootback'+thisNumber+'">(back)</a></p>');
+
+            }
+        
+        }
+
+        /***********************************/
+        // Stuff for the Slick image slider.
+        /***********************************/
+
+        // Only do slider things if there are actually sliders to create.
+        if(slider.length){
+ 
+            logThatThing({'slider': 'found'});
+
+            // Wait for Slick to actually load, which can take a little while.
+            var waitForSlick = setInterval(function(){
+                try {
+                    // In future, add loop to handle multiple sliders.
+                    slider.slick(hxOptions.slickOptions);
+                    clearInterval(waitForSlick);
+                    logThatThing({'slider': 'created'});
+                }
+                catch(err){
+                    logThatThing({'slider': 'waiting for Slick to load'});
+                }
+            }, 200);
+        }
+
+
+        // This set is for matched sliders, where one is the
+        // thumbnails and one is the full-sized image and/or text.
+        if(navslider.length && bigslider.length){
+    
+            logThatThing({'paired slider': 'found'});
+        
+            var waitForSlickNav = setInterval(function(){
+                try {
+                    // In future, add loop to handle multiple pairs.         
+                    navslider.slick(hxOptions.slickNavOptions);
+                    bigslider.slick(hxOptions.slickBigOptions);
+                
+                    clearInterval(waitForSlickNav);
+                    logThatThing({'paired slider': 'created'});
+                }
+                catch(err){
+                    logThatThing({'paired slider': 'waiting for Slick to load'});
+                }
+            }, 200);
+        }
+    }
     
 
     /***********************************/
@@ -427,7 +426,7 @@ var HXGlobalJS = (function() {
     // Should probably add code to make sure this doesn't get run multiple times.
     $(window).hxKonami(function(){
         alert('+30 Lives');
-        logThatThing('Konami Code');
+        logThatThing({'easter egg': 'Konami Code'});
     });
 
 
