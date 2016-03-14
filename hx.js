@@ -131,11 +131,15 @@ var HXGlobalJS = (function() {
         /**************************************/
 
         $('[class^=hx-togglebutton]').on('click tap', function() {
+        
             var myNumber = getClassNumber(this.className, 'hx-togglebutton');
         
             $('.hx-toggletarget'+myNumber).slideToggle('fast');
         
-            logThatThing({'Toggle Button': 'pressed'});
+            logThatThing({
+                'Toggle button': 'pressed',
+                'Toggle number': myNumber
+            });
         });
 
 
@@ -144,15 +148,22 @@ var HXGlobalJS = (function() {
         /**************************************/
 
         // Syntax: Create a button with the class "highlighter" and spans with the class "highlight"
-        $( '.highlighter' ).on('click tap', function() {
+        $( '[class^=hx-highlighter]').on('click tap', function() {
+        
+            var myNumber = getClassNumber(this.className, 'hx-highlighter');
+            
             if ( hxOptions.highlightState ) {
-                $( '.highlight' ).animate( { backgroundColor: hxHighlightColor }, 200 );
+                $( '.hx-highlight'+myNumber ).animate( { backgroundColor: hxOptions.highlightColor }, 200 );
             } else {
-                $( '.highlight' ).animate( { backgroundColor: hxHighlightBackground }, 200 );
+                $( '.hx-highlight'+myNumber ).animate( { backgroundColor: hxOptions.highlightBackground }, 200 );
             }
+            
             hxOptions.highlightState = !hxOptions.highlightState;
         
-            logThatThing({'Highlight Button': 'pressed'});
+            logThatThing({
+                'Highlight button': 'pressed',
+                'Highlight number': myNumber
+            });
         });
 
 
