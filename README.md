@@ -66,6 +66,7 @@ Grey quotation/excerpt boxes:
 <div class="hx-excerpt">
   <h4 class="hx-smallcaps">Quotation Header</h4>
   <p>Actual honest-to-god quotation</p>
+  <p class="hx-quote-source">Abraham Lincoln</p>
 </div>
 
 ### Visibility Toggle
