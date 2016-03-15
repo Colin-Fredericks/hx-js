@@ -8,12 +8,11 @@ This project collects a large number of javascript and css tricks that have been
 How to Implement HXJS in your course
 -----------
 
-First, download HXJS_Helper.zip, unzip it, and upload all of the things therein to your Files & Uploads section. This will let you use...
+First, download [HXJS_Helper.zip](https://github.com/Colin-Fredericks/hx-js/raw/master/HXJS_Helper.zip) unzip it, and upload all of the things therein to your Files & Uploads section. This will let you use...
 
 * [Video Links](https://github.com/Colin-Fredericks/edx-video-augments),
 * [Slick](https://kenwheeler.github.io/slick/)-style image sliders,
 * [intro.js](https://github.com/usablica/intro.js) text-based walkthroughs with some accessibility improvements,
-* The default image for the video links,
 * and underscore.js, just in case we end up wanting it for something.
 
 Also upload the three files from this repo:
@@ -35,12 +34,12 @@ To make things happen, you'll need to add specific classes to your HTML, and in 
 
 ### Simple Appearance Changes
 
-* For Drop Caps, do `<span class="hx-dropcap">A</span>` on the first letter.
-* For Small-Caps headers, do `class="hx-smallcaps"`.
-* For a white header with a solid color background, do `class="hx-superbold"`. You can do small caps with this.
-* For an underlined header, do `class="hx-underline"`. You can do small caps with this.
-* For images or divs that hang down on the right-hand side, use `class="hx-hangright`.
-* For images or divs that hang down on the left-hand side, use `class="hx-hangleft`.
+* For **drop caps**, do `<span class="hx-dropcap">A</span>` on the first letter.
+* For **small-caps headers**, do `class="hx-smallcaps"`.
+* For a **superbold** white header with a solid color background, do `class="hx-superbold"`. You can do small caps with this.
+* For an **underlined** header, do `class="hx-underline"`. You can do small caps with this.
+* For images or divs that hang down on the **right-hand side**, use `class="hx-hangright`.
+* For images or divs that hang down on the **left-hand side**, use `class="hx-hangleft`.
 
 ### Pretty boxes
 
@@ -105,8 +104,6 @@ Match the number on -highlighter# with the class in the following code:
 ```
 
 Each button highlights all the things with matching numbers. You don't need a different number for each highlight; you need a different number for each *set* of highlights.
-
-### Forum Tricks
 
 ### Pop-ups for clickable images
 
@@ -257,6 +254,10 @@ The javascript will turn this set of divs into a list of static links, for folks
 
 Up up down down left right left right B A
 
+### Forum Tricks
+
+(docs coming)
+
 ### Intro.js walkthroughs
 
 (coming)
@@ -266,6 +267,10 @@ Up up down down left right left right B A
 (coming)
 
 ### Audio Player
+
+(coming)
+
+### Skip To Time
 
 (coming)
 
