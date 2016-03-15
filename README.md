@@ -34,10 +34,57 @@ To make things happen, you'll need to add specific classes to your HTML. Specifi
 
 ### Simple Appearance Changes
 
-* For Drop Caps, do `<span class="hx-dropcap">F</span>`
-* For Small-Caps headers, do 
+* For Drop Caps, do `<span class="hx-dropcap">A</span>` on the first letter.
+* For Small-Caps headers, do `class="hx-smallcaps"`.
+* For a white header with a solid color background, do `class="hx-superbold"`. You can do small caps with this.
+* For an underlined header, do `class="hx-underline"`. You can do small caps with this.
+* For images or divs that hang down on the right-hand side, use `class="hx-hangright`.
+* For images or divs that hang down on the left-hand side, use `class="hx-hangleft`.
+
+### Pretty boxes
+
+Blue boxes:
+
+```html
+<div class="hx-bluebox">
+  <h4>Box Header</h4>
+  <p>Other things in box</p>
+</div>
+```
+
+Blue sidebars:
+
+```html
+<div class="hx-sidebar">
+  <h4>Box Header</h4>
+  <p>Other things in box</p>
+</div>
+```
+
+Grey quotation/excerpt boxes:
+
+<div class="hx-excerpt">
+  <h4 class="hx-smallcaps">Quotation Header</h4>
+  <p>Actual honest-to-god quotation</p>
+</div>
 
 ### Visibility Toggle
+
+This part makes the button:
+
+```html
+<p><button class="hx-togglebutton1">Toggle the sidebar on or off</button></p>
+```
+
+Then you match the number on -togglebutton# to your toggle target:
+
+```html
+<div class="hx-toggletarget1 hx-sidebar">
+  <p>I am all the stuff you want to toggle on and off.</p>
+</div>
+```
+
+Button 1 toggles target 1, button 2 toggles target 2, etc.
 
 ### Highlighter Toggle
 
@@ -59,7 +106,41 @@ Each button highlights all the things with matching numbers. You don't need a di
 
 ### Pop-ups for clickable images
 
+You will need an image map already prepared. I recommend https://www.image-maps.com/ to create one quickly.
+
+Here's an example:
+
+```html
+<p class="hx-centered"><img src="https://placebear.com/500/300" alt="placeholder bear" usemap="#TheBearMap"/></p>
+
+<map id="BearMap1" name="TheBearMap">
+  <area id="Bear1" class="Bear1 hx-popup-opener" title="Bear 1" shape="rect" coords="150,0,320,120" alt="Bear number one" />
+  <area id="Bear2" class="Bear2 hx-popup-opener" title="Bear 2" shape="rect" coords="90,120,350,300" alt="Bear number two" />
+</map>
+```
+
+Note the classes, Bear1 and Bear2. *They need to be the first class.* The javscript will then look for divs with matching classes. *They need to be divs.* Here's an example:
+
+```html
+<div class="Bear1 hx-popup-content">
+  <p>I am bear #1!</p>
+</div>
+<div class="Bear2 hx-popup-content">
+  <p>I am bear #2!</p>
+</div>
+```
+
+You can put them anywhere; they'll hide until you need them. When you click on the areas, the divs pop up. 
+
+Underneath, the javascript will automatically create a list with all of the targets, based on their "title" attribute. This list will also pop up the dialogs.
+
 ### Automated Footnotes
+
+First, make a Raw HTML component at the bottom of your page with this in it:
+
+```html
+<h3>Footnotes</h3>
+```
 
 To insert the link to the footnote, use this format:
 
@@ -67,7 +148,7 @@ To insert the link to the footnote, use this format:
 <span class="hx-footnote1">[1]</span>
 ```
 
-where you replace the number 1 with the appropriate number. They don't need to be in order, or even to be numbers, strictly speaking. Then, farther down, insert a div like this one:
+Replace the number 1 with the appropriate number. They don't need to be in order, or even to be numbers, strictly speaking. Then, farther down, insert a div like this one:
 
 ```html
 <div class="hx-footnote-target1">
@@ -76,6 +157,8 @@ where you replace the number 1 with the appropriate number. They don't need to b
 ```
 
 Make sure that the -target# at the end matches your -footnote# above.
+
+You can put these divs anywhere; the javascript will move them to the end of the footnote component. 
 
 ### Image Slider
 
@@ -128,6 +211,43 @@ For a paired slider, where the top one acts as the navigation for the bottom one
 ```
 
 ### Video Links
+
+This one is a little complex. Look at the structure below, which you can copy to use as a template. Paste it into a Raw HTML component directly beneath your video.
+
+```html
+<div id="hx-vidlinks-static-1" class="hx-vidlinks">
+
+<div data-time="9">
+	<a href="http://astronomy.fas.harvard.edu/people/dimitar-sasselov">
+	<img src="/static/hx_tiny_white.png" />
+	Dimitar Sasselov - Harvard University
+	</a>
+</div>
+
+<div data-time="17">
+	<a href="https://en.wikipedia.org/wiki/Solar_System">
+	<img src="/static/hx_tiny_white.png" />
+	Our Solar System - Wikipedia
+	</a>
+</div>
+
+<div data-time="27">
+	<a href="http://planetquest.jpl.nasa.gov/">
+	<img src="/static/hx_tiny_white.png" />
+	Exoplanets - NASA.gov
+	</a>
+</div>
+
+</div>
+```
+
+The outer div has `hx-vidlinks-static-1`, because it's for video number one - the first one on the page. If I have a second video, it should say `hx-vidlinks-static-2` and so forth.
+
+The inner divs have `data-time="9"` where the 9 means the link is going to show up nine seconds into the video. You can also specify times in minutes:seconds format, or even hours:minutes:seconds.
+
+The image inside is a little HX. It's 25 pixels tall. Feel free to replace it with a different image that's also 25 pixels tall. 
+
+The javascript will turn this set of divs into a list of static links, for folks who can't see or get to the pop-up links.
 
 ### Easter Egg
 
