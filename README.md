@@ -10,16 +10,17 @@ How to Implement HXJS in your course
 
 First, download HXJS_Helper.zip, unzip it, and upload all of the things therein to your Files & Uploads section. This will let you use...
 
-* [Video Links](https://github.com/Colin-Fredericks/edx-video-augments)
-* [Slick](https://kenwheeler.github.io/slick/)-style image sliders
-* [intro.js](https://github.com/usablica/intro.js) text-based walkthroughs with some accessibility improvements
+* [Video Links](https://github.com/Colin-Fredericks/edx-video-augments),
+* [Slick](https://kenwheeler.github.io/slick/)-style image sliders,
+* [intro.js](https://github.com/usablica/intro.js) text-based walkthroughs with some accessibility improvements,
+* The default image for the video links,
 * and underscore.js, just in case we end up wanting it for something.
 
 Also upload the three files from this repo:
 
-* hx.js, which puts all the javascript in one place
-* hx.css, which is all the css in one file
-* hxGlobalOptions.js, which sets the global options for hx.js
+* **hx.js**, which puts all the javascript in one place
+* **hx.css**, which is all the css in one file
+* **hxGlobalOptions.js**, which sets the global options for hx.js
 
 Once you've done that, copy the lines below into a Raw HTML element:
 
@@ -30,7 +31,7 @@ Once you've done that, copy the lines below into a Raw HTML element:
 
 That will enable hx.js for all components on that page. It should be doing exactly nothing so far.
 
-To make things happen, you'll need to add specific classes to your HTML. Specifically:
+To make things happen, you'll need to add specific classes to your HTML, and in some cases make little changes to your hxGlobalOptions.js file. Here's the full list of awesome stuff:
 
 ### Simple Appearance Changes
 
@@ -63,11 +64,13 @@ Blue sidebars:
 
 Grey quotation/excerpt boxes:
 
+```html
 <div class="hx-excerpt">
   <h4 class="hx-smallcaps">Quotation Header</h4>
   <p>Actual honest-to-god quotation</p>
   <p class="hx-quote-source">Abraham Lincoln</p>
 </div>
+```
 
 ### Visibility Toggle
 
@@ -120,7 +123,7 @@ Here's an example:
 </map>
 ```
 
-Note the classes, Bear1 and Bear2. *They need to be the first class.* The javscript will then look for divs with matching classes. *They need to be divs.* Here's an example:
+Note the classes, Bear1 and Bear2. You can name them anything you want, but *they need to be the first class.* The javscript will then look for divs with matching classes. *They need to be divs.* Here's an example:
 
 ```html
 <div class="Bear1 hx-popup-content">
@@ -165,7 +168,7 @@ You can put these divs anywhere; the javascript will move them to the end of the
 
 For an image slider, copy the HTML below and alter to fit your purposes. Keep the classes.
 
-```
+```html
 <div class="hx-sliderbox">
 <div class="hx-slider">
 <p><img src="https://placebear.com/300/300" alt="placeholder bear"/>Placeholder Bear</p>
