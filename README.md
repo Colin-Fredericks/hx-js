@@ -123,12 +123,12 @@ Here's an example:
 <p class="hx-centered"><img src="https://placebear.com/500/300" alt="placeholder bear" usemap="#TheBearMap"/></p>
 
 <map id="BearMap1" name="TheBearMap">
-  <area id="Bear1" class="Bear1 hx-popup-opener" title="Bear 1" shape="rect" coords="150,0,320,120" alt="Bear number one" />
-  <area id="Bear2" class="Bear2 hx-popup-opener" title="Bear 2" shape="rect" coords="90,120,350,300" alt="Bear number two" />
+  <area id="Area1" class="Bear1 hx-popup-opener" title="Bear 1" shape="rect" coords="150,0,320,120" alt="Bear number one" />
+  <area id="Area2" class="Bear2 hx-popup-opener" title="Bear 2" shape="rect" coords="90,120,350,300" alt="Bear number two" />
 </map>
 ```
 
-Note the classes, Bear1 and Bear2. You can name them anything you want, but *they need to be the first class.* The javscript will then look for divs with matching classes. *They need to be divs.* Here's an example:
+Note the classes, Bear1 and Bear2. You can name them anything you want, but *they need to be the first class.* The `hx-popup-opener` class is also necessary, but don't put it first. The javscript will then look for divs with matching classes. *They need to be divs.* Here's an example:
 
 ```html
 <div class="Bear1 hx-popup-content">
