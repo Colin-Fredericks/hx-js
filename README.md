@@ -34,8 +34,10 @@ To make things happen, you'll need to add specific classes to your HTML, and in 
 
 ### Simple Appearance Changes
 
+All of these are classes that you add to 
+
 * For **drop caps**, do `<span class="hx-dropcap">A</span>` on the first letter.
-* For **small-caps headers**, do `class="hx-smallcaps"`.
+* For **small-caps headers**, do `class="hx-smallcaps"`. Works with h3 or h4.
 * For a **superbold** white header with a solid color background, do `class="hx-superbold"`. You can do small caps with this.
 * For an **underlined** header, do `class="hx-underline"`. You can do small caps with this.
 * For images or divs that hang down on the **right-hand side**, use `class="hx-hangright`.
@@ -70,6 +72,12 @@ Grey quotation/excerpt boxes:
   <p class="hx-quote-source">Abraham Lincoln</p>
 </div>
 ```
+
+### Sidebar Tables
+
+Just give your table tag `class="hx-hangleft"` or `class="hx-hangright"` and it'll be ready to go. Note that you shouldn't do more than two columns, or three if your headers and data are very compact.
+
+If you need a really compact table, add `hx-compact-table` to the class.
 
 ### Visibility Toggle
 
