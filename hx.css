@@ -39,6 +39,11 @@
 	background: linear-gradient(to bottom, rgba(255,255,255,1) 5%, rgba(220,220,220,1) 100%);
 }
 
+.hx-excerpt > hx-quote-source {
+    text-align: right;
+    font-style: italic;
+}
+
 /* Helps with above. */
 .hx-excerpt p {
     background-image: url(quote-left.gif);
