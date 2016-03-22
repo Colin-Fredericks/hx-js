@@ -310,8 +310,6 @@ var HXVideoLinks = (function() {
         return time;
     }
     
-    return {
-        hmsToTime: hmsToTime
-    }
+    this.hmsToTime = hmsToTime;
 
 });

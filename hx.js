@@ -100,10 +100,11 @@ var HXGlobalJS = (function() {
     
         // In-Video links! As per the ones on Grape Ape.
         var allVideos = $('.video');
+        var HXVL;
         if(allVideos.length){
             $.getScript(courseAssetURL + 'HXVideoLinks.js', function(){
                 logThatThing({'HX Video Links': 'loaded'});
-                HXVideoLinks();
+                HXVL = new HXVideoLinks();
             });
         }
     
@@ -116,7 +117,7 @@ var HXGlobalJS = (function() {
         
         var allTimeLinks = $('a.hx-vidtime');
         allTimeLinks.on('click tap', function(){
-            var thisTime = HXVideoLinks().hmsToTime($(this).attr('data-time'));
+            var thisTime = HXVL.hmsToTime($(this).attr('data-time'));
             console.log(thisTime);
         });
 
@@ -431,29 +432,6 @@ var HXGlobalJS = (function() {
         return tempOptions;
     }
     
-    // Converts hh:mm:ss to a number of seconds for time-based problems.
-    // If it's passed a number, it just spits that back out as seconds.
-//     function hmsToTime(hms){
-// 
-//         hms = hms.toString();
-// 
-//         var hmsArray = hms.split(':');
-//         var time = 0;
-// 
-//         if(hmsArray.length == 3){
-//             time = 3600*parseInt(hmsArray[0]) + 60*parseInt(hmsArray[1]) + Number(hmsArray[2]);
-//         }
-//         else if(hmsArray.length == 2){
-//             time = 60*parseInt(hmsArray[0]) + Number(hmsArray[1]);
-//         }
-// 
-//         else if(hmsArray.length == 1){
-//             time = Number(hmsArray[0]);
-//         }
-// 
-//         return time;
-//     }
-
     // Konami Code
     (function($) {
 
