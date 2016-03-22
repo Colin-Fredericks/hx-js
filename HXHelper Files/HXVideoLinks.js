@@ -22,10 +22,11 @@ var HXVideoLinks = (function() {
     console.log('Video Links starting');
 
 
-    // Mark each video and set of controls with a class that will let us
-    //  handle each of them separately.
+    // Mark each video and set of controls with a class and anchor 
+    // that will let us handle each of them separately.
     // Numbering from 1 to make things easier for course creators.
     video.each(function(index){   $(this).addClass('for-video-' + (index + 1));   });
+    video.each(function(index){   $(this).parent().prepend('<a name="video' + (index + 1) + '"></a>');   });
     vidWrappers.each(function(index){   $(this).addClass('for-video-' + (index + 1));   });
     
     video.each(function(vidnumber){
@@ -307,6 +308,10 @@ var HXVideoLinks = (function() {
         }
     
         return time;
+    }
+    
+    return {
+        hmsToTime: hmsToTime
     }
 
 });

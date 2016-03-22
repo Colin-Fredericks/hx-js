@@ -99,14 +99,27 @@ var HXGlobalJS = (function() {
     
     
         // In-Video links! As per the ones on Grape Ape.
-        var vidlinks = $('.hx-vidlinks');
-        if(vidlinks.length){
+        var allVideos = $('.video');
+        if(allVideos.length){
             $.getScript(courseAssetURL + 'HXVideoLinks.js', function(){
                 logThatThing({'HX Video Links': 'loaded'});
                 HXVideoLinks();
             });
         }
     
+        /**************************************/
+        // Jump to time in video on this page.
+        // Make a link like <a href="#video1" data-time="mm:ss">link text</a>
+        // where the # is actually a pound sign. Set the number to 
+        // which video you want
+        /**************************************/
+        
+        var allTimeLinks = $('a.hx-vidtime');
+        allTimeLinks.on('click tap', function(){
+            var thisTime = HXVideoLinks().hmsToTime($(this).attr('data-time'));
+            console.log(thisTime);
+        });
+
         // Placeholder: Intro.js walkthroughs
 
 
@@ -117,7 +130,7 @@ var HXGlobalJS = (function() {
 
         // UTC Clock (currently an iframe from TimeAndDate.com)
         if(hxOptions.showUTCClock){
-            var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" frameborder="0" width="90" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>'
+            var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" title="UTC Clock" frameborder="0" width="100" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>'
             var hxClockSpot = $('.course-tabs');
             hxClockSpot.append(hxClockFrame);
         }
@@ -418,6 +431,29 @@ var HXGlobalJS = (function() {
         return tempOptions;
     }
     
+    // Converts hh:mm:ss to a number of seconds for time-based problems.
+    // If it's passed a number, it just spits that back out as seconds.
+//     function hmsToTime(hms){
+// 
+//         hms = hms.toString();
+// 
+//         var hmsArray = hms.split(':');
+//         var time = 0;
+// 
+//         if(hmsArray.length == 3){
+//             time = 3600*parseInt(hmsArray[0]) + 60*parseInt(hmsArray[1]) + Number(hmsArray[2]);
+//         }
+//         else if(hmsArray.length == 2){
+//             time = 60*parseInt(hmsArray[0]) + Number(hmsArray[1]);
+//         }
+// 
+//         else if(hmsArray.length == 1){
+//             time = Number(hmsArray[0]);
+//         }
+// 
+//         return time;
+//     }
+
     // Konami Code
     (function($) {
 
