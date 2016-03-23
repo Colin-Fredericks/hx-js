@@ -57,12 +57,6 @@ var HXGlobalJS = (function() {
     logThatThing({'HX.js': 'enabled'});
     logThatThing({'course log id': courseLogID});
 
-    /**************************************/
-    // Pre-load outside scripts. 
-    // Must be in Files & Uploads.
-    // Only do it if we need them.
-    /**************************************/
-    
     // Check for local options object.
     if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
 
@@ -82,6 +76,12 @@ var HXGlobalJS = (function() {
     
     // Once we have the options, we're ready to proceed.
     function keepGoing(hxOptions){
+    
+        /**************************************/
+        // Load outside scripts. 
+        // Must be in Files & Uploads.
+        // Only do it if we need them.
+        /**************************************/
     
         // If there's a slider, load the Slick plugin.
         var slider = $('.hx-slider');
@@ -108,8 +108,8 @@ var HXGlobalJS = (function() {
         /**************************************/
         // Jump to time in video on this page.
         // Make a link like <a href="#video1" data-time="mm:ss">link text</a>
-        // where the # is actually a pound sign. Set the number to 
-        // which video you want
+        // The # is actually a pound sign for anchor link. 
+        // Set the number to which video you want.
         /**************************************/
         
         var allTimeLinks = $('a.hx-vidtime');
