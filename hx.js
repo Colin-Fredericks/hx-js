@@ -64,7 +64,6 @@ var HXGlobalJS = (function() {
     /**************************************/
     
     // Check for local options object.
-    console.log(hxLocalOptions);
     if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
 
     // This is the course-wide options file.
@@ -118,7 +117,9 @@ var HXGlobalJS = (function() {
         var allTimeLinks = $('a.hx-vidtime');
         allTimeLinks.on('click tap', function(){
             var thisTime = HXVL.hmsToTime($(this).attr('data-time'));
-            console.log(thisTime);
+            var vidNumber = $(this).attr('href').replace('#video', '');
+            HXVL.jumpToTime(vidNumber, thisTime);
+            logThatThing({'link starts video at time': seconds});
         });
 
         // Placeholder: Intro.js walkthroughs
@@ -413,9 +414,6 @@ var HXGlobalJS = (function() {
     // Prioritizes local options, then global options in /static/, then the ones in this file.
     // Does deep copy (clone)
     function setDefaultOptions(localOptions, globalOptions, fallbackOptions){
-        console.log(localOptions);
-        console.log(globalOptions);
-        console.log(fallbackOptions);
 
         var tempOptions = {};
         

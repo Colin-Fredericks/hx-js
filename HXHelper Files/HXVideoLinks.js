@@ -244,6 +244,20 @@ var HXVideoLinks = (function() {
         linkBeingShown[vidnumber] = false;
     }
     
+    // Jump to a particular time in a given video.
+    // Public function.
+    function jumpToTime(vidnumber, seconds){
+        var thisVideo = $('.video')[vidnumber - 1];
+        var state = $(thisVideo).data('video-player-state');
+        if (state.videoPlayer.isCued()){
+            state.videoPlayer.seekTo(seconds);
+            state.videoPlayer.play();
+        }else{
+            console.log('video not cued');
+        }
+    }
+    this.jumpToTime = jumpToTime;
+    
     
     // Which link SHOULD we be showing right now? Return -1 if none.
     // If we should be showing several, returns the first one.
@@ -289,6 +303,7 @@ var HXVideoLinks = (function() {
 
     // Converts hh:mm:ss to a number of seconds for time-based problems.
     // If it's passed a number, it just spits that back out as seconds.
+    // Public function.
     function hmsToTime(hms){
 
         hms = hms.toString();
