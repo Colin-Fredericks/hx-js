@@ -262,6 +262,18 @@ The javascript will turn this set of divs into a list of static links, for folks
 
 Up up down down left right left right B A
 
+### Jump To Time
+
+Write a link that looks like this:
+
+```
+<a href="#video1" class="hx-vidtime" data-time="0:34">Go to 34 seconds</a>
+```
+
+The pound sign at the beginning of the href is a pound sign. The *number* at the end of the href tells us which video you want on the page (the top one is #1). The time is given in hh:mm:ss format, or mm:ss, or just in seconds. (Any of those will work.)
+
+The link will jump you to the appropriate video, cue it up to the right time, and start it playing.
+
 ### Forum Tricks
 
 (docs coming)
