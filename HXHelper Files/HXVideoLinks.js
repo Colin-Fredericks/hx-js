@@ -125,8 +125,6 @@ var HXVideoLinks = (function() {
         
         linkTimer[vidnumber].sort(timeCompare);    // Uses a custom function to sort by time.
 
-        console.log(linkTimer[vidnumber]);
-    
     }
     
     

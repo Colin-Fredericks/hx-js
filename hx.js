@@ -72,13 +72,11 @@ var HXGlobalJS = (function() {
         .done(function(){
             logThatThing({'Course options': 'loaded'});
             var hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);
-            console.log(hxOptions);
             keepGoing(hxOptions);
         })
         .fail(function(){
             logThatThing({'Course options': 'default'});
             var hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);        
-            console.log(hxOptions);
             keepGoing(hxOptions);
     });
     
