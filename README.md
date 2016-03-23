@@ -266,7 +266,7 @@ Up up down down left right left right B A
 
 Write a link that looks like this:
 
-```
+```html
 <a href="#video1" class="hx-vidtime" data-time="0:34">Go to 34 seconds</a>
 ```
 
@@ -287,10 +287,6 @@ The link will jump you to the appropriate video, cue it up to the right time, an
 (coming)
 
 ### Audio Player
-
-(coming)
-
-### Skip To Time
 
 (coming)
 
