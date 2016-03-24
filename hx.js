@@ -117,7 +117,7 @@ var HXGlobalJS = (function() {
             var thisTime = HXVL.hmsToTime($(this).attr('data-time'));
             var vidNumber = $(this).attr('href').replace('#video', '');
             HXVL.jumpToTime(vidNumber, thisTime);
-            logThatThing({'link starts video at time': seconds});
+            logThatThing({'link starts video at time': thisTime});
         });
 
         // Placeholder: Intro.js walkthroughs
@@ -130,7 +130,7 @@ var HXGlobalJS = (function() {
 
         // UTC Clock (currently an iframe from TimeAndDate.com)
         if(hxOptions.showUTCClock){
-            var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" title="UTC Clock" frameborder="0" width="100" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>'
+            var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" title="UTC Clock" frameborder="0" width="100" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>';
             var hxClockSpot = $('.course-tabs');
             hxClockSpot.append(hxClockFrame);
         }
@@ -277,7 +277,7 @@ var HXGlobalJS = (function() {
         var allFootnotes = $('span[class^="hx-footnote"]');
     
         if(allFootnotes.length){
-            var myNumber, thisFootnote, footnoteComponents, destinationComponent;
+            var thisFootnote, thisNumber, thisTarget, footnoteComponents, destinationComponent;
         
             for(var i = 0; i < allFootnotes.length; i++){
 
@@ -432,7 +432,7 @@ var HXGlobalJS = (function() {
     (function($) {
 
         $.fn.hxKonami = function(callback, code) {
-            if(code == undefined) code = "38,38,40,40,37,39,37,39,66,65";
+            if(code === undefined) code = "38,38,40,40,37,39,37,39,66,65";
         
             return this.each(function() {
                 var kkeys = [];
@@ -447,7 +447,7 @@ var HXGlobalJS = (function() {
                     }
                 });
             });
-        }
+        };
 
     })(jQuery);
     
