@@ -126,6 +126,24 @@ table.hx-compact-table th {
 /************** End Block *******************/
 
 
+/***************************************/
+/* This block is for auto-TOCs
+/***************************************/
+
+.hx-autotoc {
+
+}
+
+.hx-autotoc h3 {
+
+}
+
+.hx-autotoc li {
+
+}
+
+/************** End Block *******************/
+
 
 /*********************************************/
 /* This block is for fancy headers
