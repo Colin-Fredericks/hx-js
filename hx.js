@@ -1,4 +1,4 @@
-var HXGlobalJS = (function() {
+var HXGlobalJS = (function(hxLocalOptions) {
 
 
     /***********************************************/
@@ -56,9 +56,6 @@ var HXGlobalJS = (function() {
     
     logThatThing({'HX.js': 'enabled'});
     logThatThing({'course log id': courseLogID});
-
-    // Check for local options object.
-    if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
 
     // This is the course-wide options file.
     // It overrides defaults in this file, and is overridden by local options.
@@ -472,8 +469,11 @@ if(typeof hxjsIsRunning === 'undefined'){
 
     var hxjsIsRunning = true;
 
+    // Check for local options object.
+    if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
+
     $(document).ready(function() {
-        HXGlobalJS();
+        HXGlobalJS(hxLocalOptions);
     });
 
 }
