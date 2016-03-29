@@ -5,6 +5,8 @@ HarvardX Standard Javascript and CSS
 
 This project collects a large number of javascript and css tricks that have been used in various HX courses and puts them all in one place so that they're easier to implement.
 
+We use require.js to preload some useful javascript while keeping the code modular.
+
 How to Implement HXJS in your course
 -----------
 
@@ -24,7 +26,7 @@ Also upload the three files from this repo:
 Once you've done that, copy the lines below into a Raw HTML element:
 
 ```html
-<script src="/static/hx.js"></script>
+<script data-main="/static/hx" src="/static/require.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/hx.css">
 ```
 
