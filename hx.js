@@ -67,6 +67,7 @@ var HXGlobalJS = (function(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick)
             
     /**************************************/
     // Links that pop up over videos.
+    // Like YouTube cards, but they can point anywhere.
     // Only invoking if we actually have videos.
     /**************************************/
 
