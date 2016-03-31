@@ -51,11 +51,19 @@ var HXGlobalJS = (function(hxLocalOptions) {
     var courseAssetURL = getAssetURL(window.location.href, 'complete');
     logThatThing(courseAssetURL);
 
+    // Are we in Studio? If so, stop trying to run anything. Just quit.
+    var courseSite = getAssetURL(window.location.href, 'site');
+    if (courseSite.indexOf('studio') > -1){
+        console.log('Running HXJS in studio is probably not great.');
+        return;
+    }
+
     var courseInfo = getCourseInfo(window.location.href);
     var courseLogID = courseInfo.institution + '.' + courseInfo.id + '_' + courseInfo.run;
     
     logThatThing({'HX.js': 'enabled'});
     logThatThing({'course log id': courseLogID});
+
 
     /***********************************************/
     // This loads the course-wide options file.
