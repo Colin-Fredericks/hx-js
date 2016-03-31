@@ -290,19 +290,10 @@ var HXGlobalJS = (function(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick)
     if(slider.length){
 
         logThatThing({'slider': 'found'});
+        slider.slick(hxOptions.slickOptions, function(){
+            logThatThing({'slider': 'created'});
+        });
 
-        // Wait for Slick to actually load, which can take a little while.
-        var waitForSlick = setInterval(function(){
-            try {
-                // In future, add loop to handle multiple sliders.
-                slider.slick(hxOptions.slickOptions);
-                clearInterval(waitForSlick);
-                logThatThing({'slider': 'created'});
-            }
-            catch(err){
-                logThatThing({'slider': 'waiting for Slick to load'});
-            }
-        }, 200);
     }
 
 
@@ -311,20 +302,13 @@ var HXGlobalJS = (function(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick)
     if(navslider.length && bigslider.length){
 
         logThatThing({'paired slider': 'found'});
+        navslider.slick(hxOptions.slickNavOptions, function(){
+            logThatThing({'NavSlider': 'created'});
+        });
+        bigslider.slick(hxOptions.slickBigOptions, function(){
+            logThatThing({'BigSlider': 'created'});
+        });
     
-        var waitForSlickNav = setInterval(function(){
-            try {
-                // In future, add loop to handle multiple pairs.         
-                navslider.slick(hxOptions.slickNavOptions);
-                bigslider.slick(hxOptions.slickBigOptions);
-            
-                clearInterval(waitForSlickNav);
-                logThatThing({'paired slider': 'created'});
-            }
-            catch(err){
-                logThatThing({'paired slider': 'waiting for Slick to load'});
-            }
-        }, 200);
     }
     
 
@@ -447,13 +431,17 @@ var HXGlobalJS = (function(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick)
 if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
 $(document).ready(function(hxLocalOptions) {
 
+    console.log('working');
+
     HXGlobalJS(hxLocalOptions);
     requirejs(['hxGlobalOptions', 'HXVideoLinks', 'slick'],
-        HXGlobalJS(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick),
+        function(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick){
+            HXGlobalJS(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick);
+        },
         function(err){
             var failedId = err.requireModules && err.requireModules[0];
             if (failedId === 'hxGlobalOptions') {
-                HXGlobalJS(hxLocalOptions, {}, HXVideoLinks, slick),
+                HXGlobalJS(hxLocalOptions, {}, HXVideoLinks, slick);
             }
         }
     );
