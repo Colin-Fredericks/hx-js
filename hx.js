@@ -57,49 +57,73 @@ var HXGlobalJS = (function(hxLocalOptions) {
     logThatThing({'HX.js': 'enabled'});
     logThatThing({'course log id': courseLogID});
 
-    // This is the course-wide options file.
+    /***********************************************/
+    // This loads the course-wide options file.
     // It overrides defaults in this file, and is overridden by local options.
+    /***********************************************/
+    var hxOptions = {};
     $.getScript(courseAssetURL + 'hxGlobalOptions.js')
         .done(function(){
             logThatThing({'Course options': 'loaded'});
-            var hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);
-            keepGoing(hxOptions);
+            hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);
         })
         .fail(function(){
             logThatThing({'Course options': 'default'});
-            var hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);        
-            keepGoing(hxOptions);
+            hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);        
     });
-        
+    
+    /**************************************/
+    // Load outside scripts. 
+    // Must be in Files & Uploads.
+    // Only do it if we need them.
+    // Continue when done.
+    /**************************************/
+    $.getMultiScripts = function(arr, path) {
+        var _arr = $.map(arr, function(scr) {
+            return $.getScript( (path||'') + scr );
+        });
+
+        _arr.push($.Deferred(function( deferred ){
+            $( deferred.resolve );
+        }));
+
+        return $.when.apply($, _arr);
+    }
+
+    var scriptArray = [];
+
+    // Do we load Slick for image sliders?
+    var slider = $('.hx-slider');
+    var navslider = $('.hx-navslider');
+    var bigslider = $('.hx-bigslider');
+    if(slider.length || (navslider.length && bigslider.length)){
+        logThatThing({'image_slider': 'found'});
+        scriptArray.push('slick.js');
+    }
+
+    // Do we load XHVideoLinks for... um... HarvardX video links?
+    // And potentially other stuff later on for videos?
+    var allVideos = $('.video');
+    if(allVideos.length){
+        logThatThing({'video': 'found'});
+        scriptArray.push('HXVideoLinks.js');
+        var HXVL;
+    }
+
+    $.getMultiScripts(scriptArray, courseAssetURL)
+        .done(function() {
+            logThatThing({'Loaded scripts': scriptArray});
+            keepGoing(hxOptions);
+        }).fail(function(){
+            logThatThing('Failed to load scripts');
+    })
+    
     // Once we have the options, we're ready to proceed.
     function keepGoing(hxOptions){
     
-        /**************************************/
-        // Load outside scripts. 
-        // Must be in Files & Uploads.
-        // Only do it if we need them.
-        /**************************************/
-    
-        // If there's a slider, load the Slick plugin.
-        var slider = $('.hx-slider');
-        var navslider = $('.hx-navslider');
-        var bigslider = $('.hx-bigslider');
-    
-        if(slider.length || (navslider.length && bigslider.length)){
-            $.getScript(courseAssetURL + 'slick.js', function(){
-                logThatThing({'Slick image slider': 'loaded'});
-            });
-        }
-    
-    
-        // In-Video links! As per the ones on Grape Ape.
-        var allVideos = $('.video');
-        var HXVL;
+        // Instantiating some of the functions we loaded earlier.
         if(allVideos.length){
-            $.getScript(courseAssetURL + 'HXVideoLinks.js', function(){
-                logThatThing({'HX Video Links': 'loaded'});
-                HXVL = new HXVideoLinks();
-            });
+            HXVL = new HXVideoLinks();
         }
     
         /**************************************/
@@ -307,44 +331,19 @@ var HXGlobalJS = (function(hxLocalOptions) {
         /***********************************/
 
         // Only do slider things if there are actually sliders to create.
+        // Would be good to handle multiple sliders later on.
         if(slider.length){
- 
-            logThatThing({'slider': 'found'});
-
-            // Wait for Slick to actually load, which can take a little while.
-            var waitForSlick = setInterval(function(){
-                try {
-                    // In future, add loop to handle multiple sliders.
-                    slider.slick(hxOptions.slickOptions);
-                    clearInterval(waitForSlick);
-                    logThatThing({'slider': 'created'});
-                }
-                catch(err){
-                    logThatThing({'slider': 'waiting for Slick to load'});
-                }
-            }, 200);
+            slider.slick(hxOptions.slickOptions);
+            logThatThing({'slider': 'created'});
         }
-
 
         // This set is for matched sliders, where one is the
         // thumbnails and one is the full-sized image and/or text.
+        // Would be good to handle multiple pairs later on.
         if(navslider.length && bigslider.length){
-    
-            logThatThing({'paired slider': 'found'});
-        
-            var waitForSlickNav = setInterval(function(){
-                try {
-                    // In future, add loop to handle multiple pairs.         
-                    navslider.slick(hxOptions.slickNavOptions);
-                    bigslider.slick(hxOptions.slickBigOptions);
-                
-                    clearInterval(waitForSlickNav);
-                    logThatThing({'paired slider': 'created'});
-                }
-                catch(err){
-                    logThatThing({'paired slider': 'waiting for Slick to load'});
-                }
-            }, 200);
+            navslider.slick(hxOptions.slickNavOptions);
+            bigslider.slick(hxOptions.slickBigOptions);
+            logThatThing({'paired slider': 'created'});
         }
     }
     
@@ -460,21 +459,13 @@ var HXGlobalJS = (function(hxLocalOptions) {
         console.log(JSON.stringify(ThatThing));
         Logger.log(courseLogID + '.hxjs', ThatThing);
     }
-
+    
 });
 
 
-// Make sure we're only running once.
-if(typeof hxjsIsRunning === 'undefined'){
+// Check for local options object.
+if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
 
-    var hxjsIsRunning = true;
-
-    // Check for local options object.
-    if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
-
-    $(document).ready(function() {
-        HXGlobalJS(hxLocalOptions);
-    });
-
-}
-
+$(document).ready(function() {
+    HXGlobalJS(hxLocalOptions);
+});
