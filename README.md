@@ -15,7 +15,7 @@ First, download [HXJS_Helper.zip](https://github.com/Colin-Fredericks/hx-js/raw/
 * [Video Links](https://github.com/Colin-Fredericks/edx-video-augments),
 * [Slick](https://kenwheeler.github.io/slick/)-style image sliders,
 * [intro.js](https://github.com/usablica/intro.js) text-based walkthroughs with some accessibility improvements,
-* and underscore.js, just in case we end up wanting it for something.
+* Underscore.js used to be included, but it's a standard part of edX, so we don't need it.
 
 Also upload the three files from this repo:
 
