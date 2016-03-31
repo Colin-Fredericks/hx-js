@@ -26,7 +26,7 @@ Also upload the three files from this repo:
 Once you've done that, copy the lines below into a Raw HTML element:
 
 ```html
-<script data-main="/static/hx" src="/static/require.js"></script>
+<script src="/static/hx.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/hx.css">
 ```
 
