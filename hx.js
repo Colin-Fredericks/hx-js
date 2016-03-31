@@ -443,26 +443,18 @@ var HXGlobalJS = (function(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick)
 });
 
 
-// Make sure we're only running once.
-if(typeof hxjsIsRunning === 'undefined'){
+// Check for local options object.
+if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
+$(document).ready(function(hxLocalOptions) {
 
-    var hxjsIsRunning = true;
-
-    // Check for local options object.
-    if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
-
-    $(document).ready(function(hxLocalOptions) {
-        HXGlobalJS(hxLocalOptions);
-        requirejs(['hxGlobalOptions', 'HXVideoLinks', 'slick'],
-            HXGlobalJS(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick),
-            function(err){
-                var failedId = err.requireModules && err.requireModules[0];
-                if (failedId === 'hxGlobalOptions') {
-                    HXGlobalJS(hxLocalOptions, {}, HXVideoLinks, slick),
-                }
+    HXGlobalJS(hxLocalOptions);
+    requirejs(['hxGlobalOptions', 'HXVideoLinks', 'slick'],
+        HXGlobalJS(hxLocalOptions, hxGlobalOptions, HXVideoLinks, slick),
+        function(err){
+            var failedId = err.requireModules && err.requireModules[0];
+            if (failedId === 'hxGlobalOptions') {
+                HXGlobalJS(hxLocalOptions, {}, HXVideoLinks, slick),
             }
-        );
-    });
-
-}
-
+        }
+    );
+});
