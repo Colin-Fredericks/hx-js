@@ -137,6 +137,7 @@ table.hx-compact-table th {
     padding: 3px;
     margin: 8px;
     font-size: 14px;
+    max-width: 300px;
 }
 
 .hx-autotoc h3 {
