@@ -44,6 +44,15 @@ var HXGlobalJS = (function(hxLocalOptions) {
             slidesToShow: 1,
             slidesToScroll: 1
         },
+        // Default options for pop-up problems
+        PUPOptions: {
+            width: 800,
+            effect: 'fade',
+            effectlength: 200,
+            myPosition: 'center',
+            atPosition: 'center',
+            ofTarget: window
+        }
     };
 
     /***********************************************/
@@ -112,13 +121,18 @@ var HXGlobalJS = (function(hxLocalOptions) {
         scriptArray.push('slick.js');
     }
 
-    // Do we load XHVideoLinks for... um... HarvardX video links?
-    // And potentially other stuff later on for videos?
+    // Do we load XHVideoLinks for... um... HarvardX video links.
+    // And HXPopUpProblems for pop-up problems.
     var allVideos = $('.video');
     if(allVideos.length){
         logThatThing({'video': 'found'});
         scriptArray.push('HXVideoLinks.js');
         var HXVL;
+        // Only do pop-up problems if there's a timer in place.
+        if(HXPUPTimer !== {}){
+            scriptArray.push('HXPopUpProblems.js');
+            var HXPUP;
+        }
     }
 
     $.getMultiScripts(scriptArray, courseAssetURL)
@@ -135,6 +149,10 @@ var HXGlobalJS = (function(hxLocalOptions) {
         // Instantiating some of the functions we loaded earlier.
         if(allVideos.length){
             HXVL = new HXVideoLinks();
+            // Only do pop-up problems if there's a timer in place.
+            if(HXPUPTimer !== {}){
+                HXPUP = new HXPopUpProblems(HXpopUpOptions, HXPUPTimer);
+            }
         }
     
         /**************************************/
@@ -156,6 +174,7 @@ var HXGlobalJS = (function(hxLocalOptions) {
 
 
         // Placeholder: Pop-up assessments
+        
     
         /**************************************/
         // Automatic Table of Contents maker.
@@ -224,7 +243,9 @@ var HXGlobalJS = (function(hxLocalOptions) {
         }
 
 
+        /**************************************/
         // UTC Clock (currently an iframe from TimeAndDate.com)
+        /**************************************/
         if(hxOptions.showUTCClock){
             var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" title="UTC Clock" frameborder="0" width="100" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>';
             var hxClockSpot = $('.course-tabs');
@@ -256,11 +277,13 @@ var HXGlobalJS = (function(hxLocalOptions) {
 
 
         /**************************************/
-        // Stuff for a highlight toggle button.
+        // Highlight toggle button.
+        // Create a button with the class "highlighter#"
+        // and spans with the class "highlight#"
+        // where the # is a number.
         /**************************************/
 
-        // Syntax: Create a button with the class "highlighter" and spans with the class "highlight"
-        $( '[class^=hx-highlighter]').on('click tap', function() {
+        $('[class^=hx-highlighter]').on('click tap', function() {
         
             var myNumber = getClassNumber(this.className, 'hx-highlighter');
             
@@ -541,6 +564,9 @@ var HXGlobalJS = (function(hxLocalOptions) {
 
 // Check for local options object.
 if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
+
+// Check for local timers for pop-up problems.
+if (typeof HXPUPTimer === 'undefined') { var HXPUPTimer = {}; }
 
 $(document).ready(function() {
     HXGlobalJS(hxLocalOptions);
