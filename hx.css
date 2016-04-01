@@ -79,6 +79,15 @@ p > small.hx-caption {
     font-size: small !important;
 }
 
+/* Larger UL and OL left-hand margins. */
+.xblock ul {
+    margin-left: 1em !important;
+}
+
+.xblock ol {
+    margin-left: 1em !important;
+}
+
 /* Add image HRs */
 /*
 hr.hx-fancy {
@@ -150,6 +159,7 @@ table.hx-compact-table th {
     list-style-type: none !important;
     padding-top: 0px !important;
     padding-bottom: 0px !important;
+    padding-left: 0px !important;
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
