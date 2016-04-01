@@ -1,4 +1,4 @@
-var HXGlobalJS = (function(hxLocalOptions) {
+var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
 
     /***********************************************/
@@ -8,16 +8,17 @@ var HXGlobalJS = (function(hxLocalOptions) {
     /***********************************************/
 
     var hxDefaultOptions = {
+        // Show the UTC clock
         showUTCClock: false,
+        // Open the discussion right away
         hxOpenDiscussion: false,
+        // Table of Contents
+        makeTOC: false,
 
         // Highlighter: Yellow highlights that start turned off and go back to transparent afterward.
         highlightColor: '#ff0',
         highlightBackground: 'rgba(0,0,0,0)',
         highlightState: true,
-        
-        // Table of Contents
-        makeTOC: true,
 
         slickOptions: {
             arrows: true,
@@ -129,7 +130,7 @@ var HXGlobalJS = (function(hxLocalOptions) {
         scriptArray.push('HXVideoLinks.js');
         var HXVL;
         // Only do pop-up problems if there's a timer in place.
-        if(HXPUPTimer !== {}){
+        if(HXPUPTimer.length !== 0){
             scriptArray.push('HXPopUpProblems.js');
             var HXPUP;
         }
@@ -145,13 +146,16 @@ var HXGlobalJS = (function(hxLocalOptions) {
     
     // Once we have the options, we're ready to proceed.
     function keepGoing(hxOptions){
-    
-        // Instantiating some of the functions we loaded earlier.
+
+        /**************************************/
+        // If we have videos, instantiate the functions
+        // that handle pop-up links and problems.
+        /**************************************/
         if(allVideos.length){
             HXVL = new HXVideoLinks();
             // Only do pop-up problems if there's a timer in place.
-            if(HXPUPTimer !== {}){
-                HXPUP = new HXPopUpProblems(HXpopUpOptions, HXPUPTimer);
+            if(HXPUPTimer.length !== 0){
+                HXPUP = new HXPopUpProblems(hxDefaultOptions.PUPOptions, HXPUPTimer);
             }
         }
     
@@ -164,7 +168,7 @@ var HXGlobalJS = (function(hxLocalOptions) {
         
         var allTimeLinks = $('a.hx-vidtime');
         allTimeLinks.on('click tap', function(){
-            var thisTime = HXVL.hmsToTime($(this).attr('data-time'));
+            var thisTime = HXVL.hmsToTime($(this).attr('data-time'));   // Can't rely on HXVL's hmsToTime. Need to have it here.
             var vidNumber = $(this).attr('href').replace('#video', '');
             HXVL.jumpToTime(vidNumber, thisTime);
             logThatThing({'link starts video at time': thisTime});
@@ -173,9 +177,6 @@ var HXGlobalJS = (function(hxLocalOptions) {
         // Placeholder: Intro.js walkthroughs
 
 
-        // Placeholder: Pop-up assessments
-        
-    
         /**************************************/
         // Automatic Table of Contents maker.
         // Uses h3 and h4 elements, links them up.
@@ -566,8 +567,8 @@ var HXGlobalJS = (function(hxLocalOptions) {
 if (typeof hxLocalOptions === 'undefined') { var hxLocalOptions = {}; }
 
 // Check for local timers for pop-up problems.
-if (typeof HXPUPTimer === 'undefined') { var HXPUPTimer = {}; }
+if (typeof HXPUPTimer === 'undefined') { var HXPUPTimer = []; }
 
 $(document).ready(function() {
-    HXGlobalJS(hxLocalOptions);
+    HXGlobalJS(hxLocalOptions, HXPUPTimer);
 });
