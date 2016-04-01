@@ -15,6 +15,9 @@ var HXGlobalJS = (function(hxLocalOptions) {
         highlightColor: '#ff0',
         highlightBackground: 'rgba(0,0,0,0)',
         highlightState: true,
+        
+        // Table of Contents
+        makeTOC: true,
 
         slickOptions: {
             arrows: true,
@@ -154,7 +157,71 @@ var HXGlobalJS = (function(hxLocalOptions) {
 
         // Placeholder: Pop-up assessments
     
-        // Placeholder: TOC maker
+        /**************************************/
+        // Automatic Table of Contents maker.
+        // Uses h3 and h4 elements, links them up.
+        // Set hxOptions.makeTOC = true to use.
+        /**************************************/
+        
+        if(hxOptions.makeTOC){
+            $('#seq_content .xblock:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
+            // Using text instead of objects to make nesting easier.
+            var autoTOC = '<h3>Table of Contents</h3><ul>';
+
+            // Get all the h3 and h4 elements on the page.
+            var allHeaders = $('h3, h4').filter(function() {
+                // Remove anything that's hidden away.
+                return $(this).is(':visible');
+            });;
+
+            var TOCList = $('#autoTOC ul');
+            
+            // For each header, add it to the list and make a link.
+            allHeaders.each(function(i){
+                // Set the id of the element to link to.
+                $(this).attr('id','TOCLink'+i);
+                
+                var TOCEntry = $(this).text();
+                var TOCLevel;
+                if($(this).is('h3')){
+                    TOCLevel = 3;
+                    if($(allHeaders[i-1]).is('h3') || i==0){
+                        autoTOC += '<li class="autotoc'
+                            + TOCLevel
+                            + '"><a href="#TOCLink'+i+'">'
+                            + TOCEntry 
+                            + '</a></li>';
+                    } else if($(allHeaders[i-1]).is('h4')){
+                        autoTOC += '</ul></li><li class="autotoc'
+                            + TOCLevel
+                            + '"><a href="#TOCLink'+i+'">' 
+                            + TOCEntry 
+                            + '</a></li>';
+                    }
+                }
+                if($(this).is('h4')){
+                    TOCLevel = 4;
+                    if($(allHeaders[i-1]).is('h3')){
+                        if(i>0){ autoTOC.slice(0, autoTOC.length - 5); }
+                        autoTOC += '<ul><li class="autotoc'
+                            + TOCLevel
+                            + '"><a href="#TOCLink'+i+'">' 
+                            + TOCEntry 
+                            + '</a></li>';
+                    } else if($(allHeaders[i-1]).is('h4')){
+                        autoTOC += '<li class="autotoc'
+                            + TOCLevel
+                            + '"><a href="#TOCLink'+i+'">' 
+                            + TOCEntry 
+                            + '</a></li>';
+                    }
+                }
+            });
+            autoTOC += '</ul>';
+            
+            // Done - add it all to the DOM.
+            $('#autoTOC').append(autoTOC);
+        }
 
 
         // UTC Clock (currently an iframe from TimeAndDate.com)
@@ -333,6 +400,7 @@ var HXGlobalJS = (function(hxLocalOptions) {
             }
         
         }
+
 
         /***********************************/
         // Stuff for the Slick image slider.
