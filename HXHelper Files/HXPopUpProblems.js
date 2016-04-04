@@ -204,7 +204,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
             }
             catch(err){
                 // If this fails, shut down this loop.
-                // it's probably because we moved to a new tab.
+                // It's probably because we moved to a new tab.
                 clearInterval(timeChecker);
             }
 			time = state.videoPlayer.currentTime;
