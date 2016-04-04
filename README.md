@@ -30,9 +30,17 @@ Once you've done that, copy the lines below into a Raw HTML element:
 <link rel="stylesheet" type="text/css" href="/static/hx.css">
 ```
 
-That will enable hx.js for all components on that page. It should be doing exactly nothing so far.
+Or, if you're using the minified versions:
 
-To make things happen, you'll need to add specific classes to your HTML, and in some cases make little changes to your hxGlobalOptions.js file. Here's the full list of awesome stuff:
+```html
+<script src="/static/hx-min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/hx-min.css">
+```
+
+
+That will enable hx.js for all components on that page. It should be doing exactly nothing so far. You can test whether it's working by entering the Konami Code.
+
+To make other things happen, you'll need to add specific classes to your HTML, and in some cases make little changes to your hxGlobalOptions.js file. Here's the full list of awesome stuff:
 
 ### Simple Appearance Changes
 
