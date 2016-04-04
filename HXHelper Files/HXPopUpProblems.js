@@ -199,7 +199,14 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	
 		var timeChecker = setInterval(function(){
 			
-			state.videoPlayer.update();		// Forced update of time. Required for Safari.
+            try{
+                state.videoPlayer.update();        // Forced update of time. Required for Safari.
+            }
+            catch(err){
+                // If this fails, shut down this loop.
+                // it's probably because we moved to a new tab.
+                clearInterval(timeChecker);
+            }
 			time = state.videoPlayer.currentTime;
 
 			if(problemCounter < HXPUPTimer.length){
