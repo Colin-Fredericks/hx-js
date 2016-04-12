@@ -132,7 +132,7 @@ table.hx-compact-table th {
     padding: 3px !important;
 }
 
-/************** End Block *******************/
+/************** End sidebar table Block *******************/
 
 
 /***************************************/
@@ -169,7 +169,7 @@ table.hx-compact-table th {
     margin: 1px !important;
 }
 
-/************** End Block *******************/
+/************** End auto-TOC Block *******************/
 
 
 /*********************************************/
@@ -206,7 +206,7 @@ h4.hx-superbold {
     width: 600px;
 }
 
-/************** End Block *******************/
+/************** End fancy-header Block *******************/
 
 
 /*********************************************/
@@ -268,7 +268,7 @@ h4.hx-superbold {
     background-image: none;
 }
 
-/************** End Block *******************/
+/************** End pretty-box Block *******************/
 
 
 /*********************************************/
@@ -311,7 +311,7 @@ h4.hx-superbold {
 .slick-prev:before, .slick-next:before { 
     color: #189 !important;
 }
-/************** End Block *******************/
+/************** End Slick Block *******************/
 
 
 /***************************************/
@@ -450,4 +450,4 @@ h4.hx-superbold {
 	font-weight: bold !important;
 }
 
-/*********** End Block **********/
+/*********** End Video Link Block **********/
