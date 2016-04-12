@@ -1,3 +1,4 @@
+// This version is designed to be called by hx.js
 // Global variable HXPUPTimer is defined in the HTML.
 
 var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
@@ -348,10 +349,5 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 			return 1;
 		return 0;
 	}
-	
 
-
-});
-
-$(document).ready(function(){
 });
