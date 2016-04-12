@@ -28,15 +28,13 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	// Log play/pause events from the player.
 	// Also set the play/pause external control properly.
 	video.on('pause', function () {
-		Logger.log("harvardx.video_embedded_problems", {"video_event": "pause"});
-		console.log('pause');
+		logThatThing({"video_event": "pause"});
 		$('#playpauseicon').html('&#8227;');
 		$('#playpauseword').html('Play');
 	});
 
 	video.on('play', function () {
-		Logger.log("harvardx.video_embedded_problems", {"video_event": "play"});
-		console.log('play');
+		logThatThing({"video_event": "play"});
 		// Also set the play/pause external control properly.
 		$('#playpauseicon').html('||'); // Need a better-looking pause icon.
 		$('#playpauseword').html('Pause');
@@ -89,8 +87,10 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		if(skipEmAll){
 			$('#sunmoon').html('&#9790;');
 			$('#onoff').html('Problems are Off');
-			Logger.log('harvardx.video_embedded_problems', {'reload_event': 'turn_problems_off', 'time': time});
-			console.log('problems are off after reload');
+			logThatThing({
+			    'reload_event': 'turn_problems_off',
+			    'time': time
+			});
 		}
 
 		// Let's avoid situations where we're faced with a question
@@ -123,8 +123,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		$('#popUpReset').on('click tap', function(){
 			updateProblemCounter(0);
 			ISaidGoTo(0);
-			Logger.log('harvardx.video_embedded_problems', {'control_event': 'reset'});
-			console.log('reset counter and time to zero');
+			logThatThing({'control_event': 'reset counter and set t=0'});
 			
 			// If problems are currently on, turn them off for two seconds after we go back.
 			// This addresses a bug that appears in Mobile Safari.
@@ -144,13 +143,11 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 			if(problemCounter > 1){
 				var newTime = HXPUPTimer[problemCounter-2].time + 1;
 				ISaidGoTo(newTime);
-				Logger.log('harvardx.video_embedded_problems', {'control_event': 'back_one'});
-				console.log('going back one problem');
+				logThatThing({'control_event': 'go back one'});
 			}else{
 				updateProblemCounter(0);
 				ISaidGoTo(0);
-				Logger.log('harvardx.video_embedded_problems', {'control_event': 'back_one_to_start'});
-				console.log('going back to beginning');
+				logThatThing({'control_event': 'go back one to start'});
 			}
 		});
 		
@@ -161,14 +158,12 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 				state.videoPlayer.pause();
 				$('#playpauseicon').html('&#8227;');
 				$('#playpauseword').html('Play');
-				Logger.log('harvardx.video_embedded_problems', {'control_event': 'play'});
-				console.log('play from exterior controls');
+				logThatThing({'control_event': 'play'});
 			}else{
 				state.videoPlayer.play();
 				$('#playpauseicon').html('||');
 				$('#playpauseword').html('Pause');
-				Logger.log('harvardx.video_embedded_problems', {'control_event': 'pause'});
-				console.log('pause from exterior controls');
+				logThatThing({'control_event': 'pause'});
 			}
 		});
 				
@@ -180,15 +175,19 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 				localStorage[state.id + '-skip'] = 'false';
 				$('#sunmoon').html('&#9788;');
 				$('#onoff').html('Problems are On');
-				Logger.log('harvardx.video_embedded_problems', {'control_event': 'turn_problems_on', 'time': time});
-				console.log('no longer skipping all problems from time ' + time);
+				logThatThing({
+				    'control_event': 'turn_problems_on',
+				    'time': time
+				});
 			}else{
 				skipEmAll = true;
 				localStorage[state.id + '-skip'] = 'true';
 				$('#sunmoon').html('&#9790;');
 				$('#onoff').html('Problems are Off');
-				Logger.log('harvardx.video_embedded_problems', {'control_event': 'turn_problems_off', 'time': time});
-				console.log('skipping all problems from time ' + time);
+				logThatThing({
+				    'control_event': 'turn_problems_off',
+				    'time': time
+				});
 			}
 		});
 				
@@ -250,8 +249,11 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		
 		if(includenext){dialogDiv = nextDiv;}
 		
-		Logger.log('harvardx.video_embedded_problems', {'display_problem': title, 'problem_id': problemID,'time': time});
-		console.log('displaying problem: ' + title + ' ' + problemID);
+		logThatThing({
+		    'display_problem': title,
+		    'problem_id': problemID,
+		    'time': time
+		});
 		
 		// Make a modal dialog out of the chosen problem.
 		dialogDiv.dialog({
@@ -295,16 +297,14 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 			close: function(){ 
 				state.videoPlayer.play(); 
 				if(includenext){tempDiv.remove();}  // We added it, we should erase it.
-				Logger.log('harvardx.video_embedded_problems', {'unusual_event': 'dialog_closed_unmarked'});
-				console.log('dialog closed');  // Should be pretty rare. I took out the 'close' button.
+				logThatThing({'unusual_event': 'dialog closed unmarked'}); // Should be pretty rare. I took out the 'close' button.
 			}
 		});
 	}
 	
 	// Log the destruction of the dialog and play the video if there are no more dialogs up.
 	function dialogDestroyed(message){
-		Logger.log('harvardx.video_embedded_problems', {'control_event': message});
-		console.log(message);
+		logThatThing({'control_event': message});
 		$('input.check.Check').removeAttr('style');  // un-blue the check button.
 		problemsBeingShown--;
 		if(problemsBeingShown < 1){
@@ -314,8 +314,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	
 	// This resets the problem counter to match the time.
 	function clearOlderPopUps(soughtTime){
-		Logger.log('harvardx.video_embedded_problems', {'control_event': 'seek_to_' + soughtTime});
-		console.log('sought to time ' + soughtTime);
+		logThatThing({'control_event': 'seek to ' + soughtTime});
 		updateProblemCounter(0);  // Resetting fresh.
 		for(var i = 0; i < HXPUPTimer.length; i++){
 			if(soughtTime > HXPUPTimer[i].time){
