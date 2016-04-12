@@ -21,7 +21,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
         }
     }
 	
-	// Sort the HXPUPTimer by time.
+	// Sort the pop-up timer.
 	HXPUPTimer.sort(timeCompare);	// Uses a custom function to sort by time.
 
     
@@ -339,29 +339,6 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		problemCounter = number;
 		localStorage[state.id + '-counter'] = number.toString();
 		console.log('counter set to ' + problemCounter);
-	}
-
-	// Converts hh:mm:ss to a number of seconds for time-based problems.
-	// If it's passed a number, it just spits that back out as seconds.
-	function hmsToTime(hms){
-
-		hms = hms.toString();
-
-		var hmsArray = hms.split(':');
-		var time = 0;
-	
-		if(hmsArray.length == 3){
-			time = 3600*parseInt(hmsArray[0]) + 60*parseInt(hmsArray[1]) + Number(hmsArray[2]);
-		}
-		else if(hmsArray.length == 2){
-			time = 60*parseInt(hmsArray[0]) + Number(hmsArray[1]);
-		}
-	
-		else if(hmsArray.length == 1){
-			time = Number(hmsArray[0]);
-		}
-	
-		return time;
 	}
 
 	// This is a sorting function for my timer.

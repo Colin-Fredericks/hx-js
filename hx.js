@@ -168,7 +168,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         
         var allTimeLinks = $('a.hx-vidtime');
         allTimeLinks.on('click tap', function(){
-            var thisTime = HXVL.hmsToTime($(this).attr('data-time'));   // Can't rely on HXVL's hmsToTime. Need to have it here.
+            var thisTime = hmsToTime($(this).attr('data-time'));
             var vidNumber = $(this).attr('href').replace('#video', '');
             HXVL.jumpToTime(vidNumber, thisTime);
             logThatThing({'link starts video at time': thisTime});
@@ -554,11 +554,40 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     });
 
 
+    // Converts hh:mm:ss to a number of seconds for time-based problems.
+    // If it's passed a number, it just spits that back out as seconds.
+    // Public function.
+    function hmsToTime(hms){
+
+        hms = hms.toString();
+
+        var hmsArray = hms.split(':');
+        var time = 0;
+    
+        if(hmsArray.length == 3){
+            time = 3600*parseInt(hmsArray[0]) + 60*parseInt(hmsArray[1]) + Number(hmsArray[2]);
+        }
+        else if(hmsArray.length == 2){
+            time = 60*parseInt(hmsArray[0]) + Number(hmsArray[1]);
+        }
+    
+        else if(hmsArray.length == 1){
+            time = Number(hmsArray[0]);
+        }
+    
+        return time;
+    }
+    
+    this.hmsToTime = hmsToTime;
+
+
     // Send logs both to the console and to the official edX logamajig.
     function logThatThing(ThatThing){
         console.log(JSON.stringify(ThatThing));
         Logger.log(courseLogID + '.hxjs', ThatThing);
     }
+    
+    this.logThatThing = logThatThing;
     
 });
 
