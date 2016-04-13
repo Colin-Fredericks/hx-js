@@ -29,15 +29,15 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	// Also set the play/pause external control properly.
 	video.on('pause', function () {
 		logThatThing({"video_event": "pause"});
-		$('#playpauseicon').html('&#8227;');
-		$('#playpauseword').html('Play');
+		$('#hx-playpauseicon').html('&#8227;');
+		$('#hx-playpauseword').html('Play');
 	});
 
 	video.on('play', function () {
 		logThatThing({"video_event": "play"});
 		// Also set the play/pause external control properly.
-		$('#playpauseicon').html('||'); // Need a better-looking pause icon.
-		$('#playpauseword').html('Pause');
+		$('#hx-playpauseicon').html('||'); // Need a better-looking pause icon.
+		$('#hx-playpauseword').html('Pause');
 	});
 	
 	// Check to see whether the video is ready before continuing.
@@ -81,8 +81,8 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		skipEmAll = (localStorage[state.id + '-skip'] === 'true');
 		// If so, let's update the button.
 		if(skipEmAll){
-			$('#sunmoon').html('&#9790;');
-			$('#onoff').html('Problems are Off');
+			$('#hx-sunmoon').html('&#9790;');
+			$('#hx-onoff').html('Problems are Off');
 			logThatThing({
 			    'reload_event': 'turn_problems_off',
 			    'time': time
@@ -114,7 +114,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 			
 		// Let someone go through the problems again if they want.
 		// Also useful for debugging.
-		$('#popUpReset').on('click tap', function(){
+		$('#hx-popUpReset').on('click tap', function(){
 			updateProblemCounter(0);
 			ISaidGoTo(0);
 			logThatThing({'control_event': 'reset counter and set t=0'});
@@ -133,7 +133,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		});
 		
 		// Go back to one second after the previous problem.
-		$('#backOneProblem').on('click tap', function(){
+		$('#hx-backOneProblem').on('click tap', function(){
 			if(problemCounter > 1){
 				var newTime = HXPUPTimer[problemCounter-2].time + 1;
 				ISaidGoTo(newTime);
@@ -147,28 +147,28 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		
   		
 		// Play or pause the video
-		$('#popUpPlayPause').on('click tap', function(){
+		$('#hx-popUpPlayPause').on('click tap', function(){
 			if(state.videoPlayer.isPlaying()){
 				state.videoPlayer.pause();
-				$('#playpauseicon').html('&#8227;');
-				$('#playpauseword').html('Play');
+				$('#hx-playpauseicon').html('&#8227;');
+				$('#hx-playpauseword').html('Play');
 				logThatThing({'control_event': 'play'});
 			}else{
 				state.videoPlayer.play();
-				$('#playpauseicon').html('||');
-				$('#playpauseword').html('Pause');
+				$('#hx-playpauseicon').html('||');
+				$('#hx-playpauseword').html('Pause');
 				logThatThing({'control_event': 'pause'});
 			}
 		});
 				
 		// Let someone turn the pop-up questions on and off.
 		// Give visual indication by changing the button.
-		$('#problemToggle').on('click tap', function(){
+		$('#hx-problemToggle').on('click tap', function(){
 			if(skipEmAll){
 				skipEmAll = false;
 				localStorage[state.id + '-skip'] = 'false';
-				$('#sunmoon').html('&#9788;');
-				$('#onoff').html('Problems are On');
+				$('#hx-sunmoon').html('&#9788;');
+				$('#hx-onoff').html('Problems are On');
 				logThatThing({
 				    'control_event': 'turn_problems_on',
 				    'time': time
@@ -176,8 +176,8 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 			}else{
 				skipEmAll = true;
 				localStorage[state.id + '-skip'] = 'true';
-				$('#sunmoon').html('&#9790;');
-				$('#onoff').html('Problems are Off');
+				$('#hx-sunmoon').html('&#9790;');
+				$('#hx-onoff').html('Problems are Off');
 				logThatThing({
 				    'control_event': 'turn_problems_off',
 				    'time': time

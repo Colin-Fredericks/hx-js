@@ -484,15 +484,15 @@ h4.hx-superbold {
 	text-shadow: none;
 }
 
-span.VQControls {
+span.hx-VQControls {
 	font-size: 150%;
 }
 
-span#onoff {
+span#hx-onoff {
 	font-weight: bold;
 }
 
-span#playpauseword{
+span#hx-playpauseword{
 	font-weight: bold;
 }
 
