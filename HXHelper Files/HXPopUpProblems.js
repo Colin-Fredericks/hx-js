@@ -11,6 +11,8 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	var skipEmAll;
 	var protectedTime = false;
 	var problemsBeingShown = 0;
+	
+	console.log('HX Pop-Ups running');
 
 
 	// Convert mm:ss format in HXPUPTimer to seconds.
@@ -259,7 +261,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		// Make a modal dialog out of the chosen problem.
 		dialogDiv.dialog({
 			modal: true,
-			dialogClass: "no-close",
+			dialogClass: "hx-popup no-close",
 			resizable: true,
 			width: HXpopUpOptions.width,
 			show: { 

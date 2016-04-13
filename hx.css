@@ -451,3 +451,50 @@ h4.hx-superbold {
 }
 
 /*********** End Video Link Block **********/
+
+
+
+/***************************************/
+/* This block is for pop-up problems.
+/***************************************/
+
+.hx-popup .ui-widget-overlay {
+   background: #666;
+   opacity: .30;
+   filter: Alpha(Opacity=30);
+   position:fixed;
+}
+
+.hx-popup.ui-dialog { 
+	z-index: 100001 !important;
+}
+
+.hx-popup .no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.hx-popup .ui-dialog-titlebar {
+	background: linear-gradient(to top, #ccc 0%,#bbb 20%,#eee 100%);
+	border: 1px solid #AAA;
+}
+
+.hx-popup .answeredButton {
+	background: linear-gradient(to top, #9fd 0%,#7db 20%,#afd 100%);
+	background-color:#afc;
+	text-shadow: none;
+}
+
+span.VQControls {
+	font-size: 150%;
+}
+
+span#onoff {
+	font-weight: bold;
+}
+
+span#playpauseword{
+	font-weight: bold;
+}
+
+/************** End Pop-Up Problems Block *******************/
+
