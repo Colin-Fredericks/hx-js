@@ -39,6 +39,7 @@ var HXVideoLinks = (function() {
             
             try {
                 var state = thisVid.data('video-player-state'); // Sometimes this fails and that's ok.
+                checkJumpFromOldPage();
 
                 if(typeof state.videoPlayer !== 'undefined'){
                     if (state.videoPlayer.isCued()){
@@ -264,6 +265,28 @@ var HXVideoLinks = (function() {
     this.jumpToTime = jumpToTime;
     
     
+    function checkJumpFromOldPage(){
+
+        // If we have a jump-to-time link pending for this page, 
+        // go there and start the video playing.
+        if(localStorage['HXVideoLinkGo'] === "true"){
+            if(window.location.href.indexOf(localStorage['HXVideoLinkUnit']) != -1){
+                logThatThing({'Jumping to video': {
+                    'unit': localStorage['HXVideoLinkUnit'],
+                    'video number': localStorage['HXVideoLinkNumber'],
+                    'time':localStorage['HXVideoLinkTime']
+                    }
+                });
+                $('#video' + localStorage['HXVideoLinkNumber']).scrollIntoView();
+                HXVL.jumpToTime(localStorage['HXVideoLinkNumber'], localStorage['HXVideoLinkTime']);
+            }
+        }else{
+            console.log('No video link to jump to.');
+        }
+
+        localStorage['HXVideoLinkGo'] = "false";
+    }
+
     // Which link SHOULD we be showing right now? Return -1 if none.
     // If we should be showing several, returns the first one.
     function currentLink(t, vidnumber){
@@ -305,5 +328,6 @@ var HXVideoLinks = (function() {
         return 0;
     }
     
+    return true;
 
 });

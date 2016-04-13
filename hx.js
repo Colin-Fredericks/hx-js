@@ -153,6 +153,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         /**************************************/
         if(allVideos.length){
             HXVL = new HXVideoLinks();
+
             // Only do pop-up problems if there's a timer in place.
             if(HXPUPTimer.length !== 0){
                 HXPUP = new HXPopUpProblems(hxDefaultOptions.PUPOptions, HXPUPTimer);
@@ -163,18 +164,42 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Jump to time in video on this page.
         // Make a link like <a href="#video1" data-time="mm:ss">link text</a>
         // The # is actually a pound sign for anchor link. 
-        // Set the number to which video you want.
+        // Set the number to which video you want. Top one is 1.
         /**************************************/
         
         var allTimeLinks = $('a.hx-vidtime');
         allTimeLinks.on('click tap', function(){
             var thisTime = hmsToTime($(this).attr('data-time'));
-            var vidNumber = $(this).attr('href').replace('#video', '');
-            HXVL.jumpToTime(vidNumber, thisTime);
-            logThatThing({'link starts video at time': thisTime});
+            var href = $(this).attr('href');
+            var anchor = href.slice(href.indexOf('#video'));
+            var vidNumber = anchor.replace('#video', '');
+            var unitNumber = href.slice(href.indexOf('/jump_to_id/') + 13, href.indexOf('#video'))
+            var startsWithHash = href.indexOf('#') === 0 ? true : false;
+            
+            // If the href starts with a pound sign, go on this page.
+            if(startsWithHash){
+                HXVL.jumpToTime(vidNumber, thisTime);
+                logThatThing({'link starts video at time': thisTime});
+            }
+            // If not, stash the destination in HTML5 Local Storage
+            // so that we can retrieve it on the next page.
+            else{
+                localStorage['HXVideoLinkGo'] = "true";
+                localStorage['HXVideoLinkUnit'] = unitNumber;
+                localStorage['HXVideoLinkNumber'] = vidNumber;
+                localStorage['HXVideoLinkTime'] = thisTime;
+                logThatThing({'storing video info for jump': {
+                    'unit': unitNumber,
+                    'video number': vidNumber,
+                    'time':thisTime
+                    }
+                });
+            }
         });
+        
 
         // Placeholder: Intro.js walkthroughs
+        // Still trying to figure out how to place these properly.
 
 
         /**************************************/

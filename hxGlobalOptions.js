@@ -18,5 +18,3 @@ var hxGlobalOptions = {
     slickBigOptions: {},
     PUPOptions: {}
 };
-
-

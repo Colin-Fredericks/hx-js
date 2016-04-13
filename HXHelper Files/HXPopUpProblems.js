@@ -341,4 +341,6 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		return 0;
 	}
 
+    return true;
+
 });
