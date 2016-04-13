@@ -11,9 +11,6 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	var skipEmAll;
 	var protectedTime = false;
 	var problemsBeingShown = 0;
-	
-	console.log('HX Pop-Ups running');
-
 
 	// Convert mm:ss format in HXPUPTimer to seconds.
 	for (var i = 0; i < HXPUPTimer.length; i++){
@@ -49,10 +46,8 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		state = video.data('video-player-state');	// Sometimes this fails and that's ok.
 
 		if (state.videoPlayer.isCued()){
-			console.log('video data loaded');
 			clearInterval(waitForVid);
 			var pause = setTimeout(function(){
-				console.log('done waiting');
 				setUpData();
 				setUpControls();
 				mainLoop();
@@ -62,8 +57,6 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	
 	// Checks local storage and gets data from the video.
 	function setUpData(){
-	
-		console.log('setting up data');
 	
 		// Get the video data.
 		video =  $('.video');
@@ -113,8 +106,6 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	// Makes the buttons work and sets up event handlers.
 	function setUpControls(){		
 		
-		console.log('setting up controls');
-	
 		// If they seek to a specific position, set the problem counter appropriately 
 		// so that earlier problems don't gang up on them.
 		video.on('seek', function(event, ui) {
@@ -290,7 +281,6 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 				if(includenext){
 					tempDiv = problemDiv.clone();
 					dialogDiv.prepend(tempDiv);
-					console.log('pushing in front');
 				}
 				// Highlight various controls.
 				$('span.ui-button-text:contains("Done")').addClass('answeredButton');
@@ -322,7 +312,6 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		for(var i = 0; i < HXPUPTimer.length; i++){
 			if(soughtTime > HXPUPTimer[i].time){
 				updateProblemCounter(i+1);
-				console.log('new problem counter: ' + problemCounter);
 			}else{
 				break;
 			}
@@ -333,14 +322,14 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	function ISaidGoTo(thisTime){
 		time = thisTime;
 		state.videoPlayer.seekTo(thisTime);
-		console.log('I said go to ' + thisTime);
+		logThatThing({'seek_to': thisTime});
 	}
 	
 	// Keep the counter and the local storage in sync.
 	function updateProblemCounter(number){
 		problemCounter = number;
 		localStorage[state.id + '-counter'] = number.toString();
-		console.log('counter set to ' + problemCounter);
+		logThatThing({'problem_counter_set': problemCounter});
 	}
 
 	// This is a sorting function for my timer.
