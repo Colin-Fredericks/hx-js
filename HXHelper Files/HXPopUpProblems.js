@@ -321,7 +321,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	// I blame multiple Javascript timing issues.
 	function ISaidGoTo(thisTime){
 		time = thisTime;
-		state.videoPlayer.seekTo(thisTime);
+		state.videoPlayer.player.seekTo(thisTime);
 		logThatThing({'seek_to': thisTime});
 	}
 	

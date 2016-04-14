@@ -213,8 +213,7 @@ var HXVideoLinks = (function(hxLinkOptions) {
         if (typeof state.videoPlayer !== 'undefined'){
             console.log('jumping video ' + vidnumber + ' to time ' + seconds);
             thisVideo.scrollIntoView();
-            state.videoPlayer.seekTo(seconds);
-            state.videoPlayer.play();
+            state.videoPlayer.player.seekTo(seconds);
         }else{
             console.log('video ' + vidnumber + ' not ready');
         }
