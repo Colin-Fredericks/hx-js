@@ -344,7 +344,8 @@ Preferences and Settings
 
 The object below is the full set of default settings for hx-js. You can override these either by putting them into the hxGlobalOptions.js file (higher priority), or by putting this hxLocalOptions object into a raw HTML element on your page (highest priority).
 
-```javascript
+```html
+<script>
 var hxLocalOptions =  {
         // Show the UTC clock
         showUTCClock: false,
@@ -393,9 +394,7 @@ var hxLocalOptions =  {
             ofTarget: window
         }
     };
-
-
-
+</script>
 ```
 
 Future Improvements
