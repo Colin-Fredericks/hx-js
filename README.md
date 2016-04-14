@@ -359,6 +359,7 @@ var hxLocalOptions =  {
         highlightBackground: 'rgba(0,0,0,0)',
         highlightState: true,
 
+        // Default options for the Slick image slider
         slickOptions: {
             arrows: true,
             dots: true,
@@ -393,6 +394,7 @@ var hxLocalOptions =  {
             atPosition: 'center',
             ofTarget: window
         },
+        // Default options for in-video links
         VidLinkOptions: {
             hideLinkAfter: 5, //seconds
             effect: 'slide',
