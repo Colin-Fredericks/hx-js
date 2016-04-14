@@ -5,12 +5,15 @@ HarvardX Standard Javascript and CSS
 
 This project collects a large number of javascript and css tricks that have been used in various HX courses and puts them all in one place so that they're easier to implement.
 
-We use require.js to preload some useful javascript while keeping the code modular.
-
 Currently Working On...
 -----------
 
-Jump-to-time links. I have these working for videos on the same page, but not for videos on other pages.
+Nothing! Current release is "stable." 
+
+**Future Improvements**
+
+* Various functionality additions
+* Getting this to work globally throughout a course without needing to load it on each page.
 
 
 How to Implement HXJS in your course
@@ -19,9 +22,9 @@ How to Implement HXJS in your course
 First, download [HXJS_Helper.zip](https://github.com/Colin-Fredericks/hx-js/raw/master/HXJS_Helper.zip) unzip it, and upload all of the things therein to your Files & Uploads section. This will let you use...
 
 * [Video Links](https://github.com/Colin-Fredericks/edx-video-augments),
+* [Pop-Up Problems](https://github.com/Colin-Fredericks/edx-embedded-video-problems),
 * [Slick](https://kenwheeler.github.io/slick/)-style image sliders,
 * [intro.js](https://github.com/usablica/intro.js) text-based walkthroughs with some accessibility improvements,
-* Underscore.js used to be included, but it's a standard part of edX, so we don't need it.
 
 Also upload the three files from this repo:
 
@@ -286,9 +289,11 @@ Write a link that looks like this:
 <a href="#video1" class="hx-vidtime" data-time="0:34">Go to 34 seconds</a>
 ```
 
-The pound sign at the beginning of the href is a pound sign. The *number* at the end of the href tells us which video you want on the page (the top one is #1). The time is given in hh:mm:ss format, or mm:ss, or just in seconds. (Any of those will work.)
+The pound sign at the beginning of the href is a pound sign. The *number* at the *end* of the href tells us which video you want on the page (the top one is #1). The time can be given in hh:mm:ss format, or mm:ss, or just in seconds.
 
 The link will jump you to the appropriate video, cue it up to the right time, and start it playing.
+
+This will even work with `/jump_to_id/` links! Just add the `#video1` or `#video2` or whatever at the end of URL.
 
 ### Pop-up Assessments
 
@@ -333,13 +338,13 @@ var hxLocalOptions = {makeTOC: false};
 </script>
 ```
 
-This will auto-generate a table of contents from all visible h3 and h4 elements on your page, and drop it in the top-right-hand corner of the page.
+This will auto-generate a hyperlinked table of contents from all visible h3 and h4 elements on your page, and drop it in the top-right-hand corner of the page.
 
 Don't use this on pages where a video is the first thing. It will overlap and look ugly.
 
 ### Forum Tricks
 
-(docs coming)
+(coming)
 
 ### Intro.js walkthroughs
 
@@ -418,9 +423,3 @@ var hxLocalOptions =  {
 </script>
 ```
 
-Future Improvements
---------------
-
-* Various functionality additions
-* Minified version
-* Getting this to work globally throughout a course without needing to load it on each page.
