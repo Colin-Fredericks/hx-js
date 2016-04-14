@@ -300,7 +300,36 @@ The link will jump you to the appropriate video, cue it up to the right time, an
 
 ### Pop-up Assessments
 
-(coming)
+This is a little complicated. First, make a Raw HTML component right above or below your video.
+
+Then, make a `<script>` tag in that component and put a "timer" objet into it like so:
+
+```html
+<script>
+var HXPUPTimer = 
+[
+  {time: "8.5", title: "What Happened?"},
+  {time: "4", title: "What Game?"},
+  {time: "12", title: "What Was That?"},
+  {time: "16", title: "Collision"},
+  {time: "18", title: "Poll"}
+];
+</script>
+```
+
+The time can be in seconds, or in mm:ss, or hh:mm:ss format. The title is the *exact* name of one of the problems farther down on your page. It should work with any problem type except for Peer-Evaluated.
+
+Then, add this block of HTML for your controls. You shouldn't need to change anything here.
+
+```html
+<button id="hx-popUpPlayPause" aria-label="Start"><span id="hx-playpauseicon" class="hx-VQControls">&#8227;</span> <span id="hx-playpauseword">Play</span></button>
+<button id="hx-popUpReset" aria-label="Answer Video Problems From Beginning"><span class="hx-VQControls">&#8617;</span> Restart</button>
+<button id="hx-backOneProblem" aria-label="Go Back One Question"><span class="hx-VQControls">&#8676;</span> Back One</button>
+<button id="hx-problemToggle" aria-label="Toggle Video Problems On/Off"><span id="hx-sunmoon" class="hx-VQControls">&#9788;</span> <span id="hx-onoff">Problems are On</span></button>
+```
+
+HX-js will do the rest!
+
 
 ### Audio Player
 
@@ -309,6 +338,65 @@ The link will jump you to the appropriate video, cue it up to the right time, an
 ### Automated Table of Contents for Long Pages
 
 (coming)
+
+Preferences and Settings
+--------------
+
+The object below is the full set of default settings for hx-js. You can override these either by putting them into the hxGlobalOptions.js file (higher priority), or by putting this hxLocalOptions object into a raw HTML element on your page (highest priority).
+
+```javascript
+var hxLocalOptions =  {
+        // Show the UTC clock
+        showUTCClock: false,
+        // Open the discussion right away
+        hxOpenDiscussion: false,
+        // Table of Contents
+        makeTOC: false,
+
+        // Highlighter: Yellow highlights that start turned off and go back to transparent afterward.
+        highlightColor: '#ff0',
+        highlightBackground: 'rgba(0,0,0,0)',
+        highlightState: true,
+
+        slickOptions: {
+            arrows: true,
+            dots: true,
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 3
+        },
+        // Default options for image slider navigation
+        slickNavOptions: {
+            asNavFor: '.hx-bigslider',
+            variableWidth: true,
+            focusOnSelect: true,
+            slidesToShow: 3,
+            slidesToScroll: 1
+        },
+        // Default options for single big image slider paired to nav.
+        slickBigOptions: {
+            asNavFor: '.hx-navslider',
+            arrows: false,
+            dots: true,
+            fade: true,
+            adaptiveHeight: true,
+            slidesToShow: 1,
+            slidesToScroll: 1
+        },
+        // Default options for pop-up problems
+        PUPOptions: {
+            width: 800,
+            effect: 'fade',
+            effectlength: 200,
+            myPosition: 'center',
+            atPosition: 'center',
+            ofTarget: window
+        }
+    };
+
+
+
+```
 
 Future Improvements
 --------------
