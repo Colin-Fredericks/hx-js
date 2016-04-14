@@ -40,7 +40,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             asNavFor: '.hx-navslider',
             arrows: false,
             dots: true,
-            fade:  true,
+            fade: true,
             adaptiveHeight: true,
             slidesToShow: 1,
             slidesToScroll: 1
