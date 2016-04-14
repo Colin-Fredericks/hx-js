@@ -261,9 +261,9 @@ var HXVideoLinks = (function() {
         var state = $(thisVideo).data('video-player-state');
         if (typeof state.videoPlayer !== 'undefined'){
             console.log('jumping video ' + vidnumber + ' to time ' + seconds);
+            thisVideo.scrollIntoView();
             state.videoPlayer.seekTo(seconds);
             state.videoPlayer.play();
-            thisVideo.scrollIntoView();
         }else{
             console.log('video ' + vidnumber + ' not ready');
         }
