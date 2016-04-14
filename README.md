@@ -392,6 +392,14 @@ var hxLocalOptions =  {
             myPosition: 'center',
             atPosition: 'center',
             ofTarget: window
+        },
+        VidLinkOptions: {
+            hideLinkAfter: 5, //seconds
+            effect: 'slide',
+            hide: {'direction':'down'},
+            show: {'direction':'down'},
+            speed: 500,
+            location: 'bl'  // Bottom Left. bl, br, tl, and tr are all ok.
         }
     };
 </script>

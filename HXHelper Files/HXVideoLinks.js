@@ -1,4 +1,4 @@
-var HXVideoLinks = (function() {
+var HXVideoLinks = (function(hxLinkOptions) {
 
     // Declaring semi-global variables for later use.
     var video = $('.video');
@@ -6,19 +6,7 @@ var HXVideoLinks = (function() {
     var time;
     var linkTimer = [];
     var linkBeingShown = [];
-    
-    // hideLinkAfter and hxLinkOptions can be defined on the HTML page. Set defaults below.
-    
-    if (typeof hxLinkOptions === 'undefined'){
-        var hxLinkOptions = setLinkOptions();
-    } else{
-        hxLinkOptions = checkLinkOptions(hxLinkOptions);
-    }
-
-    if (typeof hideLinkAfter == 'undefined'){
-        var hideLinkAfter = 5;  // Seconds
-    }
-    
+        
     console.log('Video Links starting');
 
 
@@ -143,43 +131,6 @@ var HXVideoLinks = (function() {
     
     }
     
-    function setLinkOptions(){
-        return {
-            'effect': 'slide',
-            'hide': {'direction':'down'},
-            'show': {'direction':'down'},
-            'speed': 500,
-            'location': 'bl'
-        };
-    }
-    
-    function checkLinkOptions(options){
-        if (typeof options.effect == 'undefined'){
-            options.effect = 'slide';
-        }
-        
-        if (typeof options.location == 'undefined'){
-            options.location = 'bl';
-        }
-        
-        if (options.location == 'bl' || options.location == 'br'){
-            options.show = {'direction':'down'};
-            options.hide = {'direction':'down'};
-        }
-        else if (options.location == 'tl' || options.location == 'tr'){
-            options.show = {'direction':'up'};
-            options.hide = {'direction':'up'};
-        }
-        
-        if (typeof options.speed == 'undefined'){
-            options.speed = 500;
-        }
-        
-        return options;
-    }
-
-    
-
     // Every 500 ms, check to see whether we're going to show a new link.
     function mainLoop(state, vidnumber){
         
@@ -301,7 +252,7 @@ var HXVideoLinks = (function() {
         var linkNumber = -1;
         
         for(var i=0; i < linkTimer[vidnumber].length; i++){
-            if(t >= linkTimer[vidnumber][i].time && t < (linkTimer[vidnumber][i].time + hideLinkAfter)){
+            if(t >= linkTimer[vidnumber][i].time && t < (linkTimer[vidnumber][i].time + hxLinkOptions.hideLinkAfter)){
                 linkNumber = i;
                 break;
             }

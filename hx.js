@@ -53,6 +53,14 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             myPosition: 'center',
             atPosition: 'center',
             ofTarget: window
+        },
+        VidLinkOptions: {
+            hideLinkAfter: 5, //seconds
+            effect: 'slide',
+            hide: {'direction':'down'},
+            show: {'direction':'down'},
+            speed: 500,
+            location: 'bl'  // Bottom Left. bl, br, tl, and tr are all ok.
         }
     };
 
@@ -152,7 +160,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // that handle pop-up links and problems.
         /**************************************/
         if(allVideos.length){
-            HXVL = new HXVideoLinks();
+            HXVL = new HXVideoLinks(hxOptions.VidLinkOptions);
 
             // Only do pop-up problems if there's a timer in place.
             if(HXPUPTimer.length !== 0){

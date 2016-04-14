@@ -16,5 +16,6 @@ var hxGlobalOptions = {
     slickOptions: {},
     slickNavOptions: {},
     slickBigOptions: {},
-    PUPOptions: {}
+    PUPOptions: {},
+    VidLinkOptions: {}
 };
