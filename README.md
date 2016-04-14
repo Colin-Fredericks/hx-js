@@ -290,14 +290,6 @@ The pound sign at the beginning of the href is a pound sign. The *number* at the
 
 The link will jump you to the appropriate video, cue it up to the right time, and start it playing.
 
-### Forum Tricks
-
-(docs coming)
-
-### Intro.js walkthroughs
-
-(coming)
-
 ### Pop-up Assessments
 
 This is a little complicated. First, make a Raw HTML component right above or below your video.
@@ -331,13 +323,32 @@ Then, add this block of HTML for your controls. You shouldn't need to change any
 HX-js will do the rest!
 
 
-### Audio Player
-
-(coming)
-
 ### Automated Table of Contents for Long Pages
 
+Either set `makeTOC: true,` in your hxGlobalOptions.js file, or put this little bit into a Raw HTML component on the page.
+
+```html
+<script>
+var hxLocalOptions = {makeTOC: false};
+</script>
+```
+
+This will auto-generate a table of contents from all visible h3 and h4 elements on your page, and drop it in the top-right-hand corner of the page.
+
+Don't use this on pages where a video is the first thing. It will overlap and look ugly.
+
+### Forum Tricks
+
+(docs coming)
+
+### Intro.js walkthroughs
+
 (coming)
+
+### Audio Player
+
+(coming - Luis is working on this.)
+
 
 Preferences and Settings
 --------------
