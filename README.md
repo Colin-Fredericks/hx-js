@@ -7,6 +7,12 @@ This project collects a large number of javascript and css tricks that have been
 
 We use require.js to preload some useful javascript while keeping the code modular.
 
+Currently Working On...
+-----------
+
+Jump-to-time links. I have these working for videos on the same page, but not for videos on other pages.
+
+
 How to Implement HXJS in your course
 -----------
 

@@ -284,7 +284,7 @@ var HXVideoLinks = (function() {
                     'time':localStorage['HXVideoLinkTime']
                     }
                 });
-                //$('#video' + localStorage['HXVideoLinkNumber']).scrollIntoView();
+                // Make sure the video is ready before we try to go to the time.
                 jumpToTime(localStorage['HXVideoLinkNumber'], localStorage['HXVideoLinkTime']);
             }
         }else{
