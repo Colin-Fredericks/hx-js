@@ -39,11 +39,15 @@ var HXVideoLinks = (function() {
             
             try {
                 var state = thisVid.data('video-player-state'); // Sometimes this fails and that's ok.
-                checkJumpFromOldPage();
 
                 if(typeof state.videoPlayer !== 'undefined'){
+                    
+                    
                     if (state.videoPlayer.isCued()){
                         console.log('video data loaded');
+
+                        // Follow a video player link from an old page, if we have one.
+                        checkJumpFromOldPage();
 
                         // We're positioning links based on the video.
                         vidWrappers.addClass('link-positioner');
@@ -255,11 +259,13 @@ var HXVideoLinks = (function() {
     function jumpToTime(vidnumber, seconds){
         var thisVideo = $('.video')[vidnumber - 1];
         var state = $(thisVideo).data('video-player-state');
-        if (state.videoPlayer.isCued()){
+        if (typeof state.videoPlayer !== 'undefined'){
+            console.log('jumping video ' + vidnumber + ' to time ' + seconds);
             state.videoPlayer.seekTo(seconds);
             state.videoPlayer.play();
+            thisVideo.scrollIntoView();
         }else{
-            console.log('video not cued');
+            console.log('video ' + vidnumber + ' not ready');
         }
     }
     this.jumpToTime = jumpToTime;
@@ -267,6 +273,7 @@ var HXVideoLinks = (function() {
     
     function checkJumpFromOldPage(){
 
+        console.log('check for jump');
         // If we have a jump-to-time link pending for this page, 
         // go there and start the video playing.
         if(localStorage['HXVideoLinkGo'] === "true"){
@@ -277,8 +284,8 @@ var HXVideoLinks = (function() {
                     'time':localStorage['HXVideoLinkTime']
                     }
                 });
-                $('#video' + localStorage['HXVideoLinkNumber']).scrollIntoView();
-                HXVL.jumpToTime(localStorage['HXVideoLinkNumber'], localStorage['HXVideoLinkTime']);
+                //$('#video' + localStorage['HXVideoLinkNumber']).scrollIntoView();
+                jumpToTime(localStorage['HXVideoLinkNumber'], localStorage['HXVideoLinkTime']);
             }
         }else{
             console.log('No video link to jump to.');

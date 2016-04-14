@@ -178,8 +178,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             
             // If the href starts with a pound sign, go on this page.
             if(startsWithHash){
-                HXVL.jumpToTime(vidNumber, thisTime);
                 logThatThing({'link starts video at time': thisTime});
+                HXVL.jumpToTime(vidNumber, thisTime);
             }
             // If not, stash the destination in HTML5 Local Storage
             // so that we can retrieve it on the next page.
@@ -609,7 +609,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Send logs both to the console and to the official edX logamajig.
     function logThatThing(ThatThing){
         console.log(JSON.stringify(ThatThing));
-        Logger.log(courseLogID + '.hxjs', ThatThing);
+        // Will put back in after done testing.
+        // Logger.log(courseLogID + '.hxjs', ThatThing); 
     }
     
     this.logThatThing = logThatThing;
