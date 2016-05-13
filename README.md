@@ -372,6 +372,9 @@ var hxLocalOptions =  {
         // Table of Contents
         makeTOC: false,
 
+        // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
+        collapsedNav: false,
+
         // Highlighter: Yellow highlights that start turned off and go back to transparent afterward.
         highlightColor: '#ff0',
         highlightBackground: 'rgba(0,0,0,0)',
