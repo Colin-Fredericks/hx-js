@@ -61,6 +61,8 @@ All of these are classes that you add to
 * For an **underlined** header, do `class="hx-underline"`. You can do small caps with this.
 * For images or divs that hang down on the **right-hand side**, use `class="hx-hangright`.
 * For images or divs that hang down on the **left-hand side**, use `class="hx-hangleft`.
+* To get rid of the top navigation "ribbon" and bottom left/right buttons, add `hxLocalOptions.collapsedNav = true;` to a script tag on your page. Warning: By doing this you are intentionally removing students' ability to get to other units in this subsection. Only do this in subsections that have just a single unit.
+* To add a UTC clock on the right-hand side of the "pages" section, add `hxLocalOptions.showClock = true;` to a script tag on your page.
 
 ### Pretty boxes
 

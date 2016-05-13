@@ -14,6 +14,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         hxOpenDiscussion: false,
         // Table of Contents
         makeTOC: false,
+        
+        // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
+        collapsedNav: false,
 
         // Highlighter: Yellow highlights that start turned off and go back to transparent afterward.
         highlightColor: '#ff0',
@@ -205,15 +208,25 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             }
         });
         
-
-        // Placeholder: Intro.js walkthroughs
-        // Still trying to figure out how to place these properly.
+        
+        /**************************************/
+        // Collapsed Navigation
+        // Removes the navigation bar at the top of the page and arrows at the bottom.
+        // Only use this if you have just one unit per subsection, because otherwise
+        // your learners will never find the other units.
+        // Set hxLocalOptions.collapsedNav = true to use.
+        /**************************************/
+        if(hxOptions.collapsedNav){
+            $('.sequence-nav').hide();
+            $('.sequence-bottom').hide();
+            $('.sequence > .path').hide();
+        }
 
 
         /**************************************/
         // Automatic Table of Contents maker.
         // Uses h3 and h4 elements, links them up.
-        // Set hxOptions.makeTOC = true to use.
+        // Set hxLocalOptions.makeTOC = true to use.
         /**************************************/
         
         if(hxOptions.makeTOC){
@@ -279,15 +292,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         /**************************************/
         // UTC Clock (currently an iframe from TimeAndDate.com)
+        // Set hxLocalOptions.showUTCClock = true to use.
         /**************************************/
         if(hxOptions.showUTCClock){
             var hxClockFrame = '<li style="float:right;"><iframe src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" title="UTC Clock" frameborder="0" width="100" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>';
             var hxClockSpot = $('.course-tabs');
             hxClockSpot.append(hxClockFrame);
         }
-
-
-        // Placeholder: Audio player
 
 
         /**************************************/
@@ -478,6 +489,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             bigslider.slick(hxOptions.slickBigOptions);
             logThatThing({'paired slider': 'created'});
         }
+
+
+        // Placeholder: Audio player
+
+        // Placeholder: Intro.js walkthroughs
+        // Still trying to figure out how to place these properly.
+        
     }
     
 
