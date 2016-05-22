@@ -75,6 +75,24 @@ Blue boxes:
 </div>
 ```
 
+Red boxes in a different style:
+
+```html
+<div class="hx-redbox">
+  <h4>Box Header</h4>
+  <p>Other things in box</p>
+</div>
+```
+
+Grey (or gray) boxes in the redbox style:
+
+```html
+<div class="hx-greybox">
+  <h4>Box Header</h4>
+  <p>Other things in box</p>
+</div>
+```
+
 Blue sidebars:
 
 ```html
@@ -84,7 +102,7 @@ Blue sidebars:
 </div>
 ```
 
-Grey quotation/excerpt boxes:
+Quotation/excerpt boxes, which are grey:
 
 ```html
 <div class="hx-excerpt">

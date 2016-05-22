@@ -223,6 +223,30 @@ h4.hx-superbold {
 	background: linear-gradient(to bottom, rgba(255,255,255,1) 5%, rgba(210,235,249,1) 100%);
 }
 
+.hx-redbox {
+    border-left: 15px solid #800;
+    background-color: #fdd;
+    padding: 10px 10px 5px 15px;
+    margin: 40px;
+}
+
+.hx-redbox h4 {
+    font-variant: small-caps;
+    color: #600;
+}
+
+.hx-greybox, .hx-graybox {
+    border-left: 15px solid #666;
+    background-color: #ddd;
+    padding: 10px 10px 5px 15px;
+    margin: 40px;
+}
+
+.hx-greybox h4, .hx-graybox h4 {
+    font-variant: small-caps;
+    color: #333;
+}
+
 /* For right-hand sidebars. Same styling as the blue boxes. */
 /* Use h4 for headers inside. */
 .hx-sidebar {
