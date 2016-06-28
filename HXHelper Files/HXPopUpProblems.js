@@ -45,7 +45,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 
 		state = video.data('video-player-state');	// Sometimes this fails and that's ok.
 
-		if (state.videoPlayer.isCued()){
+		if(typeof state.videoPlayer.player.getPlayerState() !== 'undefined'){
 			clearInterval(waitForVid);
 			var pause = setTimeout(function(){
 				setUpData();
