@@ -43,8 +43,6 @@ var HXVideoLinks = (function(hxLinkOptions) {
                         mainLoop(state, vidnumber);
                         clearInterval(waitForVid);
                     }
-                }else{
-                    console.log('video player undefined');
                 }
 
             }
@@ -60,8 +58,6 @@ var HXVideoLinks = (function(hxLinkOptions) {
     // Take the simple list in our HTML and make it FABULOUS
     function setUpLists(vidnumber){
     
-        console.log('Setting up lists for video ' + (vidnumber+1));
-        
         // Let's copy the links to the appropriate location so we can position them there.
         var vidlinks = $('#hx-vidlinks-static-' + (vidnumber+1))
             .clone()
