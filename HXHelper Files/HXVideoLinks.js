@@ -30,8 +30,7 @@ var HXVideoLinks = (function(hxLinkOptions) {
 
                 if(typeof state.videoPlayer !== 'undefined'){
                     
-                    
-                    if (state.videoPlayer.isCued()){
+                    if(typeof state.videoPlayer.player.getPlayerState() !== 'undefined'){
                         console.log('video data loaded');
 
                         // Follow a video player link from an old page, if we have one.
@@ -44,6 +43,8 @@ var HXVideoLinks = (function(hxLinkOptions) {
                         mainLoop(state, vidnumber);
                         clearInterval(waitForVid);
                     }
+                }else{
+                    console.log('video player undefined');
                 }
 
             }
@@ -58,6 +59,8 @@ var HXVideoLinks = (function(hxLinkOptions) {
     
     // Take the simple list in our HTML and make it FABULOUS
     function setUpLists(vidnumber){
+    
+        console.log('Setting up lists for video ' + (vidnumber+1));
         
         // Let's copy the links to the appropriate location so we can position them there.
         var vidlinks = $('#hx-vidlinks-static-' + (vidnumber+1))
