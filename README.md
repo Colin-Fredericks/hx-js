@@ -2,9 +2,9 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [hx-js](#hx-js)
-- [HarvardX Standard Javascript and CSS](#harvardx-standard-javascript-and-css)
+- [HX-JS: HarvardX Standard Javascript and CSS](#hx-js-harvardx-standard-javascript-and-css)
   - [Currently Working On...](#currently-working-on)
+    - [Future Improvements](#future-improvements)
   - [How to Implement HXJS in your course](#how-to-implement-hxjs-in-your-course)
     - [Simple Appearance Changes](#simple-appearance-changes)
     - [Pretty boxes](#pretty-boxes)
@@ -19,16 +19,15 @@
     - [Jump To Time](#jump-to-time)
     - [Pop-up Assessments](#pop-up-assessments)
     - [Automated Table of Contents for Long Pages](#automated-table-of-contents-for-long-pages)
+  - [Future Features](#future-features)
     - [Forum Tricks](#forum-tricks)
     - [Intro.js walkthroughs](#introjs-walkthroughs)
     - [Audio Player](#audio-player)
-  - [Preferences and Settings](#preferences-and-settings)
+  - [Full List of Preferences and Settings](#full-list-of-preferences-and-settings)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# hx-js
-
-HarvardX Standard Javascript and CSS
+HX-JS: HarvardX Standard Javascript and CSS
 ====================================
 
 This project collects a large number of javascript and css tricks that have been used in various HX courses and puts them all in one place so that they're easier to implement.
@@ -38,9 +37,10 @@ Currently Working On...
 
 Nothing! Current release is "stable." 
 
-**Future Improvements**
+### Future Improvements
 
-* Various functionality additions
+* Uniformity of pretty-colored boxes.
+* Various functionality additions.
 * Getting this to work globally throughout a course without needing to load it on each page.
 
 
@@ -392,20 +392,22 @@ This will auto-generate a hyperlinked table of contents from all visible h3 and 
 
 Don't use this on pages where a video is the first thing. It will overlap and look ugly.
 
+## Future Features
+
 ### Forum Tricks
 
 (coming)
 
 ### Intro.js walkthroughs
 
-(coming)
+(coming - but difficult.)
 
 ### Audio Player
 
 (coming - Luis is working on this.)
 
 
-Preferences and Settings
+Full List of Preferences and Settings
 --------------
 
 The object below is the full set of default settings for hx-js. You can override these either by putting them into the hxGlobalOptions.js file (higher priority), or by putting this hxLocalOptions object into a raw HTML element on your page (highest priority).
