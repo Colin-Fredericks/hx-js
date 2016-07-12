@@ -1,3 +1,31 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [hx-js](#hx-js)
+- [HarvardX Standard Javascript and CSS](#harvardx-standard-javascript-and-css)
+  - [Currently Working On...](#currently-working-on)
+  - [How to Implement HXJS in your course](#how-to-implement-hxjs-in-your-course)
+    - [Simple Appearance Changes](#simple-appearance-changes)
+    - [Pretty boxes](#pretty-boxes)
+    - [Sidebar Tables](#sidebar-tables)
+    - [Visibility Toggle](#visibility-toggle)
+    - [Highlighter Toggle](#highlighter-toggle)
+    - [Pop-ups for clickable images](#pop-ups-for-clickable-images)
+    - [Automated Footnotes](#automated-footnotes)
+    - [Image Slider](#image-slider)
+    - [Video Links](#video-links)
+    - [Easter Egg](#easter-egg)
+    - [Jump To Time](#jump-to-time)
+    - [Pop-up Assessments](#pop-up-assessments)
+    - [Automated Table of Contents for Long Pages](#automated-table-of-contents-for-long-pages)
+    - [Forum Tricks](#forum-tricks)
+    - [Intro.js walkthroughs](#introjs-walkthroughs)
+    - [Audio Player](#audio-player)
+  - [Preferences and Settings](#preferences-and-settings)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # hx-js
 
 HarvardX Standard Javascript and CSS
@@ -346,6 +374,8 @@ Then, add this block of HTML for your controls. You shouldn't need to change any
 ```
 
 HX-js will do the rest!
+
+To include items that do not have an h3 heading, such as a Word Cloud, make a small raw HTML component that includes the tag `<span style="display:none" class="hx-includer">includenext</span>`, and place that component directly before the one that you want to include. HX-js will display both items at once.
 
 
 ### Automated Table of Contents for Long Pages
