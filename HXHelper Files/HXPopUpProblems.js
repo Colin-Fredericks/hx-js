@@ -234,9 +234,9 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		var includenext = false;
 		
 		// Sometimes we can't find an h3 to latch onto.
-		// We put <span style="display:none" class="includer">includenext</span> into an HTML bit before it.
+		// We put <span style="display:none" class="hx-includer">includenext</span> into an HTML bit before it.
 		// The dialog then displays the next item, and appends a clone of the HTML before it.
-		if(problemDiv.find('span.includer').text() == 'includenext'){
+		if(problemDiv.find('span.hx-includer').text() == 'includenext'){
 			nextDiv = problemDiv.next();
 			includenext = true;
 		}
