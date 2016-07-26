@@ -8,7 +8,6 @@
 
 var hxGlobalOptions = {
     hasGlobalOptions: true,
-    showUTCClock: false,
 
     /********************************************/
     // Slick Image Slider Options

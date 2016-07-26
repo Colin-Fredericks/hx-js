@@ -8,8 +8,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     /***********************************************/
 
     var hxDefaultOptions = {
-        // Show the UTC clock
-        showUTCClock: false,
         // Open the discussion right away
         hxOpenDiscussion: false,
         // Table of Contents
@@ -287,21 +285,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             
             // Done - add it all to the DOM.
             $('#autoTOC').append(autoTOC);
-        }
-
-
-        /**************************************/
-        // UTC Clock (currently an iframe from TimeAndDate.com)
-        // Set hxLocalOptions.showUTCClock = true to use.
-        /**************************************/
-        if(hxOptions.showUTCClock){
-            // Only add the clock if it isn't already there.
-            if($('#hx-utcclock').length == 0){
-                var hxClockFrame = '<li style="float:right;"><iframe id="hx-utcclock" Title="UTC clock" src="https://freesecure.timeanddate.com/clock/i53t5o51/fc5e5e5e/tct/pct/ftb/ts1/ta1" title="UTC Clock" frameborder="0" width="100" height="16" style="padding-left: 11px; padding-top: 11px;"></iframe></div>';
-                var hxClockSpot = $('.course-tabs');
-                hxClockSpot.append(hxClockFrame);
-                logThatThing('UTC clock added');
-            }
         }
 
 
