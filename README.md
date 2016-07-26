@@ -83,12 +83,12 @@ To make other things happen, you'll need to add specific classes to your HTML, a
 
 All of these are classes that you add to 
 
-* For **drop caps**, do `<span class="hx-dropcap">A</span>` on the first letter.
+* For **drop caps** that are text rather than an image, do `<span class="hx-dropcap">A</span>` on the first letter.
 * For **small-caps headers**, do `class="hx-smallcaps"`. Works with h3 or h4.
 * For a **superbold** white header with a solid color background, do `class="hx-superbold"`. You can do small caps with this.
 * For an **underlined** header, do `class="hx-underline"`. You can do small caps with this.
-* For images or divs that hang down on the **right-hand side**, use `class="hx-hangright`.
-* For images or divs that hang down on the **left-hand side**, use `class="hx-hangleft`.
+* For images or divs that hang down on the **right-hand side**, use `class="hx-hangright"`.
+* For images or divs that hang down on the **left-hand side**, including image-based drop-caps, use `class="hx-hangleft"`.
 * To get rid of the top navigation "ribbon" and bottom left/right buttons, add `hxLocalOptions.collapsedNav = true;` to a script tag on your page. Warning: By doing this you are intentionally removing students' ability to get to other units in this subsection. Only do this in subsections that have just a single unit.
 * To add a UTC clock on the right-hand side of the "pages" section, add `hxLocalOptions.showClock = true;` to a script tag on your page.
 
@@ -103,7 +103,7 @@ Blue boxes:
 </div>
 ```
 
-Red boxes in a different style:
+Red boxes:
 
 ```html
 <div class="hx-redbox">
@@ -112,7 +112,7 @@ Red boxes in a different style:
 </div>
 ```
 
-Grey (or gray) boxes in the redbox style:
+Grey (or gray) boxes:
 
 ```html
 <div class="hx-greybox">
@@ -121,7 +121,7 @@ Grey (or gray) boxes in the redbox style:
 </div>
 ```
 
-Blue sidebars:
+Sidebars (must combine with box style):
 
 ```html
 <div class="hx-sidebar">
@@ -130,7 +130,7 @@ Blue sidebars:
 </div>
 ```
 
-Quotation/excerpt boxes, which are grey:
+Quotation/excerpt boxes (should combine with greybox):
 
 ```html
 <div class="hx-excerpt">

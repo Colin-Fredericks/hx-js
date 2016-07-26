@@ -80,11 +80,11 @@ p > small.hx-caption {
 }
 
 /* Larger UL and OL left-hand margins. */
-.xblock ul {
+#main .vert .xblock ul {
     margin-left: 1em !important;
 }
 
-.xblock ol {
+#main .vert .xblock ol {
     margin-left: 1em !important;
 }
 
@@ -216,11 +216,15 @@ h4.hx-superbold {
 /* For boxes of material separated from the regular text. */
 /* Use h4 for headers inside. */
 .hx-bluebox {
-	border: 2px solid #008;
-	margin: 50px;
-	padding: 10px;
-	background-color: #fff;
-	background: linear-gradient(to bottom, rgba(255,255,255,1) 5%, rgba(210,235,249,1) 100%);
+    border-left: 15px solid #048;
+    background-color: #def;
+    padding: 10px 10px 5px 15px;
+    margin: 40px;
+}
+
+.hx-bluebox h4, .hx-sidebar h4 {
+    font-variant: small-caps;
+    color: #036;
 }
 
 .hx-redbox {
@@ -247,30 +251,21 @@ h4.hx-superbold {
     color: #333;
 }
 
-/* For right-hand sidebars. Same styling as the blue boxes. */
+/* For right-hand sidebars. Add colorbox styling. */
 /* Use h4 for headers inside. */
 .hx-sidebar {
-	border: 2px solid #008;
-	margin: 0px 30px 30px 30px;
-	padding: 10px 10px 0px 10px;
-	background-color: #fff;
-	background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(210,235,249,1) 100%);
+    margin: 3px 20px 20px 20px;
 	float: right;
 	width: 45%;
 }
 
 /* For boxes that contain big quote marks in the background. Stylish. */
+/* Add colorbox styling */
 .hx-excerpt {
-	border: 2px solid #999;
-	margin: 50px;
-	padding: 10px;
-	background-color: #fff;
 
-    background-image: url(quote-right.gif);
+    background-image: url(quote-right.png);
     background-repeat: no-repeat;
     background-position: bottom right;
-
-	background: linear-gradient(to bottom, rgba(255,255,255,1) 5%, rgba(220,220,220,1) 100%);
 }
 
 .hx-excerpt .hx-quote-source {
@@ -280,7 +275,7 @@ h4.hx-superbold {
 
 /* Helps with above. */
 .hx-excerpt p {
-    background-image: url(quote-left.gif);
+    background-image: url(quote-left.png);
     background-repeat: no-repeat;
     margin-top: 0;
     padding: 1em 60px 0;
