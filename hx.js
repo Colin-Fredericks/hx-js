@@ -230,7 +230,10 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         if(hxOptions.markExternalLinks){
             console.log('marking external links');
             $('.vert .xblock a').each(function(i, linky){
-                if( $(linky).attr('href').includes('edx.org') ){
+                var destination = $(linky).attr('href')
+                if( destination.includes('edx.org') 
+                    || destination.includes('jump_to_id')
+                    || destination.includes('/courses/') ){
                     
                 }else{
                     $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
