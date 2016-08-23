@@ -51,6 +51,11 @@ p.hx-centered {
     text-align: center;
 }
 
+/* External links */
+.fa-external-link {
+    font-size: smaller;
+    vertical-align: super;
+}
 
 
 /* Standard image caption */
@@ -477,7 +482,7 @@ h4.hx-superbold {
 /* This block is for pop-up problems.
 /***************************************/
 
-.ui-widget-overlay {
+.hx-popup .ui-widget-overlay {
    background: #666;
    opacity: .30;
    filter: Alpha(Opacity=30);
@@ -488,7 +493,7 @@ h4.hx-superbold {
 	z-index: 100001 !important;
 }
 
-.no-close .ui-dialog-titlebar-close {
+.hx-popup .no-close .ui-dialog-titlebar-close {
   display: none;
 }
 

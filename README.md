@@ -81,7 +81,7 @@ To make other things happen, you'll need to add specific classes to your HTML, a
 
 ### Simple Appearance Changes
 
-All of these are classes that you add to 
+All of these are classes that you add to various elements.
 
 * For **drop caps** that are text rather than an image, do `<span class="hx-dropcap">A</span>` on the first letter.
 * For **small-caps headers**, do `class="hx-smallcaps"`. Works with h3 or h4.
@@ -145,6 +145,10 @@ Quotation/excerpt boxes (should combine with greybox):
 Just give your table tag `class="hx-hangleft"` or `class="hx-hangright"` and it'll be ready to go. Note that you shouldn't do more than two columns, or three if your headers and data are very compact.
 
 If you need a really compact table, add `hx-compact-table` to the class.
+
+### Automatic external link marker
+
+In hxGlobalOptions, set `markExternalLinks: true,` in order to add FontAwesome external link markers to all links outside of edX. Note that links to other courses within edX will NOT currently get the markers.
 
 ### Visibility Toggle
 

@@ -16,6 +16,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
         collapsedNav: false,
 
+        // Marks all external links with an icon.
+        markExternalLinks: false,
+
         // Highlighter: Yellow highlights that start turned off and go back to transparent afterward.
         highlightColor: '#ff0',
         highlightBackground: 'rgba(0,0,0,0)',
@@ -87,21 +90,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     logThatThing({'course log id': courseLogID});
 
 
-    /***********************************************/
-    // This loads the course-wide options file.
-    // It overrides defaults in this file, and is overridden by local options.
-    /***********************************************/
-    var hxOptions = {};
-    $.getScript(courseAssetURL + 'hxGlobalOptions.js')
-        .done(function(){
-            logThatThing({'Course options': 'loaded'});
-            hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);
-        })
-        .fail(function(){
-            logThatThing({'Course options': 'default'});
-            hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);        
-    });
-    
     /**************************************/
     // Load outside scripts. 
     // Must be in Files & Uploads.
@@ -121,6 +109,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     }
 
     var scriptArray = [];
+    
+    // We definitely want to load the course-wide options file.
+    // It overrides defaults in this file, and is overridden by local options.
+    var hxOptions = {};
+    scriptArray.push('hxGlobalOptions.js');
 
     // Do we load Slick for image sliders?
     var slider = $('.hx-slider');
@@ -148,9 +141,16 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     $.getMultiScripts(scriptArray, courseAssetURL)
         .done(function() {
             logThatThing({'Loaded scripts': scriptArray});
+            if(hxGlobalOptions){
+                hxOptions = setDefaultOptions(hxLocalOptions, hxGlobalOptions, hxDefaultOptions);
+            }else{
+                hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
+            }
             keepGoing(hxOptions);
         }).fail(function(){
-            logThatThing('Failed to load scripts');
+            logThatThing('Did not load scripts.');
+            hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
+            keepGoing(hxOptions);
     })
     
     // Once we have the options, we're ready to proceed.
@@ -218,6 +218,24 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             $('.sequence-nav').hide();
             $('.sequence-bottom').hide();
             $('.sequence > .path').hide();
+        }
+
+
+        /**************************************/
+        // External Links
+        // Adds a FontAwesome icon for external links at the end of
+        // each link that does not lead to an edx course.
+        // Set hxLocalOptions.markExternalLinks = true to use.
+        /**************************************/
+        if(hxOptions.markExternalLinks){
+            console.log('marking external links');
+            $('.vert .xblock a').each(function(i, linky){
+                if( $(linky).attr('href').includes('edx.org') ){
+                    
+                }else{
+                    $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
+                }
+            });
         }
 
 
