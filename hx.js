@@ -524,8 +524,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Switch from course to asset
         var staticFolderURL = windowURL.replace('courses/course', 'asset');
 
-        // Ditch everything after courseware
-        var finalLocation = staticFolderURL.indexOf('/courseware/');
+        // Ditch the unique identifier for this resource.
+        var pluslocation = staticFolderURL.indexOf('+');
+        var finalLocation = staticFolderURL.indexOf('/', pluslocation);
         staticFolderURL = staticFolderURL.slice(0, finalLocation);
 
         // Switch from courseware to type
