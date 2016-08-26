@@ -39,7 +39,6 @@ Nothing! Current release is "stable."
 
 ### Future Improvements
 
-* Uniformity of pretty-colored boxes.
 * Various functionality additions.
 * Getting this to work globally throughout a course without needing to load it on each page.
 
@@ -395,6 +394,18 @@ var hxLocalOptions = {makeTOC: false};
 This will auto-generate a hyperlinked table of contents from all visible h3 and h4 elements on your page, and drop it in the top-right-hand corner of the page.
 
 Don't use this on pages where a video is the first thing. It will overlap and look ugly.
+
+### Automated External Link Markers
+
+Either set `markExternalLinks: true,` in your hxGlobalOptions.js file, or put this little bit into a Raw HTML component on the page.
+
+```html
+<script>
+var hxLocalOptions = {markExternalLinks: false};
+</script>
+```
+
+Every link that is not to an edx.org site will be marked with [a box-and-arrow image](http://fontawesome.io/icon/external-link/) to let students know that it's an external link. It's even accessible for screen readers! Naturally, this only works on pages where you have HX-JS enabled, so you may need to manually need to add it in a few places where javascript doesn't work (like the wiki).
 
 ## Future Features
 
