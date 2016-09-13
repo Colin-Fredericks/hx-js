@@ -407,11 +407,16 @@ var hxLocalOptions = {markExternalLinks: false};
 
 Every link that is not to an edx.org site will be marked with [a box-and-arrow image](http://fontawesome.io/icon/external-link/) to let students know that it's an external link. It's even accessible for screen readers! Naturally, this only works on pages where you have HX-JS enabled, so you may need to manually need to add it in a few places where javascript doesn't work (like the wiki).
 
-## Future Features
-
 ### Forum Tricks
 
-(coming)
+Maybe you want in-page discussions, but you don't want people making a million billion threads. There are two things you can do to help with this:
+
+* Set `removeAddPostButton: true,` in your hxGlobalOptions.js file to remove the bright shiny blue "Add a Post" button from your inline discussions. Students will only be able to add posts in the discussion board itself.
+* Set `openPageDiscussion: true,` in your hxGlobalOptions.js file to automatically open every inline discussion as soon as someone comes to a page.
+
+
+## Future Features
+
 
 ### Intro.js walkthroughs
 

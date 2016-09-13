@@ -16,6 +16,10 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
         collapsedNav: false,
 
+        // Remove the "Add a Post" button and/or auto-open the on-page discussions.
+        removeAddPostButton: false,
+        openPageDiscussion: false,
+
         // Marks all external links with an icon.
         markExternalLinks: false,
 
@@ -218,6 +222,18 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             $('.sequence-nav').hide();
             $('.sequence-bottom').hide();
             $('.sequence > .path').hide();
+        }
+
+        /**************************************/
+        // Forum Tricks
+        // Auto-open inline discussions and/or
+        // remove the "Add a Post" button.
+        /**************************************/
+        if(hxOptions.removeAddPostButton){
+            $('.new-post-btn').hide();
+        }
+        if(hxOptions.openPageDiscussion){
+            $('.discussion-show').click();
         }
 
 
