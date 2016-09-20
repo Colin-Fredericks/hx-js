@@ -8,8 +8,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     /***********************************************/
 
     var hxDefaultOptions = {
-        // Open the discussion right away
-        hxOpenDiscussion: false,
         // Table of Contents
         makeTOC: false,
         
@@ -369,18 +367,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 'Highlight number': myNumber
             });
         });
-
-
-        /*****************************************/
-        // Stuff to make forums expand right away.
-        /*****************************************/
-    
-        // To use, put "var hxOpenDiscussion = true" in a script tag on your page.
-    
-        if(hxOptions.hxOpenDiscussion){
-            $(".discussion-show.control-button").click();
-            logThatThing({'Discussion': 'auto-opened'});
-        }
 
 
         /*******************************************/

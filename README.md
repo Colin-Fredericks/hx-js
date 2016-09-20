@@ -435,15 +435,18 @@ The object below is the full set of default settings for hx-js. You can override
 ```html
 <script>
 var hxLocalOptions =  {
-        // Show the UTC clock
-        showUTCClock: false,
-        // Open the discussion right away
-        hxOpenDiscussion: false,
         // Table of Contents
         makeTOC: false,
-
+        
         // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
         collapsedNav: false,
+
+        // Remove the "Add a Post" button and/or auto-open the on-page discussions.
+        removeAddPostButton: false,
+        openPageDiscussion: false,
+
+        // Marks all external links with an icon.
+        markExternalLinks: false,
 
         // Highlighter: Yellow highlights that start turned off and go back to transparent afterward.
         highlightColor: '#ff0',
