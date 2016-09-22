@@ -517,7 +517,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // because we can't use /static/ from within javascript.
     // Pass 'complete' for the whole thing, 'site' for the site, or 'partial' for without the site.
     function getAssetURL(windowURL, option){
-
+        
+        // Sometimes escape characters are not our friends.
+        windowURL = windowURL.replace('%2B', '+');
+        windowURL = windowURL.replace('%3A', ':');
+        
         // Match the site in case we need it for something later.
         var courseSiteURL = windowURL.match(/https:\/\/.+.org\//)[0];
     
