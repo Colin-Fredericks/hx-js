@@ -328,6 +328,8 @@ The image inside is a little HX. It's 25 pixels tall. Feel free to replace it wi
 
 The javascript will turn this set of divs into a list of static links, for folks who can't see or get to the pop-up links.
 
+If you *don't* want to load this on a page, for instance on a page with a lot of videos that don't need links, you must set `hxLocalOptions.dontLoadVideoStuff` to `true`. You can't do this as a global option, because the global options are loaded along with the other scripts. It has to be done within the page.
+
 ### Easter Egg
 
 Up up down down left right left right B A
@@ -380,6 +382,7 @@ HX-js will do the rest!
 
 To include items that do not have an h3 heading, such as a Word Cloud, make a small raw HTML component that includes the tag `<span style="display:none" class="hx-includer">includenext</span>`, and place that component directly before the one that you want to include. HX-js will display both items at once.
 
+If you *don't* want to load this on a page, for instance on a page with a lot of videos that don't need pop-up videos, you must set `hxLocalOptions.dontLoadVideoStuff` to `true`. You can't do this as a global option, because the global options are loaded along with the other scripts. It has to be done within the page.
 
 ### Automated Table of Contents for Long Pages
 

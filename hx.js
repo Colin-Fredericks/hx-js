@@ -128,15 +128,27 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
     // Do we load XHVideoLinks for... um... HarvardX video links.
     // And HXPopUpProblems for pop-up problems.
+    // Set hxLocalOptions.dontLoadVideoStuff: true to avoid this,
+    // for instance if you have several videos on one page that don't need it.
+    var loadVideoStuff = true;
+    if(typeof hxLocalOptions.dontLoadVideoStuff !== undefined){
+        if(hxLocalOptions.dontLoadVideoStuff === true){
+            loadVideoStuff = false;
+            console.log('skipping loading video js');
+        }
+    }
+    
     var allVideos = $('.video');
-    if(allVideos.length){
-        logThatThing({'video': 'found'});
-        scriptArray.push('HXVideoLinks.js');
-        var HXVL;
-        // Only do pop-up problems if there's a timer in place.
-        if(HXPUPTimer.length !== 0){
-            scriptArray.push('HXPopUpProblems.js');
-            var HXPUP;
+    if(loadVideoStuff){
+        if(allVideos.length){
+            logThatThing({'video': 'found'});
+            scriptArray.push('HXVideoLinks.js');
+            var HXVL;
+            // Only do pop-up problems if there's a timer in place.
+            if(HXPUPTimer.length !== 0){
+                scriptArray.push('HXPopUpProblems.js');
+                var HXPUP;
+            }
         }
     }
 
@@ -162,7 +174,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // If we have videos, instantiate the functions
         // that handle pop-up links and problems.
         /**************************************/
-        if(allVideos.length){
+        if(allVideos.length && loadVideoStuff){
             HXVL = new HXVideoLinks(hxOptions.VidLinkOptions);
 
             // Only do pop-up problems if there's a timer in place.
@@ -243,14 +255,19 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         /**************************************/
         if(hxOptions.markExternalLinks){
             console.log('marking external links');
-            $('.vert .xblock a').each(function(i, linky){
+            $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function(i, linky){
                 var destination = $(linky).attr('href')
-                if( destination.includes('edx.org') 
-                    || destination.includes('jump_to_id')
-                    || destination.includes('/courses/') ){
+                if(typeof destination !== 'undefined'){
+                    if( destination.includes('edx.org') 
+                        || destination.includes('jump_to_id')
+                        || destination.includes('/courses/')
+                        || destination.includes('cloudfront.net')
+                        || destination.includes('javascript:void')
+                        || destination.slice(0,1) == '#' ){
                     
-                }else{
-                    $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
+                    }else{
+                        $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
+                    }
                 }
             });
         }
