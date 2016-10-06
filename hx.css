@@ -29,7 +29,7 @@ span.hx-dropcap {
 /* Image that hangs over the top few lines of a paragraph on the right. */
 .hx-hangright {
 	float: right;
-	padding: 4px 0px 3px 8px;
+	margin: 4px 0px 3px 8px;
 }
 
 /* Image that hangs over the top few lines of a paragraph on the left. */
