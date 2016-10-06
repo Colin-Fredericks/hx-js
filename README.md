@@ -390,7 +390,7 @@ Either set `makeTOC: true,` in your hxGlobalOptions.js file, or put this little 
 
 ```html
 <script>
-var hxLocalOptions = {makeTOC: false};
+var hxLocalOptions = {makeTOC: true};
 </script>
 ```
 
