@@ -232,6 +232,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             $('.sequence-nav').hide();
             $('.sequence-bottom').hide();
             $('.sequence > .path').hide();
+            $('h3.unit-title').hide();
         }
 
         /**************************************/
@@ -256,7 +257,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         if(hxOptions.markExternalLinks){
             console.log('marking external links');
             $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function(i, linky){
-                var destination = $(linky).attr('href')
+                var destination = $(linky).attr('href');
                 if(typeof destination !== 'undefined'){
                     if( destination.includes('edx.org') 
                         || destination.includes('jump_to_id')
@@ -280,7 +281,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         /**************************************/
         
         if(hxOptions.makeTOC){
-            $('#seq_content .xblock:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
+            if($('.edx-notes-wrapper-content').length){
+                $('.edx-notes-wrapper-content:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
+            }else{
+                $('#seq_content .xblock:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
+            }
             // Using text instead of objects to make nesting easier.
             var autoTOC = '<h3>Table of Contents</h3><ul>';
 
@@ -546,6 +551,12 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         // Switch from course to asset
         var staticFolderURL = windowURL.replace('courses/course', 'asset');
+        
+        // In case we're rendering in XBlock URL mode:
+        if(staticFolderURL.search('xblock/block-v1') > -1){
+            staticFolderURL = staticFolderURL.replace('xblock/block', 'asset');
+            staticFolderURL = staticFolderURL.replace('+type@', '/');
+        }
 
         // Ditch the unique identifier for this resource.
         var pluslocation = staticFolderURL.indexOf('+');
