@@ -388,6 +388,8 @@ If you *don't* want to load this on a page, for instance on a page with a lot of
 
 Either set `makeTOC: true,` in your hxGlobalOptions.js file, or put this little bit into a Raw HTML component on the page.
 
+Warning: Once students see an Auto-TOC on one page, they'll see it on the rest of the pages in that subsection. You will probably want to set this to "true" or "false" manually on each page in a particular subsection.
+
 ```html
 <script>
 var hxLocalOptions = {makeTOC: true};
