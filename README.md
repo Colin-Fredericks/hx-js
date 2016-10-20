@@ -9,6 +9,7 @@
     - [Simple Appearance Changes](#simple-appearance-changes)
     - [Pretty boxes](#pretty-boxes)
     - [Sidebar Tables](#sidebar-tables)
+    - [Make You Smile](#make-you-smile)
     - [Visibility Toggle](#visibility-toggle)
     - [Highlighter Toggle](#highlighter-toggle)
     - [Pop-ups for clickable images](#pop-ups-for-clickable-images)
@@ -148,6 +149,10 @@ If you need a really compact table, add `hx-compact-table` to the class.
 ### Automatic external link marker
 
 In hxGlobalOptions, set `markExternalLinks: true,` in order to add FontAwesome external link markers to all links outside of edX. Note that links to other courses within edX will NOT currently get the markers.
+
+### Make You Smile
+
+To make a little face at the bottom of each screen that smiles when you click on it, set `makeSmiles: true` in the hxGlobalSettings file.
 
 ### Visibility Toggle
 
@@ -399,6 +404,7 @@ var hxLocalOptions = {makeTOC: true};
 This will auto-generate a hyperlinked table of contents from all visible h3 and h4 elements on your page, and drop it in the top-right-hand corner of the page.
 
 Don't use this on pages where a video is the first thing. It will overlap and look ugly.
+
 
 ### Automated External Link Markers
 

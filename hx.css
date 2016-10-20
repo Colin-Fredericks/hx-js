@@ -93,6 +93,18 @@ p > small.hx-caption {
     margin-left: 1em !important;
 }
 
+/* For the smiley-face button */
+.hx-smiley {
+}
+
+.hx-smileystack {
+    margin-left: auto;
+}
+
+.hx-smileyspacer {
+    margin-right: auto;
+}
+
 /* Add image HRs */
 /*
 hr.hx-fancy {

@@ -14,6 +14,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
         collapsedNav: false,
 
+        // Click to turn frowny things smiley?
+        makeSmiles: false,
+
         // Remove the "Add a Post" button and/or auto-open the on-page discussions.
         removeAddPostButton: false,
         openPageDiscussion: false,
@@ -233,6 +236,28 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             $('.sequence-bottom').hide();
             $('.sequence > .path').hide();
             $('h3.unit-title').hide();
+        }
+
+        /**************************************/
+        // Make Smiles
+        // Adds a little meh-face at the bottom of the page.
+        // Click on it to make it smiley.
+        // Will eventually store state in LocalStorage.
+        /**************************************/
+        if(hxOptions.makeSmiles){
+            
+            // var smileLocation = $('.sequence-nav .nav-item.active').attr('data-id');
+            var mehFace = $('<span class="hx-smileystack fa-stack fa-lg"><span class="hx-smiley fa fa-circle fa-stack-2x" style="color:orange"></span><span class="hx-smiley fa fa-meh-o fa-stack-2x" style="color:black"></span></span>');
+            var smileFace = $('<span class="hx-smileystack fa-stack fa-lg"><span class="hx-smiley fa fa-circle fa-stack-2x" style="color:#0d0"></span><span class="hx-smiley fa fa-smile-o fa-stack-2x" style="color:black"></span></span>');
+            var spacer = $('<span class="hx-smileyspacer"></span>');
+            $('.hx-smileystack').remove();
+            $('.hx-smileyspacer').remove();
+            $('.sequence-bottom').prepend(spacer);
+            $('.sequence-bottom').append(mehFace);
+            $(mehFace).on('click tap', function(){
+                $(mehFace).remove();
+                $('.sequence-bottom').append(smileFace);
+            });
         }
 
         /**************************************/
