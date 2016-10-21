@@ -247,8 +247,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         if(hxOptions.makeSmiles){
             
             // var smileLocation = $('.sequence-nav .nav-item.active').attr('data-id');
-            var mehFace = $('<span class="hx-smileystack fa-stack fa-lg"><span class="hx-smiley fa fa-circle fa-stack-2x" style="color:orange"></span><span class="hx-smiley fa fa-meh-o fa-stack-2x" style="color:black"></span></span>');
-            var smileFace = $('<span class="hx-smileystack fa-stack fa-lg"><span class="hx-smiley fa fa-circle fa-stack-2x" style="color:#0d0"></span><span class="hx-smiley fa fa-smile-o fa-stack-2x" style="color:black"></span></span>');
+            var mehFace = $('<span class="hx-smileystack hx-meh fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-meh-o fa-stack-2x"></span></span>');
+            var smileFace = $('<span class="hx-smileystack hx-smile fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-smile-o fa-stack-2x"></span></span>');
             var spacer = $('<span class="hx-smileyspacer"></span>');
             $('.hx-smileystack').remove();
             $('.hx-smileyspacer').remove();

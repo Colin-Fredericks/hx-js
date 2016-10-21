@@ -94,11 +94,25 @@ p > small.hx-caption {
 }
 
 /* For the smiley-face button */
-.hx-smiley {
-}
 
 .hx-smileystack {
     margin-left: auto;
+}
+
+.hx-smileystack .fa-smile-o {
+    color:black;
+}
+
+.hx-smileystack .fa-meh-o {
+    color:black;
+}
+
+.hx-smileystack.hx-smile .fa-circle {
+    color:#bef;
+}
+
+.hx-smileystack.hx-meh .fa-circle {
+    color:lightgray;
 }
 
 .hx-smileyspacer {
