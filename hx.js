@@ -17,8 +17,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Click to turn frowny things smiley?
         makeSmiles: false,
 
-        // Remove the "Add a Post" button and/or auto-open the on-page discussions.
-        removeAddPostButton: false,
+        // Auto-open the on-page discussions.
         openPageDiscussion: false,
 
         // Marks all external links with an icon.
@@ -250,6 +249,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             var mehFace = $('<span class="hx-smileystack hx-meh fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-meh-o fa-stack-2x"></span></span>');
             var smileFace = $('<span class="hx-smileystack hx-smile fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-smile-o fa-stack-2x"></span></span>');
             var spacer = $('<span class="hx-smileyspacer"></span>');
+            // Remove any existing elements, because the way edX loads pages calls javascript multiple times
             $('.hx-smileystack').remove();
             $('.hx-smileyspacer').remove();
             $('.sequence-bottom').prepend(spacer);
@@ -262,15 +262,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         }
 
         /**************************************/
-        // Forum Tricks
-        // Auto-open inline discussions and/or
-        // remove the "Add a Post" button.
+        // Forum Tricks section. Right now, we only have:
+        // Auto-open inline discussions
         /**************************************/
-        if(hxOptions.removeAddPostButton){
-            $('.new-post-btn').hide();
-        }
         if(hxOptions.openPageDiscussion){
-            $('.discussion-show').click();
+            $('.discussion-show.btn').click();
         }
 
 
@@ -281,7 +277,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Set hxLocalOptions.markExternalLinks = true to use.
         /**************************************/
         if(hxOptions.markExternalLinks){
-            console.log('marking external links');
+            logThatThing('marking external links');
             $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function(i, linky){
                 var destination = $(linky).attr('href');
                 if(typeof destination !== 'undefined'){

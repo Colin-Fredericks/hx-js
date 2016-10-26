@@ -420,10 +420,7 @@ Every link that is not to an edx.org site will be marked with [a box-and-arrow i
 
 ### Forum Tricks
 
-Maybe you want in-page discussions, but you don't want people making a million billion threads. There are two things you can do to help with this:
-
-* Set `removeAddPostButton: true,` in your hxGlobalOptions.js file to remove the bright shiny blue "Add a Post" button from your inline discussions. Students will only be able to add posts in the discussion board itself.
-* Set `openPageDiscussion: true,` in your hxGlobalOptions.js file to automatically open every inline discussion as soon as someone comes to a page.
+Maybe you want in-page discussions, but you want them open right away so everyone can see all the different threads. Set `openPageDiscussion: true,` in your hxGlobalOptions.js file to automatically open every inline discussion as soon as someone comes to a page.
 
 
 ## Future Features
