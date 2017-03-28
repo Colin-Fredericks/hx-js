@@ -10,7 +10,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     var hxDefaultOptions = {
         // Table of Contents
         makeTOC: false,
-        
+
         // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
         collapsedNav: false,
 
@@ -27,7 +27,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         highlightColor: '#ff0',
         highlightBackground: 'rgba(0,0,0,0)',
         highlightState: true,
-
+        // Default options for Slick image slider
         slickOptions: {
             arrows: true,
             dots: true,
@@ -62,6 +62,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             atPosition: 'center',
             ofTarget: window
         },
+        // Default options for video links
         VidLinkOptions: {
             hideLinkAfter: 5, //seconds
             effect: 'slide',
@@ -76,7 +77,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Get course external URL and related info.
     // Good for logging and grabbing scripts/images.
     /***********************************************/
-    
+
     var courseAssetURL = getAssetURL(window.location.href, 'complete');
     logThatThing(courseAssetURL);
 
@@ -89,13 +90,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
     var courseInfo = getCourseInfo(window.location.href);
     var courseLogID = courseInfo.institution + '.' + courseInfo.id + '_' + courseInfo.run;
-    
+
     logThatThing({'HX.js': 'enabled'});
     logThatThing({'course log id': courseLogID});
 
 
     /**************************************/
-    // Load outside scripts. 
+    // Load outside scripts.
     // Must be in Files & Uploads.
     // Only do it if we need them.
     // Continue when done.
@@ -113,7 +114,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     }
 
     var scriptArray = [];
-    
+
     // We definitely want to load the course-wide options file.
     // It overrides defaults in this file, and is overridden by local options.
     var hxOptions = {};
@@ -128,7 +129,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         scriptArray.push('slick.js');
     }
 
-    // Do we load XHVideoLinks for... um... HarvardX video links.
+    // Do we load HXVideoLinks for... um... HarvardX video links?
     // And HXPopUpProblems for pop-up problems.
     // Set hxLocalOptions.dontLoadVideoStuff: true to avoid this,
     // for instance if you have several videos on one page that don't need it.
@@ -139,7 +140,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             console.log('skipping loading video js');
         }
     }
-    
+
     var allVideos = $('.video');
     if(loadVideoStuff){
         if(allVideos.length){
@@ -168,7 +169,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
             keepGoing(hxOptions);
     })
-    
+
     // Once we have the options, we're ready to proceed.
     function keepGoing(hxOptions){
 
@@ -184,14 +185,14 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 HXPUP = new HXPopUpProblems(hxDefaultOptions.PUPOptions, HXPUPTimer);
             }
         }
-    
+
         /**************************************/
         // Jump to time in video on this page.
         // Make a link like <a href="#video1" data-time="mm:ss">link text</a>
-        // The # is actually a pound sign for anchor link. 
+        // The # is actually a pound sign for anchor link.
         // Set the number to which video you want. Top one is 1.
         /**************************************/
-        
+
         var allTimeLinks = $('a.hx-vidtime');
         allTimeLinks.on('click tap', function(){
             var thisTime = hmsToTime($(this).attr('data-time'));
@@ -200,7 +201,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             var vidNumber = anchor.replace('#video', '');
             var unitNumber = href.slice(href.indexOf('/jump_to_id/') + 13, href.indexOf('#video'))
             var startsWithHash = href.indexOf('#') === 0 ? true : false;
-            
+
             // If the href starts with a pound sign, go on this page.
             if(startsWithHash){
                 logThatThing({'link starts video at time': thisTime});
@@ -221,8 +222,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 });
             }
         });
-        
-        
+
+
         /**************************************/
         // Collapsed Navigation
         // Removes the navigation bar at the top of the page and arrows at the bottom.
@@ -244,7 +245,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Will eventually store state in LocalStorage.
         /**************************************/
         if(hxOptions.makeSmiles){
-            
+
             // var smileLocation = $('.sequence-nav .nav-item.active').attr('data-id');
             var mehFace = $('<span class="hx-smileystack hx-meh fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-meh-o fa-stack-2x"></span></span>');
             var smileFace = $('<span class="hx-smileystack hx-smile fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-smile-o fa-stack-2x"></span></span>');
@@ -281,13 +282,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function(i, linky){
                 var destination = $(linky).attr('href');
                 if(typeof destination !== 'undefined'){
-                    if( destination.includes('edx.org') 
+                    if( destination.includes('edx.org')
                         || destination.includes('jump_to_id')
                         || destination.includes('/courses/')
                         || destination.includes('cloudfront.net')
                         || destination.includes('javascript:void')
                         || destination.slice(0,1) == '#' ){
-                    
+
                     }else{
                         $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
                     }
@@ -301,7 +302,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Uses h3 and h4 elements, links them up.
         // Set hxLocalOptions.makeTOC = true to use.
         /**************************************/
-        
+
         if(hxOptions.makeTOC){
             if($('.edx-notes-wrapper-content').length){
                 $('.edx-notes-wrapper-content:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
@@ -318,12 +319,12 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             });;
 
             var TOCList = $('#autoTOC ul');
-            
+
             // For each header, add it to the list and make a link.
             allHeaders.each(function(i){
                 // Set the id of the element to link to.
                 $(this).attr('id','TOCLink'+i);
-                
+
                 var TOCEntry = $(this).text();
                 var TOCLevel;
                 if($(this).is('h3')){
@@ -332,13 +333,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                         autoTOC += '<li class="autotoc'
                             + TOCLevel
                             + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry 
+                            + TOCEntry
                             + '</a></li>';
                     } else if($(allHeaders[i-1]).is('h4')){
                         autoTOC += '</ul></li><li class="autotoc'
                             + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">' 
-                            + TOCEntry 
+                            + '"><a href="#TOCLink'+i+'">'
+                            + TOCEntry
                             + '</a></li>';
                     }
                 }
@@ -348,20 +349,20 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                         if(i>0){ autoTOC.slice(0, autoTOC.length - 5); }
                         autoTOC += '<ul><li class="autotoc'
                             + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">' 
-                            + TOCEntry 
+                            + '"><a href="#TOCLink'+i+'">'
+                            + TOCEntry
                             + '</a></li>';
                     } else if($(allHeaders[i-1]).is('h4')){
                         autoTOC += '<li class="autotoc'
                             + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">' 
-                            + TOCEntry 
+                            + '"><a href="#TOCLink'+i+'">'
+                            + TOCEntry
                             + '</a></li>';
                     }
                 }
             });
             autoTOC += '</ul>';
-            
+
             // Done - add it all to the DOM.
             $('#autoTOC').append(autoTOC);
         }
@@ -371,15 +372,15 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Stuff for a visibility toggle button.
         // Button classes start with "hx-togglebutton#"
         // Target classes start with "hx-toggletarget#"
-        // # is a number, not a pound sign. 
+        // # is a number, not a pound sign.
         /**************************************/
 
         $('[class^=hx-togglebutton]').on('click tap', function() {
-        
+
             var myNumber = getClassNumber(this.className, 'hx-togglebutton');
-        
+
             $('.hx-toggletarget'+myNumber).slideToggle('fast');
-        
+
             logThatThing({
                 'Toggle button': 'pressed',
                 'Toggle number': myNumber
@@ -395,17 +396,17 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         /**************************************/
 
         $('[class^=hx-highlighter]').on('click tap', function() {
-        
+
             var myNumber = getClassNumber(this.className, 'hx-highlighter');
-            
+
             if ( hxOptions.highlightState ) {
                 $( '.hx-highlight'+myNumber ).animate( { backgroundColor: hxOptions.highlightColor }, 200 );
             } else {
                 $( '.hx-highlight'+myNumber ).animate( { backgroundColor: hxOptions.highlightBackground }, 200 );
             }
-            
+
             hxOptions.highlightState = !hxOptions.highlightState;
-        
+
             logThatThing({
                 'Highlight button': 'pressed',
                 'Highlight number': myNumber
@@ -419,45 +420,45 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Target div has class "MyID hx-popup-content"
         // Don't put other classes first.
         /*******************************************/
-    
+
         var popUpOpener = $('.hx-popup-opener');
-    
+
         if(popUpOpener.length){
-    
+
             // First, create lists of areas for the purpose of accessibility.
             $('map').each(function(index){
-        
+
                 // Make a list element from each area's title
                 var tempList = [];
                 $(this).find('area').each(function(index){
-                
+
                     tempList.push('<li class="'
                         + this.className.split(/\s+/)[0]
                         + ' hx-popup-opener" title="'
-                        + this.title 
-                        + '"><a href="javascript:;">' 
-                        + this.title 
+                        + this.title
+                        + '"><a href="javascript:;">'
+                        + this.title
                         + '</a></li>'
                     );
                 });
-            
+
                 // Make that list into a big string and wrap it with UL
                 var listHTML = '<ul>' + tempList.join('') + '</ul>';
                 listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
-            
+
                 // Append the list right after the map.
                 $(this).after(listHTML);
             });
-        
+
             // Get the list of popup openers again so we can bind properly.
             popUpOpener = $('.hx-popup-opener');
 
             // Create the dialogue if we click on the right areas or links.
             popUpOpener.on('click tap', function(){
-            
+
                 var myClass = this.className;
                 var boxName = myClass.split(/\s+/)[0];
- 
+
                 $('div.'+boxName).dialog({
                     dialogClass: "hx-popup-dialog",
                     title: $(this).attr('title'),
@@ -474,13 +475,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                     $('div.'+boxName).css({'display':''});
                     alert(boxName);
                 });
-            
+
                 logThatThing({
                     'Pop-up Dialog': 'opened',
                     'Dialog': boxName
                 });
             });
-        
+
         }
 
 
@@ -491,12 +492,12 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Does some rearranging and formatting.
         // Must have HTML component with h3 header "Footnotes"
         /***********************************/
-    
+
         var allFootnotes = $('span[class^="hx-footnote"]');
-    
+
         if(allFootnotes.length){
             var thisFootnote, thisNumber, thisTarget, footnoteComponents, destinationComponent;
-        
+
             for(var i = 0; i < allFootnotes.length; i++){
 
                 thisFootnote = allFootnotes[i];
@@ -520,7 +521,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 thisTarget.append('<p><a href="#hxfootback'+thisNumber+'">(back)</a></p>');
 
             }
-        
+
         }
 
 
@@ -549,9 +550,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         // Placeholder: Intro.js walkthroughs
         // Still trying to figure out how to place these properly.
-        
+
     }
-    
+
 
     /***********************************/
     // Various utility functions.
@@ -561,19 +562,19 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // because we can't use /static/ from within javascript.
     // Pass 'complete' for the whole thing, 'site' for the site, or 'partial' for without the site.
     function getAssetURL(windowURL, option){
-        
+
         // Sometimes escape characters are not our friends.
         windowURL = windowURL.replace('%2B', '+');
         windowURL = windowURL.replace('%3A', ':');
-        
+
         // Match the site in case we need it for something later.
         var courseSiteURL = windowURL.match(/https:\/\/.+.org\//)[0];
-    
+
         if(option == 'site'){ return courseSiteURL; }
 
         // Switch from course to asset
         var staticFolderURL = windowURL.replace('courses/course', 'asset');
-        
+
         // In case we're rendering in XBlock URL mode:
         if(staticFolderURL.search('xblock/block-v1') > -1){
             staticFolderURL = staticFolderURL.replace('xblock/block', 'asset');
@@ -587,9 +588,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         // Switch from courseware to type
         staticFolderURL = staticFolderURL + '+type@asset+block/';
-    
+
         if(option == 'partial'){ return staticFolderURL.replace(courseSiteURL, ''); }
-    
+
         return staticFolderURL;
     }
 
@@ -597,13 +598,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     function getCourseInfo(windowURL){
         var partialURL = getAssetURL(windowURL, 'partial');
         var courseInfo = {};
-    
+
         // get the part from the colon to the first +
         partialURL = partialURL.split(':')[1];
         courseInfo.institution = partialURL.split('+')[0];
         courseInfo.id = partialURL.split('+')[1];
         courseInfo.run = partialURL.split('+')[2];
-    
+
         return courseInfo;
 
     }
@@ -619,14 +620,14 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         }
         return -1;
     }
-    
+
     // Sets the default options for something if they're not already defined.
     // Prioritizes local options, then global options in /static/, then the ones in this file.
     // Does deep copy (clone)
     function setDefaultOptions(localOptions, globalOptions, fallbackOptions){
 
         var tempOptions = {};
-        
+
         if (!localOptions && !globalOptions) {
             return fallbackOptions;
         } else if (!localOptions) {
@@ -636,16 +637,16 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         } else {
             tempOptions = $.extend(true, {}, fallbackOptions, globalOptions, localOptions);
         }
-        
+
         return tempOptions;
     }
-    
+
     // Konami Code
     (function($) {
 
         $.fn.hxKonami = function(callback, code) {
             if(code === undefined) code = "38,38,40,40,37,39,37,39,66,65";
-        
+
             return this.each(function() {
                 var kkeys = [];
                 $(this).keydown(function(e){
@@ -662,7 +663,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         };
 
     })(jQuery);
-    
+
     // Should probably add code to make sure this doesn't get run multiple times.
     $(window).hxKonami(function(){
         alert('+30 Lives');
@@ -679,21 +680,21 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         var hmsArray = hms.split(':');
         var time = 0;
-    
+
         if(hmsArray.length == 3){
             time = 3600*parseInt(hmsArray[0]) + 60*parseInt(hmsArray[1]) + Number(hmsArray[2]);
         }
         else if(hmsArray.length == 2){
             time = 60*parseInt(hmsArray[0]) + Number(hmsArray[1]);
         }
-    
+
         else if(hmsArray.length == 1){
             time = Number(hmsArray[0]);
         }
-    
+
         return time;
     }
-    
+
     this.hmsToTime = hmsToTime;
 
 
@@ -701,11 +702,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     function logThatThing(ThatThing){
         console.log(JSON.stringify(ThatThing));
         Will put back in after done testing.
-        Logger.log(courseLogID + '.hxjs', ThatThing); 
+        Logger.log(courseLogID + '.hxjs', ThatThing);
     }
-    
+
     this.logThatThing = logThatThing;
-    
+
 });
 
 
