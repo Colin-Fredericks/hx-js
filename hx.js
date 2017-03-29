@@ -701,7 +701,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Send logs both to the console and to the official edX logamajig.
     function logThatThing(ThatThing){
         console.log(JSON.stringify(ThatThing));
-        Will put back in after done testing.
         Logger.log(courseLogID + '.hxjs', ThatThing);
     }
 
