@@ -447,7 +447,12 @@ var hxLocalOptions =  {
         makeTOC: false,
         
         // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
+        // This should only be used for older versions of OpenEdX before the 2017 navigation overhaul.
         collapsedNav: false,
+        
+        // Puts a little "meh" face at the bottom of the page.
+        // Click it to turn it into a smiley face.
+        makeSmiles: true,
 
         // Remove the "Add a Post" button and/or auto-open the on-page discussions.
         removeAddPostButton: false,

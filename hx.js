@@ -15,7 +15,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         collapsedNav: false,
 
         // Click to turn frowny things smiley?
-        makeSmiles: false,
+        makeSmiles: true,
 
         // Auto-open the on-page discussions.
         openPageDiscussion: false,
@@ -88,6 +88,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         return;
     }
 
+    // Get our current location, mostly for logging purposes,
+    // but also so we can load the scripts properly.
     var courseInfo = getCourseInfo(window.location.href);
     var courseLogID = courseInfo.institution + '.' + courseInfo.id + '_' + courseInfo.run;
 
@@ -101,6 +103,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Only do it if we need them.
     // Continue when done.
     /**************************************/
+    
+    // Define the function that gets the outside scripts.
     $.getMultiScripts = function(arr, path) {
         var _arr = $.map(arr, function(scr) {
             return $.getScript( (path||'') + scr );
@@ -141,6 +145,10 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         }
     }
 
+    // We load the video scripts when...
+    // - we're not specifically told not to
+    // - and there's a video on the page
+    // - and, for pop-up problems, there needs to be a timer.
     var allVideos = $('.video');
     if(loadVideoStuff){
         if(allVideos.length){
@@ -154,7 +162,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             }
         }
     }
-
+    
+    // This is where we load all the outside scripts we want.
     $.getMultiScripts(scriptArray, courseAssetURL)
         .done(function() {
             logThatThing({'Loaded scripts': scriptArray});
@@ -226,14 +235,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         /**************************************/
         // Collapsed Navigation
-        // Removes the navigation bar at the top of the page and arrows at the bottom.
-        // Only use this if you have just one unit per subsection, because otherwise
-        // your learners will never find the other units.
-        // Set hxLocalOptions.collapsedNav = true to use.
+        // Removes the navigation bar at the top of the page.
+        // The arrows will still be at the bottom of the page.
+        // Set hxLocalOptions.collapsedNav = true to use, or pref. in Global
         /**************************************/
         if(hxOptions.collapsedNav){
             $('.sequence-nav').hide();
-            $('.sequence-bottom').hide();
+            // $('.sequence-bottom').hide();
             $('.sequence > .path').hide();
             $('h3.unit-title').hide();
         }
@@ -242,7 +250,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Make Smiles
         // Adds a little meh-face at the bottom of the page.
         // Click on it to make it smiley.
-        // Will eventually store state in LocalStorage.
+        // Might eventually store state in LocalStorage.
         /**************************************/
         if(hxOptions.makeSmiles){
 
@@ -262,6 +270,18 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             });
         }
 
+        /**************************************/
+        // Make a color picker that lightly tints the page
+        // for people with dyslexia.
+        // Still a work in progress.
+        /**************************************/
+        var tintButton = $('#hx-tint');
+        if(tintButton.length){
+            $(tintButton).on('click tap', function(){
+                $('p').animate({'color': 'blue'});
+            });
+        }
+        
         /**************************************/
         // Forum Tricks section. Right now, we only have:
         // Auto-open inline discussions
@@ -418,7 +438,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Clickable images that pop up dialog boxes.
         // Clickable area has id "MyID" and class "hx-popup-opener"
         // Target div has class "MyID hx-popup-content"
-        // Don't put other classes first.
+        // Don't put other classes first, but you can put them later if you want.
         /*******************************************/
 
         var popUpOpener = $('.hx-popup-opener');
