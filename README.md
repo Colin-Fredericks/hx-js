@@ -91,6 +91,9 @@ All of these are classes that you add to various elements.
 * For images or divs that hang down on the **left-hand side**, including image-based drop-caps, use `class="hx-hangleft"`.
 * To get rid of the top navigation "ribbon" and bottom left/right buttons, add `hxLocalOptions.collapsedNav = true;` to a script tag on your page. Warning: By doing this you are intentionally removing students' ability to get to other units in this subsection. Only do this in subsections that have just a single unit.
 * To add a UTC clock on the right-hand side of the "pages" section, add `hxLocalOptions.showClock = true;` to a script tag on your page.
+* Image maps are automatically rescaled to fit images if edX's responsive design changes the size of the image. To turn this off, set `hxLocalOptions.resizeMaps = false` in a script tag on your page.
+
+
 
 ### Pretty boxes
 
@@ -457,6 +460,9 @@ var hxLocalOptions =  {
         // Remove the "Add a Post" button and/or auto-open the on-page discussions.
         removeAddPostButton: false,
         openPageDiscussion: false,
+
+        // Resize image maps when an image shrinks because of screen size
+        resizeMaps: true,
 
         // Marks all external links with an icon.
         markExternalLinks: false,
