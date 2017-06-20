@@ -20,6 +20,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Auto-open the on-page discussions.
         openPageDiscussion: false,
 
+        // Resize image maps when an image shrinks because of screen size
+        resizeMaps: true,
+
         // Marks all external links with an icon.
         markExternalLinks: false,
 
@@ -133,6 +136,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         scriptArray.push('slick.js');
     }
 
+    // Do we load the Image Map Resizer?
+    var theMaps = $('map');
+    if(theMaps.length){
+        logThatThing({'image_map': 'found'});
+        scriptArray.push('imageMapResizer.min.js');
+    }
+
     // Do we load HXVideoLinks for... um... HarvardX video links?
     // And HXPopUpProblems for pop-up problems.
     // Set hxLocalOptions.dontLoadVideoStuff: true to avoid this,
@@ -194,6 +204,14 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 HXPUP = new HXPopUpProblems(hxDefaultOptions.PUPOptions, HXPUPTimer);
             }
         }
+
+        /**************************************/
+        // If we have image maps, scale them.
+        /**************************************/
+        if(theMaps.length && hxOptions.resizeMaps){
+            $('map').imageMapResize();
+        }
+
 
         /**************************************/
         // Jump to time in video on this page.
