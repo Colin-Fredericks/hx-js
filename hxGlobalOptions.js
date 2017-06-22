@@ -8,7 +8,7 @@
 
 var hxGlobalOptions = {
     hasGlobalOptions: true,
-    makeSmiles: true,
+    makeSmiles: false,
 
     /********************************************/
     // Slick Image Slider Options
