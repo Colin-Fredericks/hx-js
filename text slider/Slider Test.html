@@ -1,0 +1,105 @@
+<script>
+var hxLocalOptions =  {
+ slickOptions: {
+  arrows: false,
+  dots: false,
+  infinite: false,
+  draggable: false,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  swipe: false,
+  touchMove: false
+ }
+}
+</script>
+<script src="/static/hx.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/hx.css">
+
+<style>
+.slick-slider {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+.slideBreadcrumbs {
+  color: #666;
+}
+</style>
+
+<script>
+$(document).ready(function(){
+
+  var depth = 0;
+  var history = [];
+  var breadcrumbs = [];
+  var crumbTray = $('.slideBreadcrumbs');
+  
+  function currentSlide(){
+  	return $($('.slick-current')[0]).children().first().children().first();
+  }
+  
+  function formatCrumbs(crumbs){
+  	return crumbs.join(' » ');
+  }
+  
+  $('.hx-slider').on('init', function(){
+	breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
+	crumbTray.text(breadcrumbs[0]);
+  });
+
+  $('.slidelink').on('click tap', function(){
+    var target = $(this).attr('data-target');
+    history.push( $('.hx-slider').slick('slickCurrentSlide') );
+    $('.hx-slider').slick('slickGoTo',target);
+    breadcrumbs.push( currentSlide().attr('data-breadcrumb') 
+    );
+    crumbTray.html(formatCrumbs(breadcrumbs));
+  });
+  
+  $('.backToParentSlide').on('click tap', function(){
+    breadcrumbs.pop();
+    $('.hx-slider').slick('slickGoTo',history.pop());
+    crumbTray.html(formatCrumbs(breadcrumbs));
+  });
+});
+</script>
+
+<h3>Test Slider</h3>
+
+<div class="crumbbox">
+  <button class="backToParentSlide">Back</button>
+  <span class="slideBreadcrumbs"></span>
+</div>
+
+<div class="hx-sliderbox">
+<div class="hx-slider">
+  <div data-breadcrumb="Climate Bears">
+    <img class="hx-hangright" src="https://placebear.com/300/300" alt="placeholder bear"/>
+	<h3>Placeholder Bear 0</h3>
+	<p>I am some wonderful text about bears and how nice it is that they don't come to bother me.</p>
+	<p>My height and shoulders degree in philosophy glass half-full outdoor activities. My favorite word is it depends on the night sleeping late tattoos nothing too complicated, training for the marathon Neutral Milk Hotel my favorite word is Kurosawa medical school. Nothing too complicated activity partners grab coffee or a drink working on my body and my mind video games I love the smell of.</p>
+	<button class="slidelink" data-target="7">Slide 7</button>
+	</div>
+  <div><img src="https://placebear.com/250/250" alt="placeholder bear"/>Placeholder Bear 1</div>
+  <div><img src="https://placebear.com/180/180" alt="placeholder bear"/>Placeholder Bear 2</div>
+  <div><img src="https://placebear.com/150/150" alt="placeholder bear"/>Placeholder Bear 3</div>
+  <div data-breadcrumb="Condition Bears">
+    <img src="https://placebear.com/240/240" alt="placeholder bear"/>
+	<h3>Placeholder Bear 4</h3>
+	<p>I am some wonderful text about bears and how nice it is that they don't come to bother me.</p>
+	<p>Doctor Who glass half-full but then it wouldn't be private extrovert. Whatever topic is on NPR art school playing my guitar grab coffee or a drink Ethiopian, my friends tell me they don't get why I'm single beach days my height and shoulders going to shows I love the smell of. Watching a movie I'm just a regular guy Netflix new friends my goofy smile I'm pretty laid-back.</p>
+  </div>
+  <div><img src="https://placebear.com/240/240" alt="placeholder bear"/>Placeholder Bear 5</div>
+  <div><img src="https://placebear.com/240/240" alt="placeholder bear"/>Placeholder Bear 6</div>
+  <div data-breadcrumb="Event Bears">
+    <img src="https://placebear.com/240/240" alt="placeholder bear"/>
+	<h3>Placeholder Bear 7</h3>
+	<p>I am some wonderful text about bears and how nice it is that they don't come to bother me.</p>
+	<p>I don't take myself too seriously as friends running shoes Neutral Milk Hotel. My eyes open-minded I'm not good at filling out these things art school loyal, having a few beers Oxford comma not looking for a penpal passionate about jazz cafes. Myers-Briggs feminism Murakami sleeping late I'm looking for loyal.</p>
+	<button class="slidelink" data-target="4">Slide 4</button>
+  </div>
+  <div><img src="https://placebear.com/100/100" alt="placeholder bear"/>Placeholder Bear 8</div>
+  <div><img src="https://placebear.com/200/200" alt="placeholder bear"/>Placeholder Bear 9</div>
+</div>
+</div>
