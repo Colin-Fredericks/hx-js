@@ -22,8 +22,24 @@ var hxLocalOptions =  {
   -ms-user-select: text;
   user-select: text;
 }
+.hx-sliderbox {
+  border-top: 2px solid #666;
+  border-bottom: 2px solid #666;
+}
+.backToParentSlide {
+  border: none;
+  color: #999;
+  background-color: white;
+  background-image: none;
+  font-size: 16pt;
+  padding: 4px;
+}
+.canGoBack {
+  color: black;
+}
 .slideBreadcrumbs {
-  color: #666;
+  color: #999;
+  font-size: 12pt;
 }
 </style>
 
@@ -34,6 +50,7 @@ $(document).ready(function(){
   var history = [];
   var breadcrumbs = [];
   var crumbTray = $('.slideBreadcrumbs');
+  var backButton = $('.backToParentSlide');
   
   function currentSlide(){
   	return $($('.slick-current')[0]).children().first().children().first();
@@ -55,12 +72,18 @@ $(document).ready(function(){
     breadcrumbs.push( currentSlide().attr('data-breadcrumb') 
     );
     crumbTray.html(formatCrumbs(breadcrumbs));
+    backButton.addClass('canGoBack');
   });
   
   $('.backToParentSlide').on('click tap', function(){
-    breadcrumbs.pop();
-    $('.hx-slider').slick('slickGoTo',history.pop());
-    crumbTray.html(formatCrumbs(breadcrumbs));
+    if(breadcrumbs.length > 1){
+	  breadcrumbs.pop();
+	  $('.hx-slider').slick('slickGoTo',history.pop());
+	  crumbTray.html(formatCrumbs(breadcrumbs));
+	  if(breadcrumbs.length == 1){
+		backButton.removeClass('canGoBack');
+	  }
+	}
   });
 });
 </script>
@@ -68,7 +91,7 @@ $(document).ready(function(){
 <h3>Test Slider</h3>
 
 <div class="crumbbox">
-  <button class="backToParentSlide">Back</button>
+  <button class="backToParentSlide">◀</button>
   <span class="slideBreadcrumbs"></span>
 </div>
 
