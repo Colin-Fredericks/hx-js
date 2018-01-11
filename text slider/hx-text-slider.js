@@ -40,11 +40,9 @@ $(document).ready(function(){
     return slideHTML;
   }
 
-  // Takes slide HTML, adds it to the DOM, and sets listeners.
-  function addSlide(slick, slideHTML){
-    slick.slickAdd(slideHTML);
-    // Add link listener
-    $('.slidelink').on('click tap', function(e){
+  // Add one-time link listeners.
+  function addListeners(slick){
+    currentSlide().find('.slidelink').one('click tap', function(e){
       e.preventDefault();
       // Get the link target.
       var target = $(this).attr('data-target');
@@ -63,6 +61,11 @@ $(document).ready(function(){
     });
   }
 
+  // Takes slide HTML, adds it to the DOM, and sets listeners.
+  function addSlide(slick, slideHTML){
+    slick.slickAdd(slideHTML);
+  }
+
   HXslider.on('init', function(e, slick){
     // Set up the first slide and drop it into the slider.
     addSlide(slick, getSlideHTML(sampleSlides[0]));
@@ -71,13 +74,15 @@ $(document).ready(function(){
     // Set initial breadcrumbs
 	  breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
 	  crumbTray.text(breadcrumbs[0]);
+    addListeners(slick);
   });
 
-  HXslider.on('afterChange', function(){
+  HXslider.on('afterChange', function(e, slick){
     // Update breadcrumbs
     crumbTray.html(formatCrumbs(breadcrumbs));
     // Handle keyboard focus manually after slides change.
     currentSlide().focus();
+    addListeners(slick);
   });
 
   $('.backToParentSlide').on('click tap', function(){
