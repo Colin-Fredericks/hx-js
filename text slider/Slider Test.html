@@ -1,16 +1,43 @@
 <script>
 var hxLocalOptions =  {
- slickOptions: {
-  arrows: false,
-  dots: false,
-  infinite: false,
-  draggable: false,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  swipe: false,
-  touchMove: false
- }
+  slickOptions: {
+    arrows: false,
+    dots: false,
+    infinite: false,
+    draggable: false,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    swipe: false,
+    touchMove: false
+  }
 }
+
+var sampleSlides = [
+  {
+    id: 'SlideA',
+    title: 'Topic A',
+    breadcrumb: 'Topic A',
+    image: 'https://placebear.com/250/250',
+    alt: 'Placebear 250',
+    text: '<p>I am the first paragraph. I have a link to <a class="slidelink" href="#" data-target="Slide2">Slide 2</a>.</p> <p>This is some \'escaped\' text. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. </p>'
+  },
+  {
+    id: 'Slide2',
+    title: 'Topic 2',
+    breadcrumb: 'Topic II',
+    image: 'https://placebear.com/350/350',
+    alt: 'Placebear 350',
+    text: '<p>I am the first paragraph. Here is some more escaped text: \'\"\&amp;</p> <p>I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I have a link to <a class="slidelink" href="#" data-target="SlideGamma">Slide Gamma</a>.I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. </p>'
+  },
+  {
+    id: 'SlideGamma',
+    title: 'Topic Gamma',
+    breadcrumb: 'Topic &#947;',
+    image: 'https://placebear.com/150/150',
+    alt: 'Placebear 150',
+    text: '<p>I am the first paragraph.</p> <p>I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. I am the second paragraph. </p>'
+  },
+]
 </script>
 
 <script src="/static/hx.js"></script>
@@ -27,33 +54,7 @@ var hxLocalOptions =  {
 </div>
 
 <div class="hx-sliderbox">
-<div class="hx-slider">
-  <div data-breadcrumb="Climate Bears" tabindex="-1">
-    <img class="hx-hangright" src="https://placebear.com/300/300" alt="placeholder bear"/>
-    <h3>Placeholder Bear 0</h3>
-    <p>I am some wonderful text about bears and how nice it is that they don't come to bother me.</p>
-    <p>My height and shoulders degree in philosophy glass half-full outdoor activities. My favorite word is it depends on the night sleeping late tattoos nothing too complicated, training for the marathon Neutral Milk Hotel my favorite word is Kurosawa medical school. Nothing too complicated activity partners grab coffee or a drink working on my body and my mind video games I love the smell of.</p>
-    <button class="slidelink" data-target="7">Slide 7</button>
+  <div class="hx-slider">
+    <div>Initializing...</div>
   </div>
-  <div><img src="https://placebear.com/250/250" alt="placeholder bear"/>Placeholder Bear 1</div>
-  <div><img src="https://placebear.com/180/180" alt="placeholder bear"/>Placeholder Bear 2</div>
-  <div><img src="https://placebear.com/150/150" alt="placeholder bear"/>Placeholder Bear 3</div>
-  <div data-breadcrumb="Condition Bears" tabindex="-1">
-    <img class="hx-hangright" src="https://placebear.com/140/140" alt="placeholder bear"/>
-  	<h3>Placeholder Bear 4</h3>
-  	<p>I am some wonderful text about bears and how nice it is that they don't come to bother me.</p>
-  	<p>Doctor Who glass half-full but then it wouldn't be private extrovert. Whatever topic is on NPR art school playing my guitar grab coffee or a drink Ethiopian, my friends tell me they don't get why I'm single beach days my height and shoulders going to shows I love the smell of. Watching a movie I'm just a regular guy Netflix new friends my goofy smile I'm pretty laid-back.</p>
-  </div>
-  <div><img src="https://placebear.com/240/240" alt="placeholder bear"/>Placeholder Bear 5</div>
-  <div><img src="https://placebear.com/240/240" alt="placeholder bear"/>Placeholder Bear 6</div>
-  <div data-breadcrumb="Event Bears" tabindex="-1">
-    <img class="hx-hangright" src="https://placebear.com/440/440" alt="placeholder bear"/>
-  	<h3>Placeholder Bear 7</h3>
-  	<p>I am some wonderful text about bears and how nice it is that they don't come to bother me.</p>
-  	<p>I don't take myself too seriously as friends running shoes Neutral Milk Hotel. My eyes open-minded I'm not good at filling out these things art school loyal, having a few beers Oxford comma not looking for a penpal passionate about jazz cafes. Myers-Briggs feminism Murakami sleeping late I'm looking for loyal.</p>
-  	<button class="slidelink" data-target="4">Slide 4</button>
-  </div>
-  <div><img src="https://placebear.com/100/100" alt="placeholder bear"/>Placeholder Bear 8</div>
-  <div><img src="https://placebear.com/200/200" alt="placeholder bear"/>Placeholder Bear 9</div>
-</div>
 </div>
