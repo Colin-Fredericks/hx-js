@@ -1,0 +1,26 @@
+.slick-slider {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+.hx-sliderbox {
+  border-top: 2px solid #666;
+  border-bottom: 2px solid #666;
+}
+.backToParentSlide {
+  border: none;
+  color: #999;
+  background-color: white;
+  background-image: none;
+  font-size: 16pt;
+  padding: 4px;
+}
+.canGoBack {
+  color: black;
+}
+.slideBreadcrumbs {
+  color: #999;
+  font-size: 12pt;
+  font-style: italic;
+}
