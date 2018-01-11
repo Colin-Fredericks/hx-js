@@ -9,7 +9,9 @@ $(document).ready(function(){
 
   // Returns the div for the current slide.
   function currentSlide(){
-  	return $($('.slick-current')[0]).children().first().children().first();
+    var cs = $($('.slick-current')[0]);
+    console.log(cs);
+  	return cs;
   }
 
   function formatCrumbs(crumbs){
@@ -19,7 +21,6 @@ $(document).ready(function(){
   // Returns the object for the slide with id slideName
   function lookupSlide(slides, slideName){
     for(i = 0; i < slides.length; i++){
-      console.log(slides[i].id);
       if(slides[i].id == slideName){
         return slides[i];
       }
@@ -31,7 +32,7 @@ $(document).ready(function(){
   function getSlideHTML(slide){
     var slideHTML = '';
     slideHTML += '<div data-breadcrumb="' + slide.breadcrumb + '" tabindex="-1">';
-    slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
+    slideHTML += '<img class="hx-hangright" src="' + slide.image + '" alt="' + slide.alt + '" />';
     slideHTML += '<h3>' + slide.title + '</h3>';
     slideHTML += slide.text;
     slideHTML += '</div>';
