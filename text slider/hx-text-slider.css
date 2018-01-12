@@ -24,3 +24,11 @@
   font-size: 12pt;
   font-style: italic;
 }
+.slideicons a{
+  float:left;
+  margin: 2px 2px 2px 0px;
+}
+
+.slideBreadcrumbs .bclink{
+  color: #389;
+}

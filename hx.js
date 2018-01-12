@@ -599,6 +599,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Turns a page URL in edX into an external asset url,
     // because we can't use /static/ from within javascript.
     // Pass 'complete' for the whole thing, 'site' for the site, or 'partial' for without the site.
+    // Public function.
     function getAssetURL(windowURL, option){
 
         // Sometimes escape characters are not our friends.
@@ -733,6 +734,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         return time;
     }
 
+    this.getAssetURL = getAssetURL;
     this.hmsToTime = hmsToTime;
 
 
