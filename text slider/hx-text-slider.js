@@ -115,12 +115,12 @@ $(document).ready(function(){
   }
 
   // Add one-time link listeners.
-  function addListeners(slick){
+  function addListeners(slick, slideData){
     currentSlide().find('.slidelink').one('click tap', function(e){
       e.preventDefault();
       // Get the link target.
       var target = $(this).attr('data-target');
-      var newSlide = lookupSlide(sampleSlides, target);
+      var newSlide = lookupSlide(slideData, target);
       // Insert new slide.
       addSlide(slick, getSlideHTML(newSlide))
       // Go to that slide.
@@ -162,52 +162,62 @@ $(document).ready(function(){
     slick.slickAdd(slideHTML);
   }
 
-  // Bring in the CSV file.
-  if('slidesFile' in window){
-    var csvfile = slidesFile;
-    console.log('Slides file: ' + csvfile)
-    if(slidesFile.indexOf('/static/') != -1){
-      csvfile = getAssetURL(window.location.href, 'complete') + csvfile;
-    }
-    Papa.parse(csvfile, {
-    	download: true,
-      header: true,
-    	complete: function(results) {
-        slideData = makeSlideArray(results.data)
-    		console.log(results);
-        console.log(slideData);
-        console.log(sampleSlides);
-    	}
-    });
-  }else{
-    console.log('Slides file not specified.')
-  }
-
+  // Set up initial listeners
   HXslider.on('init', function(e, slick){
     // Set up the first slide and drop it into the slider.
-    addSlide(slick, getSlideHTML(sampleSlides[0]));
-    // Remove the "Initializing" slide.
-    slick.slickRemove(0)
-    // Set initial history
-    history.push( currentSlide().attr('data-slide-id') );
-    // Set initial breadcrumbs
-	  breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
-	  crumbTray.html(formatCrumbs(breadcrumbs));
-    addListeners(slick);
+    // But wait for the data first.
+    var waitForData = setInterval(function(){
+      console.log('waiting for slide data...');
+      if(typeof slideData[0] !== 'undefined'){
+        console.log('Slide data loaded.');
+        addSlide(slick, getSlideHTML(slideData[0]));
+        // Remove the "Initializing" slide.
+        slick.slickRemove(0)
+        // Set initial history
+        history.push( currentSlide().attr('data-slide-id') );
+        // Set initial breadcrumbs
+        breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
+        crumbTray.html(formatCrumbs(breadcrumbs));
+        addListeners(slick, slideData);
+        clearInterval(waitForData);
+      }
+    }, 250);
   });
 
   HXslider.on('afterChange', function(e, slick){
+    console.log('slide changed');
     // Update breadcrumbs
     crumbTray.html(formatCrumbs(breadcrumbs));
     // Handle keyboard focus manually after slides change.
     currentSlide().focus();
-    addListeners(slick);
+    addListeners(slick, slideData);
   });
 
   $('.backToParentSlide').on('click tap', function(){
     // Don't go back if we're on the first slide.
     if(breadcrumbs.length > 1){
       goBackOne();
-  	}
+    }
   });
+
+  // Bring in the CSV file.
+  if('slidesFile' in window){
+    var csvfile = slidesFile;
+    if(slidesFile.indexOf('/static/') != -1){
+      csvfile = getAssetURL(window.location.href, 'complete') + csvfile;
+    }
+    Papa.parse(csvfile, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        slideData = makeSlideArray(results.data)
+        console.log(results);
+        console.log(slideData);
+      }
+    });
+  }else{
+    console.log('Slides file not specified.')
+  }
+
+
 });
