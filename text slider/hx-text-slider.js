@@ -1,3 +1,11 @@
+/*************************************************************
+/ Text slider for use within edX
+/ Created at HarvardX
+/ Requirements:
+/  * Slick image slider https://kenwheeler.github.io/slick/
+/  * PapaParse csv parser https://github.com/mholt/PapaParse
+*************************************************************/
+
 $(document).ready(function(){
 
   var depth = 0;
@@ -6,6 +14,42 @@ $(document).ready(function(){
   var crumbTray = $('.slideBreadcrumbs');
   var backButton = $('.backToParentSlide');
   var HXslider = $('.hx-slider');
+  var slideData = [];
+
+  // Process flat data into more useful structure. Particularly,
+  // get icons as array instead of a bunch of separate entries.
+  function makeSlideArray(sd){
+    // Valid keys: Icon#, Icon#Target	Icon#Alt
+    var newSlideData = [];
+
+    sd.forEach(function(e){
+      var newElement = {};
+      newElement.icons=[];
+      Object.keys(e).forEach( function(key, i){
+        lowerkey = key.toLowerCase();
+        newElement[lowerkey] = e[key];
+        if(key.indexOf('Icon') != -1){
+          // 5th character is always the number,
+          // and we don't allow more than 9 icons.
+          var iconNum = parseInt(key[4]) - 1;
+          if( typeof newElement.icons[iconNum] === 'undefined' ){
+            newElement.icons[iconNum] = {};
+          }
+          if( key == 'Icon' + (iconNum + 1) ){
+            newElement.icons[iconNum].image = e[key];
+          }else if( key == 'Icon' + (iconNum + 1) + 'Target' ){
+            newElement.icons[iconNum].target = e[key];
+          }else if( key == 'Icon' + (iconNum + 1) + 'Alt' ){
+            newElement.icons[iconNum].alt = e[key];
+          }else{
+            console.log('Weird key detected: ' + key)
+          }
+        }
+      });
+      newSlideData.push(newElement);
+    });
+    return newSlideData;
+  }
 
   // Returns the div for the current slide.
   function currentSlide(){
@@ -60,6 +104,7 @@ $(document).ready(function(){
       slideHTML += '</a>';
     }
     slideHTML += '</div>'
+
     slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
     slideHTML += '</div>';
 
@@ -115,6 +160,27 @@ $(document).ready(function(){
   // Takes slide HTML, adds it to the DOM, and sets listeners.
   function addSlide(slick, slideHTML){
     slick.slickAdd(slideHTML);
+  }
+
+  // Bring in the CSV file.
+  if('slidesFile' in window){
+    var csvfile = slidesFile;
+    console.log('Slides file: ' + csvfile)
+    if(slidesFile.indexOf('/static/') != -1){
+      csvfile = getAssetURL(window.location.href, 'complete') + csvfile;
+    }
+    Papa.parse(csvfile, {
+    	download: true,
+      header: true,
+    	complete: function(results) {
+        slideData = makeSlideArray(results.data)
+    		console.log(results);
+        console.log(slideData);
+        console.log(sampleSlides);
+    	}
+    });
+  }else{
+    console.log('Slides file not specified.')
   }
 
   HXslider.on('init', function(e, slick){
