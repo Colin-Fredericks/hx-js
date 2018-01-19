@@ -257,15 +257,25 @@ $(document).ready(function(){
     if(slidesFile.indexOf('/static/') != -1){
       csvfile = getAssetURL(window.location.href, 'complete') + csvfile;
     }
-    Papa.parse(csvfile, {
-      download: true,
-      header: true,
-      complete: function(results) {
-        slideData = makeSlideArray(results.data)
-        console.log(results);
-        console.log(slideData);
+    
+    // We're including the Papa CSV parser in the HTML, 
+    // so make sure it loads completely before trying to use it.
+    var waitForPapa = setInterval(function(){
+      console.log('waiting for CSV parser...');
+      if(typeof Papa !== 'undefined'){
+        Papa.parse(csvfile, {
+          download: true,
+          header: true,
+          complete: function(results) {
+            slideData = makeSlideArray(results.data)
+            console.log(results);
+            console.log(slideData);
+          }
+        });
+        clearInterval(waitForPapa);
       }
-    });
+    }, 250);
+
   }else{
     console.log('Slides file not specified.')
   }
