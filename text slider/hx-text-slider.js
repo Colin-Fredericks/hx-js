@@ -92,9 +92,14 @@ $(document).ready(function(){
     slideHTML += '<div data-breadcrumb="' + slide.breadcrumb
       + '" data-slide-id="' + slide.id
       + '" tabindex="-1">';
+      
     slideHTML += '<h3>' + slide.title + '</h3>';
+    
+    slideHTML += '<div class="hx-slidelayout">';
 
-    slideHTML += '<div class="rightbox hx-hangright">'
+    slideHTML += '<div class="hx-leftbox">' + slide.text + '</div>';
+
+    slideHTML += '<div class="hx-rightbox">'
     slideHTML += '<div class="slideicons">'
     for(i = 0; i < slide.icons.length; i++){
       slideHTML += '<a data-target="' + slide.icons[i].target + '" class="slidelink" href="">';
@@ -108,7 +113,6 @@ $(document).ready(function(){
     slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
     slideHTML += '</div>';
 
-    slideHTML += '<div class="slidetext">' + slide.text + '</div>';
     slideHTML += '</div>';
 
     return slideHTML;
@@ -116,6 +120,8 @@ $(document).ready(function(){
 
   // Add one-time link listeners.
   function addListeners(slick, slideData){
+  
+    // Handle links to other slides
     currentSlide().find('.slidelink').one('click tap', function(e){
       e.preventDefault();
       // Get the link target.
@@ -133,12 +139,22 @@ $(document).ready(function(){
       // Make the back button active.
       backButton.addClass('canGoBack');
     });
+
+    // Handle breadcrumb clicks
     $('.bclink').one('click tap', function(e){
       console.log('breadcrumb clicked');
       e.preventDefault();
       var backNum = $(this).attr('data-goback');
       for(i = 1; i < backNum; i++){ goBackOne(); }
     });
+    
+    // Enable collapsible sections
+    var togglers = currentSlide().find('.hx-togglenext');
+    togglers.next().hide();
+    togglers.on('click tap', function(){
+      $(this).find('span.fa').toggleClass('fa-caret-down fa-caret-right');
+      $(this).next().slideToggle(200);
+    })
   }
 
   // For the back button and the breadcrumbs
@@ -185,7 +201,6 @@ $(document).ready(function(){
   });
 
   HXslider.on('afterChange', function(e, slick){
-    console.log('slide changed');
     // Update breadcrumbs
     crumbTray.html(formatCrumbs(breadcrumbs));
     // Handle keyboard focus manually after slides change.
