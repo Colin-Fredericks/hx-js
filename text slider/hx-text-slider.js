@@ -25,21 +25,40 @@ $(document).ready(function(){
     sd.forEach(function(e){
       var newElement = {};
       newElement.icons=[];
+      newElement.folds=[];
       Object.keys(e).forEach( function(key, i){
         lowerkey = key.toLowerCase();
         newElement[lowerkey] = e[key];
-        if(key.indexOf('Icon') != -1){
-          // 5th character is always the number,
+        
+        // Make arrays for headers and folded texts
+        if(key.indexOf('Fold') == 0){
+          // Last character is the number, no more than 9.
+          var foldNum = parseInt(key[key.length-1]) - 1;
+          if( typeof newElement.folds[foldNum] === 'undefined' ){
+            newElement.folds[foldNum] = {};
+          }
+          if( key == 'FoldHeader' + (foldNum + 1) ){
+            newElement.folds[foldNum].header = e[key];
+          }else if( key == 'FoldText' + (foldNum + 1) ){
+            newElement.folds[foldNum].text = e[key];
+          }else{
+            console.log('Weird key detected: ' + key)
+          }
+        }
+        
+        // Make arrays for icons
+        if(key.indexOf('Icon') == 0){
+          // Last character is always the number,
           // and we don't allow more than 9 icons.
-          var iconNum = parseInt(key[4]) - 1;
+          var iconNum = parseInt(key[key.length-1]) - 1;
           if( typeof newElement.icons[iconNum] === 'undefined' ){
             newElement.icons[iconNum] = {};
           }
           if( key == 'Icon' + (iconNum + 1) ){
             newElement.icons[iconNum].image = e[key];
-          }else if( key == 'Icon' + (iconNum + 1) + 'Target' ){
+          }else if( key == 'IconTarget' + (iconNum + 1) ){
             newElement.icons[iconNum].target = e[key];
-          }else if( key == 'Icon' + (iconNum + 1) + 'Alt' ){
+          }else if( key == 'IconAlt' + (iconNum + 1) ){
             newElement.icons[iconNum].alt = e[key];
           }else{
             console.log('Weird key detected: ' + key)
@@ -97,16 +116,32 @@ $(document).ready(function(){
     
     slideHTML += '<div class="hx-slidelayout">';
 
-    slideHTML += '<div class="hx-leftbox">' + slide.text + '</div>';
+    slideHTML += '<div class="hx-leftbox">' 
+    slideHTML += slide.abovefold;
+    // All the collapsible bits, if any.
+    for(j = 0; j < slide.folds.length; j++){
+      if(slide.folds[j].header !== ''){
+        slideHTML += '<h4 class="hx-togglenext" tabindex="0">';
+        slideHTML += '<span class="fa fa-caret-right"></span> ';
+        slideHTML += slide.folds[j].header;
+        slideHTML += ' <span class="sr">Click to expand</span></h4>';
+        slideHTML += '<div>' + slide.folds[j].text + '</div>';
+      }
+    }
+    slideHTML += '</div>';
 
     slideHTML += '<div class="hx-rightbox">'
+    
+    // All the icons, if any.
     slideHTML += '<div class="slideicons">'
     for(i = 0; i < slide.icons.length; i++){
-      slideHTML += '<a data-target="' + slide.icons[i].target + '" class="slidelink" href="">';
-      slideHTML += '<img src="' + staticFolder + slide.icons[i].image
-        + '" alt="' + slide.icons[i].alt
-        + '" width="75px" />';
-      slideHTML += '</a>';
+      if(slide.icons[i].image !== ''){
+        slideHTML += '<a data-target="' + slide.icons[i].target + '" class="slidelink" href="">';
+        slideHTML += '<img src="' + staticFolder + slide.icons[i].image
+          + '" alt="' + slide.icons[i].alt
+          + '" width="75px" />';
+        slideHTML += '</a>';
+      }
     }
     slideHTML += '</div>'
 
@@ -142,7 +177,6 @@ $(document).ready(function(){
 
     // Handle breadcrumb clicks
     $('.bclink').one('click tap', function(e){
-      console.log('breadcrumb clicked');
       e.preventDefault();
       var backNum = $(this).attr('data-goback');
       for(i = 1; i < backNum; i++){ goBackOne(); }
@@ -151,7 +185,9 @@ $(document).ready(function(){
     // Enable collapsible sections
     var togglers = currentSlide().find('.hx-togglenext');
     togglers.next().hide();
-    togglers.on('click tap', function(){
+    togglers.attr('tabindex','0');
+    togglers.append('<span class="sr">Click to expand</span>');
+    togglers.off('click.hxtog tap.hxtog').on('click.hxtog tap.hxtog', function(){
       $(this).find('span.fa').toggleClass('fa-caret-down fa-caret-right');
       $(this).next().slideToggle(200);
     })
