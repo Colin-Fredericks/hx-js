@@ -6,9 +6,9 @@ Here's what you need to do:
 2. Upload the `papaparse.js`, `hx-text-slider.css`, and `hx-text-slider.js` files to Files & Uploads. The first one is the parser for CSV files.
 3. Copy the HTML from `Slider Test.html` into a Raw HTML component in edX.
 
-To change the source file, go into the HTML and change the line that says `var slidesFile = "/static/ClimateImpactExplorer.csv";` to something else.
-
 You'll see a version of the slider, though with broken icon links.
+
+To change the source file, go into the HTML and change the line that says `var slidesFile = "/static/ClimateImpactExplorer.csv";` to something else.
 
 Here's what the required columns in the data file are for:
 * ID - Does not appear, but is used in links. Write a link with `class="slidelink"` and `data-target=` whatever ID you want, and that will be used to call up the right slide with the matching ID.
