@@ -15,6 +15,7 @@
     - [Pop-ups for clickable images](#pop-ups-for-clickable-images)
     - [Automated Footnotes](#automated-footnotes)
     - [Image Slider](#image-slider)
+    - [Text Sliders](#text-slider)
     - [Video Links](#video-links)
     - [Easter Egg](#easter-egg)
     - [Jump To Time](#jump-to-time)
@@ -296,6 +297,13 @@ For a paired slider, where the top one acts as the navigation for the bottom one
 </div>
 </div>
 ```
+
+### Dynamic Text Slider
+
+You can put text into the image slider above. However, we've also made a *dynamic* text slider, that pulls its slides from a CSV file and loads them only when needed. This is great for larger collections of data that students might want to examine and explore in detail. This takes a little more custom work.
+
+See the [text slider](https://github.com/Colin-Fredericks/hx-js/tree/master/text%20slider)
+ folder for more detail.
 
 ### Video Links
 
