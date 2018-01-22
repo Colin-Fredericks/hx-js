@@ -145,7 +145,9 @@ $(document).ready(function(){
     }
     slideHTML += '</div>'
 
+    slideHTML += '<a href="' + slide.image + '" target="_blank">';
     slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
+    slideHTML += '</a>';
     slideHTML += '</div>';
 
     slideHTML += '</div>';
