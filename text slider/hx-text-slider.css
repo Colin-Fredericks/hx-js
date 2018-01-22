@@ -7,15 +7,19 @@
 
 .hx-slidelayout {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .hx-leftbox{
-  flex-grow: 1;
+  flex: 1 1 auto;
+  min-width: 300px;
+  display: inline-block;
 }
 
 .hx-rightbox{
-  width: 300px;
+  flex: 0 0 auto;
   padding: 10px;
+  display: inline-block;
 }
 
 .hx-sliderbox {
