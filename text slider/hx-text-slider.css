@@ -19,12 +19,11 @@
 }
 
 
-@media only screen and (min-width: 640px) {
+@media only screen and (min-width: 700px) {
     /* For desktop: */
-    
+
   .hx-slidelayout {
     display: flex;
-    overflow-x: scroll;
   }
 
   .hx-leftbox{
