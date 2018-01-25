@@ -126,7 +126,7 @@ $(document).ready(function(){
         slideHTML += '<h4 class="hx-togglenext" tabindex="0">';
         slideHTML += '<span class="fa fa-caret-right"></span> ';
         slideHTML += slide.folds[j].header;
-        slideHTML += ' <span class="sr">Click to expand</span></h4>';
+        slideHTML += ' <span class="sr hx-expandnote">Click to expand</span></h4>';
         slideHTML += '<div>' + slide.folds[j].text + '</div>';
       }
     }
@@ -190,9 +190,11 @@ $(document).ready(function(){
     var togglers = currentSlide().find('.hx-togglenext');
     togglers.next().hide();
     togglers.attr('tabindex','0');
-    togglers.append('<span class="sr">Click to expand</span>');
     togglers.off('click.hxtog tap.hxtog').on('click.hxtog tap.hxtog', function(){
+      $(this).find('span.hx-expandnote').text('Click to collapse');
+      $(this).find('span.hx-collapsenote').text('Click to expand');
       $(this).find('span.fa').toggleClass('fa-caret-down fa-caret-right');
+      $(this).find('span.sr').toggleClass('hx-expandnote hx-collapsenote');
       $(this).next().slideToggle(200);
     });
   }
