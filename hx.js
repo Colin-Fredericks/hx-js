@@ -118,7 +118,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         }));
 
         return $.when.apply($, _arr);
-    }
+    };
 
     var scriptArray = [];
 
@@ -187,7 +187,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             logThatThing('Did not load scripts.');
             hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
             keepGoing(hxOptions);
-    })
+    });
 
     // Once we have the options, we're ready to proceed.
     function keepGoing(hxOptions){
@@ -226,7 +226,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             var href = $(this).attr('href');
             var anchor = href.slice(href.indexOf('#video'));
             var vidNumber = anchor.replace('#video', '');
-            var unitNumber = href.slice(href.indexOf('/jump_to_id/') + 13, href.indexOf('#video'))
+            var unitNumber = href.slice(href.indexOf('/jump_to_id/') + 13, href.indexOf('#video'));
             var startsWithHash = href.indexOf('#') === 0 ? true : false;
 
             // If the href starts with a pound sign, go on this page.
@@ -237,10 +237,10 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             // If not, stash the destination in HTML5 Local Storage
             // so that we can retrieve it on the next page.
             else{
-                localStorage['HXVideoLinkGo'] = "true";
-                localStorage['HXVideoLinkUnit'] = unitNumber;
-                localStorage['HXVideoLinkNumber'] = vidNumber;
-                localStorage['HXVideoLinkTime'] = thisTime;
+                localStorage.HXVideoLinkGo = "true";
+                localStorage.HXVideoLinkUnit = unitNumber;
+                localStorage.HXVideoLinkNumber = vidNumber;
+                localStorage.HXVideoLinkTime = thisTime;
                 logThatThing({'storing video info for jump': {
                     'unit': unitNumber,
                     'video number': vidNumber,
@@ -354,7 +354,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             var allHeaders = $('h3, h4').filter(function() {
                 // Remove anything that's hidden away.
                 return $(this).is(':visible');
-            });;
+            });
 
             var TOCList = $('#autoTOC ul');
 
@@ -367,7 +367,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 var TOCLevel;
                 if($(this).is('h3')){
                     TOCLevel = 3;
-                    if($(allHeaders[i-1]).is('h3') || i==0){
+                    if($(allHeaders[i-1]).is('h3') || i===0){
                         autoTOC += '<li class="autotoc'
                             + TOCLevel
                             + '"><a href="#TOCLink'+i+'">'
