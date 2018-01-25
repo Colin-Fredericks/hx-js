@@ -4,6 +4,8 @@
 / Requirements:
 /  * Slick image slider https://kenwheeler.github.io/slick/
 /  * PapaParse csv parser https://github.com/mholt/PapaParse
+/  * HX-JS, which provides Slick and the getAssetURL function
+/           https://github.com/Colin-Fredericks/hx-js
 *************************************************************/
 
 $(document).ready(function(){
@@ -27,11 +29,11 @@ $(document).ready(function(){
       newElement.icons=[];
       newElement.folds=[];
       Object.keys(e).forEach( function(key, i){
-        lowerkey = key.toLowerCase();
+        var lowerkey = key.toLowerCase();
         newElement[lowerkey] = e[key];
         
         // Make arrays for headers and folded texts
-        if(key.indexOf('Fold') == 0){
+        if(key.indexOf('Fold') === 0){
           // Last character is the number, no more than 9.
           var foldNum = parseInt(key[key.length-1]) - 1;
           if( typeof newElement.folds[foldNum] === 'undefined' ){
@@ -42,12 +44,12 @@ $(document).ready(function(){
           }else if( key == 'FoldText' + (foldNum + 1) ){
             newElement.folds[foldNum].text = e[key];
           }else{
-            console.log('Weird key detected: ' + key)
+            console.log('Weird key detected: ' + key);
           }
         }
         
         // Make arrays for icons
-        if(key.indexOf('Icon') == 0){
+        if(key.indexOf('Icon') === 0){
           // Last character is always the number,
           // and we don't allow more than 9 icons.
           var iconNum = parseInt(key[key.length-1]) - 1;
@@ -61,7 +63,7 @@ $(document).ready(function(){
           }else if( key == 'IconAlt' + (iconNum + 1) ){
             newElement.icons[iconNum].alt = e[key];
           }else{
-            console.log('Weird key detected: ' + key)
+            console.log('Weird key detected: ' + key);
           }
         }
       });
@@ -80,7 +82,7 @@ $(document).ready(function(){
   function formatCrumbs(crumbs){
     var crumbtext = '';
     // crumbtext = crumbs.join(' » ');
-    for (i = 0; i < crumbs.length; i++){
+    for (var i = 0; i < crumbs.length; i++){
       crumbtext += '<a href="#" class="bclink" data-target="' + history[i]
         + '" data-goback="' + (crumbs.length - i)
         + '">';
@@ -95,7 +97,7 @@ $(document).ready(function(){
 
   // Returns the object for the slide with id slideName
   function lookupSlide(slides, slideName){
-    for(i = 0; i < slides.length; i++){
+    for(var i = 0; i < slides.length; i++){
       if(slides[i].id == slideName){
         return slides[i];
       }
@@ -116,10 +118,10 @@ $(document).ready(function(){
     
     slideHTML += '<div class="hx-slidelayout">';
 
-    slideHTML += '<div class="hx-leftbox">' 
+    slideHTML += '<div class="hx-leftbox">';
     slideHTML += slide.abovefold;
     // All the collapsible bits, if any.
-    for(j = 0; j < slide.folds.length; j++){
+    for(var j = 0; j < slide.folds.length; j++){
       if(slide.folds[j].header !== ''){
         slideHTML += '<h4 class="hx-togglenext" tabindex="0">';
         slideHTML += '<span class="fa fa-caret-right"></span> ';
@@ -130,11 +132,11 @@ $(document).ready(function(){
     }
     slideHTML += '</div>';
 
-    slideHTML += '<div class="hx-rightbox">'
+    slideHTML += '<div class="hx-rightbox">';
     
     // All the icons, if any.
-    slideHTML += '<div class="slideicons">'
-    for(i = 0; i < slide.icons.length; i++){
+    slideHTML += '<div class="slideicons">';
+    for(var i = 0; i < slide.icons.length; i++){
       if(slide.icons[i].image !== ''){
         slideHTML += '<a data-target="' + slide.icons[i].target + '" class="slidelink" href="">';
         slideHTML += '<img src="' + staticFolder + slide.icons[i].image
@@ -143,7 +145,7 @@ $(document).ready(function(){
         slideHTML += '</a>';
       }
     }
-    slideHTML += '</div>'
+    slideHTML += '</div>';
 
     slideHTML += '<a href="' + slide.image + '" target="_blank">';
     slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
@@ -165,7 +167,7 @@ $(document).ready(function(){
       var target = $(this).attr('data-target');
       var newSlide = lookupSlide(slideData, target);
       // Insert new slide.
-      addSlide(slick, getSlideHTML(newSlide))
+      addSlide(slick, getSlideHTML(newSlide));
       // Go to that slide.
       HXslider.slick('slickGoTo',depth+1);
       depth += 1;
@@ -181,7 +183,7 @@ $(document).ready(function(){
     $('.bclink').one('click tap', function(e){
       e.preventDefault();
       var backNum = $(this).attr('data-goback');
-      for(i = 1; i < backNum; i++){ goBackOne(); }
+      for(var i = 1; i < backNum; i++){ goBackOne(); }
     });
     
     // Enable collapsible sections
@@ -192,7 +194,7 @@ $(document).ready(function(){
     togglers.off('click.hxtog tap.hxtog').on('click.hxtog tap.hxtog', function(){
       $(this).find('span.fa').toggleClass('fa-caret-down fa-caret-right');
       $(this).next().slideToggle(200);
-    })
+    });
   }
 
   // For the back button and the breadcrumbs
@@ -204,7 +206,7 @@ $(document).ready(function(){
     // Go to the last slide in the history.
     HXslider.slick('slickGoTo', HXslider.slick('slickCurrentSlide') - 1);
     // Remove the last slide on our list.
-    HXslider.slick('slickRemove', removeBefore=false)
+    HXslider.slick('slickRemove', removeBefore=false);
     // If appropriate, grey out the back button.
     if(breadcrumbs.length == 1){
       backButton.removeClass('canGoBack');
@@ -226,7 +228,7 @@ $(document).ready(function(){
         console.log('Slide data loaded.');
         addSlide(slick, getSlideHTML(slideData[0]));
         // Remove the "Initializing" slide.
-        slick.slickRemove(0)
+        slick.slickRemove(0);
         // Set initial history
         history.push( currentSlide().attr('data-slide-id') );
         // Set initial breadcrumbs
@@ -269,7 +271,7 @@ $(document).ready(function(){
           download: true,
           header: true,
           complete: function(results) {
-            slideData = makeSlideArray(results.data)
+            slideData = makeSlideArray(results.data);
             console.log(results);
             console.log(slideData);
           }
@@ -279,8 +281,7 @@ $(document).ready(function(){
     }, 250);
 
   }else{
-    console.log('Slides file not specified.')
+    console.log('Slides file not specified.');
   }
-
 
 });
