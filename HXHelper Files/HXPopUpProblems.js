@@ -1,5 +1,6 @@
 // This version is designed to be called by hx.js
 // Global variable HXPUPTimer is defined in the HTML.
+// The hmsToTime converter function is defined in hx.js
 
 var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 
@@ -16,7 +17,7 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	for (var i = 0; i < HXPUPTimer.length; i++){
     	for (var key in HXPUPTimer[i]) {
             if (key == 'time') {
-                HXPUPTimer[i].time = hmsToTime(HXPUPTimer[i].time)
+                HXPUPTimer[i].time = hmsToTime(HXPUPTimer[i].time);
             }
         }
     }
@@ -47,11 +48,9 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 
 		if(typeof state.videoPlayer.player.getPlayerState() !== 'undefined'){
 			clearInterval(waitForVid);
-			var pause = setTimeout(function(){
-				setUpData();
-				setUpControls();
-				mainLoop();
-			}, 0);
+      setUpData();
+      setUpControls();
+      mainLoop();
 		}
 	}, 100);
 	
