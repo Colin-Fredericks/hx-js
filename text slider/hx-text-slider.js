@@ -123,11 +123,13 @@ $(document).ready(function(){
     // All the collapsible bits, if any.
     for(var j = 0; j < slide.folds.length; j++){
       if(slide.folds[j].header !== ''){
-        slideHTML += '<h4 class="hx-togglenext" tabindex="0">';
+        slideHTML += '<h4 class="hx-togglenext" tabindex="0" '
+            + 'aria-expanded="false" aria-controls="hx-folded-' + j + '">';
         slideHTML += '<span class="fa fa-caret-right"></span> ';
         slideHTML += slide.folds[j].header;
         slideHTML += ' <span class="sr hx-expandnote">Click to expand</span></h4>';
-        slideHTML += '<div>' + slide.folds[j].text + '</div>';
+        slideHTML += '<div id="hx-folded-' + j + '" aria-hidden="true">' 
+            + slide.folds[j].text + '</div>';
       }
     }
     slideHTML += '</div>';
@@ -191,11 +193,22 @@ $(document).ready(function(){
     togglers.next().hide();
     togglers.attr('tabindex','0');
     togglers.off('click.hxtog tap.hxtog').on('click.hxtog tap.hxtog', function(){
+      // We're gonna toggle lots of stuff below.
+      if( $(this).attr('aria-expanded') === 'true' ){
+        $(this).attr('aria-expanded', 'false');
+      }else{
+        $(this).attr('aria-expanded', 'true');
+      };
       $(this).find('span.hx-expandnote').text('Click to collapse');
       $(this).find('span.hx-collapsenote').text('Click to expand');
       $(this).find('span.fa').toggleClass('fa-caret-down fa-caret-right');
       $(this).find('span.sr').toggleClass('hx-expandnote hx-collapsenote');
       $(this).next().slideToggle(200);
+      if( $(this).next().attr('aria-hidden') === 'true'){
+        $(this).next().attr('aria-hidden', 'false');
+      }else{
+        $(this).next().attr('aria-hidden', 'true');
+      };
     });
   }
 
