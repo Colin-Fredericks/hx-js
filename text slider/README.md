@@ -17,5 +17,6 @@ Here's what the required columns in the data file are for:
 * AboveFold - text that is not collapsed.
 
 The optional columns are:
+* NextUp - A set of links that show where you can go next from here. These appear at the bottom so that people with screen readers don't have to go all the way back up to find the links.
 * FoldHeaderN and FoldTextN - These are headers and text for collapsible sections within the slide. You can have up to 9 folds before the system breaks.
 * IconN, IconTargetN, and IconAltN - These are the filename, link target, and alt text for your icons. You can have up to 9 icons before the system breaks.
