@@ -136,34 +136,42 @@ $(document).ready(function(){
 
     slideHTML += '<div class="hx-rightbox">';
     
+    slideHTML += '<a href="' + slide.image + '" target="_blank">';
+    slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
+    slideHTML += '</a>';
+
     // All the icons, if any.
     slideHTML += '<div class="slideicons">';
     for(var i = 0; i < slide.icons.length; i++){
       if(slide.icons[i].image !== ''){
-        slideHTML += '<a data-target="' + slide.icons[i].target + '" class="slidelink" href="">';
+        slideHTML += '<a data-target="' + slide.icons[i].target + '" href="">';
         slideHTML += '<img src="' + staticFolder + slide.icons[i].image
           + '" alt="' + slide.icons[i].alt
-          + '" width="75px" />';
+          + '" width="65px" />';
         slideHTML += '</a>';
       }
     }
     slideHTML += '</div>';
 
-    slideHTML += '<a href="' + slide.image + '" target="_blank">';
-    slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
-    slideHTML += '</a>';
-    slideHTML += '</div>';
+    slideHTML += '</div>';   
 
     slideHTML += '</div>';
+    
+    if(slide.nextup){
+      slideHTML += '<div class="hx-nextup"><strong>Connections:</strong><br>' + slide.nextup + '</div>';
+    }
+
 
     return slideHTML;
   }
 
   // Add one-time link listeners.
   function addListeners(slick, slideData){
-  
+    
     // Handle links to other slides
-    currentSlide().find('.slidelink').one('click tap', function(e){
+    currentSlide().find('a').filter(function(){
+      return $(this).attr('data-target') !== 'undefined';
+    }).one('click tap', function(e){
       e.preventDefault();
       // Get the link target.
       var target = $(this).attr('data-target');
