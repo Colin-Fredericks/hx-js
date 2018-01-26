@@ -161,7 +161,6 @@ $(document).ready(function(){
       slideHTML += '<div class="hx-nextup"><strong>Connections:</strong><br>' + slide.nextup + '</div>';
     }
 
-
     return slideHTML;
   }
 
@@ -171,7 +170,7 @@ $(document).ready(function(){
     // Handle links to other slides
     currentSlide().find('a').filter(function(){
       return $(this).attr('data-target') !== 'undefined';
-    }).one('click tap', function(e){
+    }).off('click.hxsm tap.hxsm').on('click.hxsm tap.hxsm', function(e){
       e.preventDefault();
       // Get the link target.
       var target = $(this).attr('data-target');
@@ -187,6 +186,7 @@ $(document).ready(function(){
       breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
       // Make the back button active.
       backButton.addClass('canGoBack');
+      console.log('Go to slide ' + target + ', depth ' + depth);
     });
 
     // Handle breadcrumb clicks
