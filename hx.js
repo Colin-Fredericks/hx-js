@@ -413,11 +413,36 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // # is a number, not a pound sign.
         /**************************************/
 
+        $('[class^=hx-togglebutton]').each(function(){
+            var myNumber = getClassNumber(this.className, 'hx-togglebutton');
+            $(this).attr('aria-controls' , 'hx-toggletarget'+myNumber);
+            
+            if( $('.hx-toggletarget'+myNumber+':visible').length > 0 ){
+                $(this).attr('aria-expanded','true');
+                $('.hx-toggletarget'+myNumber).attr('aria-hidden','false');
+            }else{
+                $(this).attr('aria-expanded','false');
+                $('[class^=hx-toggletarget]').attr('aria-hidden','true');
+            }
+        });
+        
         $('[class^=hx-togglebutton]').on('click tap', function() {
 
             var myNumber = getClassNumber(this.className, 'hx-togglebutton');
 
             $('.hx-toggletarget'+myNumber).slideToggle('fast');
+            
+            // Something is broken with this right now.
+            // It seems to only work the first time.
+            if( $(this).attr('aria-expanded') === 'true'){
+                console.log('was visible');
+                $(this).attr('aria-expanded','false');
+                $('.hx-toggletarget'+myNumber).attr('aria-hidden','true');
+            }else{
+                console.log('was not visible');
+                $(this).attr('aria-expanded','true');
+                $('.hx-toggletarget'+myNumber).attr('aria-hidden','false');
+            }
 
             logThatThing({
                 'Toggle button': 'pressed',
