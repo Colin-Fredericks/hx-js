@@ -125,6 +125,8 @@ Grey (or gray) boxes:
 </div>
 ```
 
+Also available: orangebox, greenbox, magentabox, purplebox, bluebox2.
+
 Sidebars (must combine with box style):
 
 ```html
