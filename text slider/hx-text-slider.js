@@ -159,24 +159,24 @@ $(document).ready(function(){
 
     slideHTML += '</div>';
 
-    if(slide.next){
-      var nextSlides = slide.next.split(',');
-      slideHTML += '<div class="hx-next"><strong>Next:</strong><br>'
-      nextSlides.forEach(function(e){
-        slideHTML += '<a href="#" data-target="' + e.trim() + '">';
-        slideHTML += lookupSlide(slideData, e.trim()).title;
-        slideHTML += '</a><br/>';
+    function prevNextHTML(targetList){
+      var html = '';
+      targetList.forEach(function(e){
+        html += '<a href="#" data-target="' + e.trim() + '">';
+        html += lookupSlide(slideData, e.trim()).title;
+        html += '</a><br/>';
       });
+      return html;
+    }
+
+    if(slide.next){
+      slideHTML += '<div class="hx-next"><strong>Next:</strong><br>'
+      slideHTML += prevNextHTML( slide.next.split(',') );
       slideHTML += '</div>';
     }
     if(slide.previous){
-      var prevSlides = slide.previous.split(',');
       slideHTML += '<div class="hx-previous"><strong>Previous:</strong><br>'
-      prevSlides.forEach(function(e){
-        slideHTML += '<a href="#" data-target="' + e.trim() + '">';
-        slideHTML += lookupSlide(slideData, e.trim()).title;
-        slideHTML += '</a><br/>';
-      });
+      slideHTML += prevNextHTML( slide.previous.split(',') );
       slideHTML += '</div>';
     }
 
