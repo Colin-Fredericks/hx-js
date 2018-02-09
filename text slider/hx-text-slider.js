@@ -13,7 +13,8 @@ $(document).ready(function(){
   var depth = 0;
   var history = [];
   var breadcrumbs = [];
-  var crumbTray = $('.slideBreadcrumbs');
+  // Uncomment below for breadcrumbs.
+  // var crumbTray = $('.slideBreadcrumbs');
   var backButton = $('.backToParentSlide');
   var HXslider = $('.hx-slider');
   var slideData = [];
@@ -31,7 +32,7 @@ $(document).ready(function(){
       Object.keys(e).forEach( function(key, i){
         var lowerkey = key.toLowerCase();
         newElement[lowerkey] = e[key];
-        
+
         // Make arrays for headers and folded texts
         if(key.indexOf('Fold') === 0){
           // Last character is the number, no more than 9.
@@ -47,7 +48,7 @@ $(document).ready(function(){
             console.log('Weird key detected: ' + key);
           }
         }
-        
+
         // Make arrays for icons
         if(key.indexOf('Icon') === 0){
           // Last character is always the number,
@@ -79,21 +80,22 @@ $(document).ready(function(){
   }
 
   // HTML formatting for the breadcrumbs
-  function formatCrumbs(crumbs){
-    var crumbtext = '';
-    // crumbtext = crumbs.join(' » ');
-    for (var i = 0; i < crumbs.length; i++){
-      crumbtext += '<a href="#" class="bclink" data-target="' + history[i]
-        + '" data-goback="' + (crumbs.length - i)
-        + '">';
-      crumbtext += crumbs[i];
-      crumbtext += '</a>';
-      if(i+1 < crumbs.length){
-        crumbtext += ' » ';
-      }
-    }
-  	return crumbtext;
-  }
+  // Uncomment below for breadcrumbs.
+  // function formatCrumbs(crumbs){
+  //   var crumbtext = '';
+  //   // crumbtext = crumbs.join(' » ');
+  //   for (var i = 0; i < crumbs.length; i++){
+  //     crumbtext += '<a href="#" class="bclink" data-target="' + history[i]
+  //       + '" data-goback="' + (crumbs.length - i)
+  //       + '">';
+  //     crumbtext += crumbs[i];
+  //     crumbtext += '</a>';
+  //     if(i+1 < crumbs.length){
+  //       crumbtext += ' » ';
+  //     }
+  //   }
+  // 	return crumbtext;
+  // }
 
   // Returns the object for the slide with id slideName
   function lookupSlide(slides, slideName){
@@ -113,9 +115,9 @@ $(document).ready(function(){
     slideHTML += '<div data-breadcrumb="' + slide.breadcrumb
       + '" data-slide-id="' + slide.id
       + '" tabindex="-1">';
-      
+
     slideHTML += '<h3>' + slide.title + '</h3>';
-    
+
     slideHTML += '<div class="hx-slidelayout">';
 
     slideHTML += '<div class="hx-leftbox">';
@@ -128,14 +130,14 @@ $(document).ready(function(){
         slideHTML += '<span class="fa fa-caret-right"></span> ';
         slideHTML += slide.folds[j].header;
         slideHTML += ' <span class="sr hx-expandnote">Click to expand</span></h4>';
-        slideHTML += '<div id="hx-folded-' + j + '" aria-hidden="true">' 
+        slideHTML += '<div id="hx-folded-' + j + '" aria-hidden="true">'
             + slide.folds[j].text + '</div>';
       }
     }
     slideHTML += '</div>';
 
     slideHTML += '<div class="hx-rightbox">';
-    
+
     slideHTML += '<a href="' + slide.image + '" target="_blank">';
     slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
     slideHTML += '</a>';
@@ -153,12 +155,29 @@ $(document).ready(function(){
     }
     slideHTML += '</div>';
 
-    slideHTML += '</div>';   
+    slideHTML += '</div>';
 
     slideHTML += '</div>';
-    
-    if(slide.nextup){
-      slideHTML += '<div class="hx-nextup"><strong>Connections:</strong><br>' + slide.nextup + '</div>';
+
+    if(slide.next){
+      var nextSlides = slide.next.split(',');
+      slideHTML += '<div class="hx-next"><strong>Next:</strong><br>'
+      nextSlides.forEach(function(e){
+        slideHTML += '<a href="#" data-target="' + e.trim() + '">';
+        slideHTML += lookupSlide(slideData, e.trim()).title;
+        slideHTML += '</a><br/>';
+      });
+      slideHTML += '</div>';
+    }
+    if(slide.previous){
+      var prevSlides = slide.previous.split(',');
+      slideHTML += '<div class="hx-previous"><strong>Previous:</strong><br>'
+      prevSlides.forEach(function(e){
+        slideHTML += '<a href="#" data-target="' + e.trim() + '">';
+        slideHTML += lookupSlide(slideData, e.trim()).title;
+        slideHTML += '</a><br/>';
+      });
+      slideHTML += '</div>';
     }
 
     return slideHTML;
@@ -166,7 +185,7 @@ $(document).ready(function(){
 
   // Add one-time link listeners.
   function addListeners(slick, slideData){
-    
+
     // Handle links to other slides
     currentSlide().find('a').filter(function(){
       return $(this).attr('data-target') !== 'undefined';
@@ -189,13 +208,13 @@ $(document).ready(function(){
       console.log('Go to slide ' + target + ', depth ' + depth);
     });
 
-    // Handle breadcrumb clicks
-    $('.bclink').one('click tap', function(e){
-      e.preventDefault();
-      var backNum = $(this).attr('data-goback');
-      for(var i = 1; i < backNum; i++){ goBackOne(); }
-    });
-    
+    // Uncomment to handle breadcrumb clicks
+    // $('.bclink').one('click tap', function(e){
+    //   e.preventDefault();
+    //   var backNum = $(this).attr('data-goback');
+    //   for(var i = 1; i < backNum; i++){ goBackOne(); }
+    // });
+
     // Enable collapsible sections
     var togglers = currentSlide().find('.hx-togglenext');
     togglers.next().hide();
@@ -249,14 +268,19 @@ $(document).ready(function(){
       console.log('waiting for slide data...');
       if(typeof slideData[0] !== 'undefined'){
         console.log('Slide data loaded.');
-        addSlide(slick, getSlideHTML(slideData[0]));
+        if('startingSlide' in window){
+          addSlide(slick, getSlideHTML(lookupSlide(slideData, startingSlide)));
+        }else{
+          addSlide(slick, getSlideHTML(slideData[0]));
+        }
         // Remove the "Initializing" slide.
         slick.slickRemove(0);
         // Set initial history
         history.push( currentSlide().attr('data-slide-id') );
         // Set initial breadcrumbs
         breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
-        crumbTray.html(formatCrumbs(breadcrumbs));
+        // Uncomment below for breadcrumbs.
+        // crumbTray.html(formatCrumbs(breadcrumbs));
         addListeners(slick, slideData);
         clearInterval(waitForData);
       }
@@ -264,8 +288,8 @@ $(document).ready(function(){
   });
 
   HXslider.on('afterChange', function(e, slick){
-    // Update breadcrumbs
-    crumbTray.html(formatCrumbs(breadcrumbs));
+    // Uncomment below for breadcrumbs.
+    // crumbTray.html(formatCrumbs(breadcrumbs));
     // Handle keyboard focus manually after slides change.
     currentSlide().focus();
     addListeners(slick, slideData);
@@ -284,8 +308,8 @@ $(document).ready(function(){
     if(slidesFile.indexOf('/static/') != -1){
       csvfile = getAssetURL(window.location.href, 'complete') + csvfile;
     }
-    
-    // We're including the Papa CSV parser in the HTML, 
+
+    // We're including the Papa CSV parser in the HTML,
     // so make sure it loads completely before trying to use it.
     var waitForPapa = setInterval(function(){
       console.log('waiting for CSV parser...');
