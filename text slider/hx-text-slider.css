@@ -5,6 +5,15 @@
   user-select: text;
 }
 
+/* Need to hide the elements that are off-screen */
+.slick-slide{
+  visibility: hidden;
+}
+
+.slick-slide.slick-active{
+  visibility: visible;
+}
+
 
 /* For small screens */
 .hx-slidelayout {
@@ -12,14 +21,22 @@
 
 .hx-leftbox{
   display: inline-block;
+  vertical-align:top;
+  padding: 4px;
 }
 
 .hx-rightbox{
   display: inline-block;
 }
 
+.hx-rightbox figure{
+  border-bottom: 1px solid #bbb;
+  padding: 2px;
+  margin: 0px 0px 10px 0px;
+}
 
-@media only screen and (min-width: 700px) {
+
+@media only screen and (min-width: 820px) {
     /* For desktop: */
 
   .hx-slidelayout {
@@ -30,6 +47,8 @@
     flex: 1 1 auto;
     min-width: 300px;
     display: inline-block;
+    border-right: 1px solid #bbb;
+    padding-right: 4px;
   }
 
   .hx-rightbox{

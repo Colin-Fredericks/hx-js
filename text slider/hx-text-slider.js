@@ -137,9 +137,13 @@ var HXTextSlider = (function() {
 
     slideHTML += '<div class="hx-rightbox">';
 
+    slideHTML += '<figure>'
     slideHTML += '<a href="' + slide.image + '" target="_blank">';
     slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
     slideHTML += '</a>';
+    slideHTML += '<figcaption>' + slide.caption + '</figcaption>'
+    slideHTML += '</figure>'
+
 
     // All the icons, if any.
     slideHTML += '<div class="slideicons">';
