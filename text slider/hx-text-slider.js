@@ -8,9 +8,8 @@
 /           https://github.com/Colin-Fredericks/hx-js
 *************************************************************/
 
-$(document).ready(function(){
+var HXTextSlider = (function() {
 
-  var depth = 0;
   var history = [];
   var breadcrumbs = [];
   // Uncomment below for breadcrumbs.
@@ -98,10 +97,10 @@ $(document).ready(function(){
   // }
 
   // Returns the object for the slide with id slideName
-  function lookupSlide(slides, slideName){
-    for(var i = 0; i < slides.length; i++){
-      if(slides[i].id == slideName){
-        return slides[i];
+  function lookupSlide(slideName){
+    for(var i = 0; i < slideData.length; i++){
+      if(slideData[i].id == slideName){
+        return slideData[i];
       }
     }
     console.log('Cannot find slide whose id matches the link\'s target.');
@@ -163,7 +162,7 @@ $(document).ready(function(){
       var html = '';
       targetList.forEach(function(e){
         html += '<a href="#" data-target="' + e.trim() + '">';
-        html += lookupSlide(slideData, e.trim()).title;
+        html += lookupSlide(e.trim()).title;
         html += '</a><br/>';
       });
       return html;
@@ -191,21 +190,9 @@ $(document).ready(function(){
       return $(this).attr('data-target') !== 'undefined';
     }).off('click.hxsm tap.hxsm').on('click.hxsm tap.hxsm', function(e){
       e.preventDefault();
-      // Get the link target.
+      // Get the link target and go there.
       var target = $(this).attr('data-target');
-      var newSlide = lookupSlide(slideData, target);
-      // Insert new slide.
-      addSlide(slick, getSlideHTML(newSlide));
-      // Go to that slide.
-      HXslider.slick('slickGoTo',depth+1);
-      depth += 1;
-      // Update history list.
-      history.push( currentSlide().attr('data-slide-id') );
-      // Update breadcrumb list.
-      breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
-      // Make the back button active.
-      backButton.addClass('canGoBack');
-      console.log('Go to slide ' + target + ', depth ' + depth);
+      goToSlide(target);
     });
 
     // Uncomment to handle breadcrumb clicks
@@ -241,7 +228,6 @@ $(document).ready(function(){
 
   // For the back button and the breadcrumbs
   function goBackOne(){
-    depth -= 1;
     // Update breadcrumb list and the history.
     breadcrumbs.pop();
     history.pop();
@@ -260,6 +246,24 @@ $(document).ready(function(){
     slick.slickAdd(slideHTML);
   }
 
+  function goToSlide(slideID){
+    // If we're already at this slide, do nothing.
+    if(slideID !== currentSlide().data('slideId')){
+      var newSlide = lookupSlide(slideID);
+      // Regardless of whether this slide is in the current stack,
+      // make a new copy and move to it. Don't slide back.
+      HXslider.slick('addSlide', getSlideHTML(newSlide));
+      // Go to that slide.
+      HXslider.slick('slickGoTo',history.length + 1);
+      // Make the back button active.
+      backButton.addClass('canGoBack');
+      // Update history list.
+      history.push( currentSlide().attr('data-slide-id') );
+      // Update breadcrumb list.
+      breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
+    }
+  }
+
   // Set up initial listeners
   HXslider.on('init', function(e, slick){
     // Set up the first slide and drop it into the slider.
@@ -269,7 +273,7 @@ $(document).ready(function(){
       if(typeof slideData[0] !== 'undefined'){
         console.log('Slide data loaded.');
         if('startingSlide' in window){
-          addSlide(slick, getSlideHTML(lookupSlide(slideData, startingSlide)));
+          addSlide(slick, getSlideHTML(lookupSlide(startingSlide)));
         }else{
           addSlide(slick, getSlideHTML(slideData[0]));
         }
@@ -331,4 +335,11 @@ $(document).ready(function(){
     console.log('Slides file not specified.');
   }
 
+  window.HXGoToSlide = goToSlide;
+
+});
+
+
+$(document).ready(function() {
+  HXTextSlider();
 });
