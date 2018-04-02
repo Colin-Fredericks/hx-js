@@ -121,6 +121,17 @@
   border: none;
 }
 
+.hx-slide-icon{
+  float: left;
+}
+
+.hx-slide-title{
+  position: relative;
+  top: 30px;
+  left: 10px;
+  margin-right: 50px;
+}
+
 .backToParentSlide {
   border: none;
   box-shadow: none;

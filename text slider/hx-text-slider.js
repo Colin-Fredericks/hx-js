@@ -17,6 +17,15 @@ var HXTextSlider = (function() {
   var backButton = $('.backToParentSlide');
   var HXslider = $('.hx-slider');
   var slideData = [];
+  var iconsize = 65; //pixels
+
+  var colorLookup = {
+    'red': '#c00000',
+    'green': '#00B050',
+    'cyan': '#01B0F0',
+    'yellow': '#FFC001',
+    'blue': '#1F4E79'
+  }
 
   // Process flat data into more useful structure. Particularly,
   // get icons as array instead of a bunch of separate entries.
@@ -115,7 +124,11 @@ var HXTextSlider = (function() {
       + '" data-slide-id="' + slide.id
       + '" tabindex="-1">';
 
-    slideHTML += '<h3>' + slide.title + '</h3>';
+    slideHTML += '<img class="hx-slide-icon" alt="" width="' + iconsize + 'px" src="'
+      + staticFolder + slide.ownicon + '"/>';
+    slideHTML += '<h3 class="hx-slide-title" style="border-bottom: 2px solid '
+      + colorLookup[slide.category]
+      + ';">' + slide.title + '</h3><br clear="all"/>';
 
     slideHTML += '<div class="hx-slidelayout">';
 
@@ -153,7 +166,7 @@ var HXTextSlider = (function() {
     //     slideHTML += '<a data-target="' + slide.icons[i].target + '" href="">';
     //     slideHTML += '<img src="' + staticFolder + slide.icons[i].image
     //       + '" alt="' + slide.icons[i].alt
-    //       + '" width="65px" />';
+    //       + '" width="' + iconsize + 'px" />';
     //     slideHTML += '</a>';
     //   }
     // }
@@ -169,7 +182,7 @@ var HXTextSlider = (function() {
         tempslide = lookupSlide(e.trim())
         html += '<div class="hx-prevnext-icons"><a href="#" data-target="' + e.trim() + '">';
         html += '<img src="' + staticFolder + tempslide.ownicon
-          + '" width="65px" alt="" />'
+          + '" width="' + iconsize + 'px" alt="" />'
         html += tempslide.breadcrumb;
         html += '</a></div>';
       });
