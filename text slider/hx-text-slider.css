@@ -30,9 +30,29 @@
 }
 
 .hx-rightbox figure{
-  border-bottom: 1px solid #bbb;
   padding: 2px;
   margin: 0px 0px 10px 0px;
+}
+
+.hx-text-slider-nav{
+  padding: 5px;
+  background-color: #eee;
+  box-shadow: inset 1px 1px 8px #aaa;
+  border-radius: 3px;
+}
+
+.hx-prevnext-icons{
+  text-align: center;
+  display: inline-block;
+  margin: 0px 6px 0px 6px;
+}
+
+.hx-next{
+  text-align: right;
+}
+
+.hx-next h4{
+  text-align: right;
 }
 
 
@@ -47,8 +67,7 @@
     flex: 1 1 auto;
     min-width: 300px;
     display: inline-block;
-    border-right: 1px solid #bbb;
-    padding-right: 4px;
+    padding-right: 8px;
   }
 
   .hx-rightbox{
@@ -57,21 +76,59 @@
     display: inline-block;
   }
 
+  .hx-text-slider-nav{
+    display: flex;
+    padding: 5px;
+    background-color: #eee;
+    box-shadow: inset 1px 1px 8px #aaa;
+    border-radius: 3px;
+  }
+
+  .hx-previous{
+    flex: 1 0 50%;
+  }
+
+  .hx-previous-icons{
+  }
+
+  .hx-next{
+    flex: 1 0 50%;
+    text-align: right;
+  }
+
+  .hx-next h4{
+    text-align: right;
+  }
+
+  .hx-next-icons{
+  }
+
+  .hx-prevnext-icons{
+    text-align: center;
+    display: inline-block;
+    margin: 0px 6px 0px 6px;
+  }
+
 }
 
+.crumbbox{
+  background-color: #eee;
+  box-shadow: inset 1px 1px 8px #bbb;
+  border-radius: 3px;
+}
 
 .hx-sliderbox {
-  border-top: 2px solid #666;
-  border-bottom: 2px solid #666;
+  border: none;
 }
 
 .backToParentSlide {
   border: none;
+  box-shadow: none;
   color: #999;
-  background-color: white;
+  background-color: transparent;
   background-image: none;
   font-size: 16pt;
-  padding: 4px;
+  padding: 4px 4px 4px 8px;
 }
 
 .canGoBack {

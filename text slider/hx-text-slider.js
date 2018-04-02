@@ -145,18 +145,19 @@ var HXTextSlider = (function() {
     slideHTML += '</figure>'
 
 
-    // All the icons, if any.
-    slideHTML += '<div class="slideicons">';
-    for(var i = 0; i < slide.icons.length; i++){
-      if(slide.icons[i].image !== ''){
-        slideHTML += '<a data-target="' + slide.icons[i].target + '" href="">';
-        slideHTML += '<img src="' + staticFolder + slide.icons[i].image
-          + '" alt="' + slide.icons[i].alt
-          + '" width="65px" />';
-        slideHTML += '</a>';
-      }
-    }
-    slideHTML += '</div>';
+    // All the icons under the icon, if any.
+    // Commented because it's not currently in use - replaced by previous/next
+    // slideHTML += '<div class="slideicons">';
+    // for(var i = 0; i < slide.icons.length; i++){
+    //   if(slide.icons[i].image !== ''){
+    //     slideHTML += '<a data-target="' + slide.icons[i].target + '" href="">';
+    //     slideHTML += '<img src="' + staticFolder + slide.icons[i].image
+    //       + '" alt="' + slide.icons[i].alt
+    //       + '" width="65px" />';
+    //     slideHTML += '</a>';
+    //   }
+    // }
+    // slideHTML += '</div>';
 
     slideHTML += '</div>';
 
@@ -165,23 +166,34 @@ var HXTextSlider = (function() {
     function prevNextHTML(targetList){
       var html = '';
       targetList.forEach(function(e){
-        html += '<a href="#" data-target="' + e.trim() + '">';
-        html += lookupSlide(e.trim()).title;
-        html += '</a><br/>';
+        tempslide = lookupSlide(e.trim())
+        html += '<div class="hx-prevnext-icons"><a href="#" data-target="' + e.trim() + '">';
+        html += '<img src="' + staticFolder + tempslide.ownicon
+          + '" width="65px" alt="" />'
+        html += tempslide.breadcrumb;
+        html += '</a></div>';
       });
       return html;
     }
 
-    if(slide.next){
-      slideHTML += '<div class="hx-next"><strong>Next:</strong><br>'
-      slideHTML += prevNextHTML( slide.next.split(',') );
-      slideHTML += '</div>';
-    }
+    slideHTML += '<div class="hx-text-slider-nav">';
+
     if(slide.previous){
-      slideHTML += '<div class="hx-previous"><strong>Previous:</strong><br>'
+      slideHTML += '<div class="hx-previous">'
+      slideHTML += '<h4>Causes</h4>'
+      slideHTML += '<div class="hx-previous-icons">'
       slideHTML += prevNextHTML( slide.previous.split(',') );
-      slideHTML += '</div>';
+      slideHTML += '</div></div>';
     }
+    if(slide.next){
+      slideHTML += '<div class="hx-next">'
+      slideHTML += '<h4>Effects</h4>'
+      slideHTML += '<div class="hx-next-icons">'
+      slideHTML += prevNextHTML( slide.next.split(',') );
+      slideHTML += '</div></div>';
+    }
+
+    slideHTML += '</div>';
 
     return slideHTML;
   }
