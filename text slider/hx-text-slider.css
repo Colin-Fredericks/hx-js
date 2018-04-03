@@ -119,6 +119,7 @@
 
 .hx-sliderbox {
   border: none;
+  padding: 8px 4px 4px 4px;
 }
 
 .hx-slide-icon{
@@ -129,7 +130,6 @@
   position: relative;
   top: 30px;
   left: 10px;
-  margin-right: 50px;
 }
 
 .backToParentSlide {
