@@ -12,6 +12,7 @@
     - [Make You Smile](#make-you-smile)
     - [Visibility Toggle](#visibility-toggle)
     - [Highlighter Toggle](#highlighter-toggle)
+    - [Code Syntax Highlighting](#code-syntax-highlighting)
     - [Pop-ups for clickable images](#pop-ups-for-clickable-images)
     - [Automated Footnotes](#automated-footnotes)
     - [Image Slider](#image-slider)
@@ -37,7 +38,7 @@ This project collects a large number of javascript and css tricks that have been
 Currently Working On...
 -----------
 
-Nothing! Current release is "stable." 
+Syntax highlighting for a couple different code languages, using [Prism](http://prismjs.com/).
 
 ### Future Improvements
 
@@ -194,6 +195,20 @@ Match the number on -highlighter# with the class in the following code:
 
 Each button highlights all the things with matching numbers. You don't need a different number for each highlight; you need a different number for each *set* of highlights.
 
+### Code Syntax Highlighting
+
+If you have a `<code>` element on the page, hx-js will find it and load [Prism](http://prismjs.com/) for syntax highlighting, using the Coy theme. The currently included languages are:
+
+* Python
+* MATLAB
+* r
+* LaTeX
+* HTML/XML
+* JavaScript
+* CSS
+
+More can be added, but each one increases the download size, so be judicious about adding them.
+
 ### Pop-ups for clickable images
 
 You will need an image map already prepared. I recommend https://www.image-maps.com/ to create one quickly.
@@ -220,7 +235,7 @@ Note the classes, Bear1 and Bear2. You can name them anything you want, but *the
 </div>
 ```
 
-You can put them anywhere; they'll hide until you need them. When you click on the areas, the divs pop up. 
+You can put them anywhere; they'll hide until you need them. When you click on the areas, the divs pop up.
 
 Underneath, the javascript will automatically create a list with all of the targets, based on their "title" attribute. This list will also pop up the dialogs.
 
@@ -248,7 +263,7 @@ Replace the number 1 with the appropriate number. They don't need to be in order
 
 Make sure that the -target# at the end matches your -footnote# above.
 
-You can put these divs anywhere; the javascript will move them to the end of the footnote component. 
+You can put these divs anywhere; the javascript will move them to the end of the footnote component.
 
 ### Image Slider
 
@@ -342,7 +357,7 @@ The outer div has `hx-vidlinks-static-1`, because it's for video number one - th
 
 The inner divs have `data-time="9"` where the 9 means the link is going to show up nine seconds into the video. You can also specify times in minutes:seconds format, or even hours:minutes:seconds.
 
-The image inside is a little HX. It's 25 pixels tall. Feel free to replace it with a different image that's also 25 pixels tall. 
+The image inside is a little HX. It's 25 pixels tall. Feel free to replace it with a different image that's also 25 pixels tall.
 
 The javascript will turn this set of divs into a list of static links, for folks who can't see or get to the pop-up links.
 
@@ -374,7 +389,7 @@ Then, make a `<script>` tag in that component and put a "timer" objet into it li
 
 ```html
 <script>
-var HXPUPTimer = 
+var HXPUPTimer =
 [
   {time: "8.5", title: "What Happened?"},
   {time: "4", title: "What Game?"},
@@ -458,11 +473,11 @@ The object below is the full set of default settings for hx-js. You can override
 var hxLocalOptions =  {
         // Table of Contents
         makeTOC: false,
-        
+
         // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
         // This should only be used for older versions of OpenEdX before the 2017 navigation overhaul.
         collapsedNav: false,
-        
+
         // Puts a little "meh" face at the bottom of the page.
         // Click it to turn it into a smiley face.
         makeSmiles: true,
@@ -529,4 +544,3 @@ var hxLocalOptions =  {
     };
 </script>
 ```
-

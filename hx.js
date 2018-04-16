@@ -30,6 +30,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         highlightColor: '#ff0',
         highlightBackground: 'rgba(0,0,0,0)',
         highlightState: true,
+        // Code syntax highlighting
+        highlightCode: false,
+
         // Default options for Slick image slider
         slickOptions: {
             arrows: true,
@@ -106,7 +109,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Only do it if we need them.
     // Continue when done.
     /**************************************/
-    
+
     // Define the function that gets the outside scripts.
     $.getMultiScripts = function(arr, path) {
         var _arr = $.map(arr, function(scr) {
@@ -126,6 +129,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // It overrides defaults in this file, and is overridden by local options.
     var hxOptions = {};
     scriptArray.push('hxGlobalOptions.js');
+
+    // Do we load Prism for code highlighting?
+    var codeblocks = $('code');
+    if(codeblocks.length){
+        logThatThing({'code_block': 'found'});
+        scriptArray.push('prism.js');
+    }
 
     // Do we load Slick for image sliders?
     var slider = $('.hx-slider');
@@ -172,7 +182,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             }
         }
     }
-    
+
     // This is where we load all the outside scripts we want.
     $.getMultiScripts(scriptArray, courseAssetURL)
         .done(function() {
@@ -197,6 +207,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // that handle pop-up links and problems.
         /**************************************/
         if(allVideos.length && loadVideoStuff){
+            $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'VideoLinks.css" type="text/css" />'));
             HXVL = new HXVideoLinks(hxOptions.VidLinkOptions);
 
             // Only do pop-up problems if there's a timer in place.
@@ -211,6 +222,16 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         if(theMaps.length && hxOptions.resizeMaps){
             $('map').imageMapResize();
         }
+
+
+        /**************************************/
+        /* If we have code blocks on the page,
+        /* load the style sheet for them.
+        /**************************************/
+        if( codeblocks.length ){
+          $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'prism.css" type="text/css" />'));
+        }
+
 
 
         /**************************************/
@@ -299,7 +320,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 $('p').animate({'color': 'blue'});
             });
         }
-        
+
         /**************************************/
         // Forum Tricks section. Right now, we only have:
         // Auto-open inline discussions
@@ -416,7 +437,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         $('[class^=hx-togglebutton]').each(function(){
             var myNumber = getClassNumber(this.className, 'hx-togglebutton');
             $(this).attr('aria-controls' , 'hx-toggletarget'+myNumber);
-            
+
             if( $('.hx-toggletarget'+myNumber+':visible').length > 0 ){
                 $(this).attr('aria-expanded','true');
                 $('.hx-toggletarget'+myNumber).attr('aria-hidden','false');
@@ -425,13 +446,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 $('[class^=hx-toggletarget]').attr('aria-hidden','true');
             }
         });
-        
+
         $('[class^=hx-togglebutton]').on('click tap', function() {
 
             var myNumber = getClassNumber(this.className, 'hx-togglebutton');
 
             $('.hx-toggletarget'+myNumber).slideToggle('fast');
-            
+
             // Something is broken with this right now.
             // It seems to only work the first time.
             if( $(this).attr('aria-expanded') === 'true'){
@@ -595,6 +616,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Only do slider things if there are actually sliders to create.
         // Would be good to handle multiple sliders later on.
         if(slider.length){
+            $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'slick.css" type="text/css" />'));
+            $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'slick-theme.css" type="text/css" />'));
             slider.slick(hxOptions.slickOptions);
             logThatThing({'slider': 'created'});
         }

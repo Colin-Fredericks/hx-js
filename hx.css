@@ -1,8 +1,4 @@
-@import url("slick.css");
-@import url("slick-theme.css");
-@import url("VideoLinks.css");
-@import url("introjs.css");
-
+/* CSS for HarvardX's standard javascript library */
 
 /* Using a 75-pixel tall image as a drop cap. */
 .hx-icon-dropcap {
@@ -418,7 +414,7 @@ h4.hx-superbold {
     padding: 2px;
 }
 
-.slick-prev:before, .slick-next:before { 
+.slick-prev:before, .slick-next:before {
     color: #189 !important;
 }
 /************** End Slick Block *******************/
@@ -428,10 +424,10 @@ h4.hx-superbold {
 /* This block is for video links.
 /***************************************/
 
-#hx-vidlinks-static {	
+#hx-vidlinks-static {
 }
 
-#hx-vidlinks-live {	
+#hx-vidlinks-live {
 }
 
 .hx-link-text-live {
@@ -441,17 +437,17 @@ h4.hx-superbold {
 	display: none;
 	opacity: 0.7;
 	background-color: black;
-	
+
 	font-size: 16px;
 	color: white;
-	
+
 	position: absolute;
 	bottom: 50px;
-	
+
 	padding: 4px;
 	border: 2px solid grey;
 	margin: 2px;
-	
+
 	border-radius: 4px;
 	box-shadow: 2px 2px 4px #111;
 }
@@ -460,18 +456,18 @@ h4.hx-superbold {
 	display: none;
 	opacity: 0.7;
 	background-color: black;
-	
+
 	font-size: 16px;
 	color: white;
-	
+
 	position: absolute;
 	bottom: 50px;
 	right: 5px;
-	
+
 	padding: 4px;
 	border: 2px solid grey;
 	margin: 2px;
-	
+
 	border-radius: 4px;
 	box-shadow: 2px 2px 4px #111;
 }
@@ -480,17 +476,17 @@ h4.hx-superbold {
 	display: none;
 	opacity: 0.7;
 	background-color: black;
-	
+
 	font-size: 16px;
 	color: white;
-	
+
 	position: absolute;
 	top: 5px;
-	
+
 	padding: 4px;
 	border: 2px solid grey;
 	margin: 2px;
-	
+
 	border-radius: 4px;
 	box-shadow: 2px 2px 4px #111;
 }
@@ -499,18 +495,18 @@ h4.hx-superbold {
 	display: none;
 	opacity: 0.7;
 	background-color: black;
-	
+
 	font-size: 16px;
 	color: white;
-	
+
 	position: absolute;
 	top: 5px;
 	right: 5px;
-	
+
 	padding: 4px;
 	border: 2px solid grey;
 	margin: 2px;
-	
+
 	border-radius: 4px;
 	box-shadow: 2px 2px 4px #111;
 }
@@ -575,7 +571,7 @@ h4.hx-superbold {
    position:fixed !important;
 }
 
-.hx-popup.ui-dialog { 
+.hx-popup.ui-dialog {
 	z-index: 100001 !important;
 }
 
@@ -607,4 +603,3 @@ span#hx-playpauseword{
 }
 
 /************** End Pop-Up Problems Block *******************/
-
