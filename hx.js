@@ -31,7 +31,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         highlightBackground: 'rgba(0,0,0,0)',
         highlightState: true,
         // Code syntax highlighting
-        highlightCode: false,
+        highlightCode: true,
 
         // Default options for Slick image slider
         slickOptions: {
@@ -134,7 +134,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     var codeblocks = $('code');
     if(codeblocks.length){
         logThatThing({'code_block': 'found'});
-        scriptArray.push('prism.js');
+          scriptArray.push('prism.js');
     }
 
     // Do we load Slick for image sliders?
@@ -228,7 +228,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         /* If we have code blocks on the page,
         /* load the style sheet for them.
         /**************************************/
-        if( codeblocks.length ){
+        if( codeblocks.length && hxOptions.highlightCode){
           $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'prism.css" type="text/css" />'));
         }
 
