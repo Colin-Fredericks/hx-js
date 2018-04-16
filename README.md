@@ -207,6 +207,16 @@ If you have a `<code>` element on the page, hx-js will find it and load [Prism](
 * JavaScript
 * CSS
 
+To have these show up, put your code blocks in the following format:
+```
+<pre><code class="lang-xxxx"> Code Goes Here
+More Lines of Code
+End of Code
+</code></pre>
+```
+
+...and replace lang-xxxx with lang-matlab, lang-r, lang-latex, or whatever you need for your course.
+
 More can be added, but each one increases the download size, so be judicious about adding them.
 
 ### Pop-ups for clickable images
