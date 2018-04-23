@@ -47,6 +47,11 @@
   margin: 0px 6px 0px 6px;
 }
 
+.hx-prevnext-icons img{
+  display: block;
+  margin: auto;
+}
+
 .hx-next{
   text-align: right;
 }
@@ -129,7 +134,7 @@
 .hx-slide-title{
   position: relative;
   top: 30px;
-  left: 10px;
+  left: 15px;
 }
 
 .backToParentSlide {
@@ -162,7 +167,7 @@
 }
 
 .hx-togglenext{
-  border: 1px solid #aaa;
+  border: 1px solid #bbb;
   border-radius: 3px;
   padding: 2px 2px 2px 4px;
 }
