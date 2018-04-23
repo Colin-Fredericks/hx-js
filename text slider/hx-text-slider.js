@@ -112,7 +112,7 @@ var HXTextSlider = (function() {
         return slideData[i];
       }
     }
-    console.log('Cannot find slide whose id matches the link\'s target.');
+    console.log('Cannot find slide whose id matches the link\'s target: ' + slideName);
   }
 
   // Takes a slide object and returns the HTML for it.
@@ -182,7 +182,8 @@ var HXTextSlider = (function() {
         tempslide = lookupSlide(e.trim())
         html += '<div class="hx-prevnext-icons"><a href="#" data-target="' + e.trim() + '">';
         html += '<img src="' + staticFolder + tempslide.ownicon
-          + '" width="' + iconsize + 'px" alt="" />'
+          + '" width="' + iconsize + 'px" height="' + iconsize
+          + 'px" alt="" />'
         html += tempslide.breadcrumb;
         html += '</a></div>';
       });
