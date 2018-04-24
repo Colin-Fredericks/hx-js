@@ -129,6 +129,8 @@
 
 .hx-slide-icon{
   float: left;
+  position: relative;
+  z-index: 10;
 }
 
 .hx-slide-title{
