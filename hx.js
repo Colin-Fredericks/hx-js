@@ -226,10 +226,41 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         /**************************************/
         /* If we have code blocks on the page,
-        /* load the style sheet for them.
+        /* load the style sheet for them, and
+        /* make sure they recolor properly later.
         /**************************************/
         if( codeblocks.length && hxOptions.highlightCode){
           $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'prism.css" type="text/css" />'));
+
+          // If a student submits or resets a problem, we'll need to recolor the code.
+          $('.submit, .reset').on('click tap', function(){
+            // Recoloring function. Needs to remove observer temporarily,
+            // or its brain will explode with all the mutations.
+            var rehighlight = function(mutationsList) {
+              for(var mutation of mutationsList) {
+                if (mutation.type == 'childList') {
+                  $.when( observer.disconnect() ).done(function(){
+                    $.when(Prism.highlightAllUnder(target)).done(function(){
+                      // Submitting or resetting results in a lot of changes.
+                      // Just wait half a second for them to go through.
+                      // It'll save us a lot of overhead.
+                      setTimeout(function(){
+                        observer.observe(target, config);
+                      }, 500);
+                    });
+                  });
+                  break;
+                }
+              }
+            }
+
+            // After learners submit, watch the problem for mutations.
+            // Once the mutations happen, recolor the code in that problem.
+            var target = this.closest('.xblock');
+            var config = {childList: true, subtree: true};
+            var observer = new MutationObserver(rehighlight);
+            observer.observe(target, config);
+          });
         }
 
 
