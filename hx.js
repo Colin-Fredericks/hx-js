@@ -257,7 +257,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             // After learners submit, watch the problem for mutations.
             // Once the mutations happen, recolor the code in that problem.
             var target = this.closest('.xblock');
-            var config = {childList: true, subtree: true};
+            var config = {childList: true};
             var observer = new MutationObserver(rehighlight);
             observer.observe(target, config);
           });
@@ -376,6 +376,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                         || destination.includes('jump_to_id')
                         || destination.includes('/courses/')
                         || destination.includes('cloudfront.net')
+                        || destination.includes('edx-cdn.org')
+                        || destination.includes('edxapp')
                         || destination.includes('javascript:void')
                         || destination.slice(0,1) == '#' ){
 
