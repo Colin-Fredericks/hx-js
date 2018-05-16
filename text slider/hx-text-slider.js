@@ -24,7 +24,7 @@ var HXTextSlider = (function() {
     'green': '#00B050',
     'cyan': '#01B0F0',
     'yellow': '#FFC001',
-    'blue': '#1F4E79'
+    'blue': '#475292'
   }
 
   // Process flat data into more useful structure. Particularly,
@@ -217,7 +217,7 @@ var HXTextSlider = (function() {
 
     // Handle links to other slides
     currentSlide().find('a').filter(function(){
-      return $(this).attr('data-target') !== 'undefined';
+      return typeof $(this).attr('data-target') !== 'undefined';
     }).off('click.hxsm tap.hxsm').on('click.hxsm tap.hxsm', function(e){
       e.preventDefault();
       // Get the link target and go there.
