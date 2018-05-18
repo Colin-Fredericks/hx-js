@@ -48,11 +48,11 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 
 		if(typeof state.videoPlayer.player.getPlayerState() !== 'undefined'){
 			clearInterval(waitForVid);
-      setUpData();
-      setUpControls();
-      mainLoop();
+			setUpData();
+			setUpControls();
+			mainLoop();
 		}
-	}, 100);
+	}, 200);
 	
 	// Checks local storage and gets data from the video.
 	function setUpData(){
@@ -192,10 +192,10 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		var timeChecker = setInterval(function(){
 			
             try{
-                state.videoPlayer.update();        // Forced update of time. Required for Safari.
+                state.videoPlayer.update();		// Forced update of time. Required for Safari.
             }
             catch(err){
-                // If this fails, shut down this loop.
+                // If the update fails, shut down this loop.
                 // It's probably because we moved to a new tab.
                 clearInterval(timeChecker);
             }
@@ -205,13 +205,10 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 				if(time > HXPUPTimer[problemCounter].time){
 				
 					if(!skipEmAll && !protectedTime){
-						state.videoPlayer.pause();
-						popUpProblem(HXPUPTimer[problemCounter].title, state);
-						updateProblemCounter(problemCounter+1);
-					}else{
-						// We're still incrementing and tracking even if we skip problems.
-						updateProblemCounter(problemCounter+1);
+						popUpProblem(HXPUPTimer[problemCounter].title, state);	
 					}
+					// We're still incrementing and tracking even if we skip problems.
+					updateProblemCounter(problemCounter+1);
 				}
 			}
 		}, 500);
@@ -222,13 +219,16 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 	// Does the work of creating the dialogue.
 	// It pulls a question from lower down in the page, and puts it back when we're done.
 	function popUpProblem(title, state){
-		
+	
+		// Strip leading and trailing whitespace, 'cause it's the most common typo.
+		title = title.trim();
+				
 		// Find the div for the problem based on its title.
 		var problemDiv = $('h3:contains(' + title + ')').closest('.vert');
 
 		var problemID = $('h3:contains(' + title + ')').parent().attr('id');
 		
-		var nextDiv, tempDiv;
+		var tempDiv;
 		var dialogDiv = problemDiv;
 		var includenext = false;
 		
@@ -236,17 +236,18 @@ var HXPopUpProblems = (function(HXpopUpOptions, HXPUPTimer) {
 		// We put <span style="display:none" class="hx-includer">includenext</span> into an HTML bit before it.
 		// The dialog then displays the next item, and appends a clone of the HTML before it.
 		if(problemDiv.find('span.hx-includer').text() == 'includenext'){
-			nextDiv = problemDiv.next();
+			dialogDiv = problemDiv.next();
 			includenext = true;
 		}
-		
-		if(includenext){dialogDiv = nextDiv;}
 		
 		logThatThing({
 		    'display_problem': title,
 		    'problem_id': problemID,
 		    'time': time
 		});
+		
+		// Pause the video.
+		state.videoPlayer.pause();
 		
 		// Make a modal dialog out of the chosen problem.
 		dialogDiv.dialog({
