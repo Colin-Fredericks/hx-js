@@ -688,7 +688,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         windowURL = windowURL.replace('%3A', ':');
 
         // Match the site in case we need it for something later.
-        var courseSiteURL = windowURL.match(/https:\/\/.+.org\//)[0];
+        var courseSiteURL = windowURL.match(/https:\/\/.+\//)[0];
 
         if(option == 'site'){ return courseSiteURL; }
 
