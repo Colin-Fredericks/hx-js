@@ -15,6 +15,8 @@ var HXTextSlider = (function() {
   // Uncomment below for breadcrumbs.
   // var crumbTray = $('.slideBreadcrumbs');
   var backButton = $('.backToParentSlide');
+  var homeSlideButton = $('.goToHomeSlide');
+  var showOverviewMap = $('.showOverviewMap');
   var HXslider = $('.hx-slider');
   var slideData = [];
   var iconsize = 65; //pixels
@@ -22,7 +24,7 @@ var HXTextSlider = (function() {
   var colorLookup = {
     'red': '#c00000',
     'green': '#00B050',
-    'cyan': '#01B0F0',
+    'cyan': '#4adec4',
     'yellow': '#FFC001',
     'blue': '#475292'
   }
@@ -304,8 +306,29 @@ var HXTextSlider = (function() {
         console.log('Slide data loaded.');
         if('startingSlide' in window){
           addSlide(slick, getSlideHTML(lookupSlide(startingSlide)));
+          homeSlideButton.on('click tap', function(){ goToSlide(startingSlide); });
         }else{
           addSlide(slick, getSlideHTML(slideData[0]));
+          homeSlideButton.on('click tap', function(){ goToSlide(slideData[0]); });
+        }
+        // Enable overview map if there's one included.
+        if($('.overviewMap').length > 0){
+          showOverviewMap.addClass('canGoBack');
+          showOverviewMap.on('click tap', function(){
+            $('.overviewMap').dialog({
+              dialogClass: "no-close",
+              width: 1080,
+              buttons: [
+                { text: "Close",
+                  click: function() {
+                    $( this ).dialog( "close" );
+                  }
+                }
+              ]
+            });
+          });
+        }else{
+          $('.overviewMap').hide();
         }
         // Remove the "Initializing" slide.
         slick.slickRemove(0);
@@ -329,12 +352,13 @@ var HXTextSlider = (function() {
     addListeners(slick, slideData);
   });
 
-  $('.backToParentSlide').on('click tap', function(){
+  backButton.on('click tap', function(){
     // Don't go back if we're on the first slide.
     if(breadcrumbs.length > 1){
       goBackOne();
     }
   });
+
 
   // Bring in the CSV file.
   if('slidesFile' in window){

@@ -139,7 +139,7 @@
   left: 15px;
 }
 
-.backToParentSlide {
+.backToParentSlide, .goToHomeSlide, .showOverviewMap {
   border: none;
   box-shadow: none;
   color: #999;
@@ -147,6 +147,19 @@
   background-image: none;
   font-size: 16pt;
   padding: 4px 4px 4px 8px;
+}
+
+.showOverviewMap {
+  float: right;
+  padding: 4px 8px 4px 4px;
+}
+
+.overviewMap {
+  display: none;
+}
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
 }
 
 .canGoBack {
