@@ -253,6 +253,10 @@ h4.hx-superbold {
     font-variant: small-caps;
     color: #036;
 }
+.hx-bluebox h3, .hx-sidebar h3 {
+    font-variant: small-caps;
+    color: #036;
+}
 
 .hx-bluebox2 {
     border-left: 15px solid #5B93FF;
@@ -265,6 +269,10 @@ h4.hx-superbold {
     font-variant: small-caps;
     color: #1E3460;
 }
+.hx-bluebox2 h3 {
+    font-variant: small-caps;
+    color: #1E3460;
+}
 
 .hx-greenbox {
     border-left: 15px solid #07A878;
@@ -274,6 +282,10 @@ h4.hx-superbold {
 }
 
 .hx-greenbox h4 {
+    font-variant: small-caps;
+    color: #013A29;
+}
+.hx-greenbox h3 {
     font-variant: small-caps;
     color: #013A29;
 }
@@ -290,6 +302,10 @@ h4.hx-superbold {
     color: #600;
 }
 
+.hx-redbox h3 {
+    font-variant: small-caps;
+    color: #600;
+}
 .hx-magentabox {
     border-left: 15px solid #A71852;
     background-color: #EEC6D4;
@@ -298,6 +314,10 @@ h4.hx-superbold {
 }
 
 .hx-magentabox h4 {
+    font-variant: small-caps;
+    color: #4D001F;
+}
+.hx-magentabox h3 {
     font-variant: small-caps;
     color: #4D001F;
 }
@@ -310,6 +330,10 @@ h4.hx-superbold {
 }
 
 .hx-orangebox h4 {
+    font-variant: small-caps;
+    color: #752900;
+}
+.hx-orangebox h3 {
     font-variant: small-caps;
     color: #752900;
 }
@@ -326,6 +350,11 @@ h4.hx-superbold {
     color: #330974;
 }
 
+.hx-purplebox h3 {
+    font-variant: small-caps;
+    color: #330974;
+}
+
 .hx-greybox, .hx-graybox {
     border-left: 15px solid #666;
     background-color: #ddd;
@@ -334,6 +363,11 @@ h4.hx-superbold {
 }
 
 .hx-greybox h4, .hx-graybox h4 {
+    font-variant: small-caps;
+    color: #333;
+}
+
+.hx-greybox h3, .hx-graybox h3 {
     font-variant: small-caps;
     color: #333;
 }
