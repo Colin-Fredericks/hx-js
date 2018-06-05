@@ -506,6 +506,8 @@ var hxLocalOptions =  {
         highlightColor: '#ff0',
         highlightBackground: 'rgba(0,0,0,0)',
         highlightState: true,
+        // Code syntax highlighting
+        highlightCode: true,
 
         // Default options for the Slick image slider
         slickOptions: {
