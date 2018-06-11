@@ -373,6 +373,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 var destination = $(linky).attr('href');
                 if(typeof destination !== 'undefined'){
                     if( destination.includes('edx.org')
+                        || destination.includes('mailto')
                         || destination.includes('jump_to_id')
                         || destination.includes('/courses/')
                         || destination.includes('cloudfront.net')
