@@ -90,7 +90,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Are we in Studio? If so, stop trying to run anything. Just quit.
     var courseSite = getAssetURL(window.location.href, 'site');
     if (courseSite.indexOf('studio') > -1){
-        console.log('Running HXJS in studio is probably not great.');
+        console.log('Running HXJS in studio is probably not great. Quitting.');
         return;
     }
 
@@ -487,22 +487,24 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
             $('.hx-toggletarget'+myNumber).slideToggle('fast');
 
-            // Something is broken with this right now.
-            // It seems to only work the first time.
             if( $(this).attr('aria-expanded') === 'true'){
-                console.log('was visible');
+                logThatThing({
+                    'Toggle button': 'pressed',
+                    'Toggled to': 'invisible',
+                    'Toggle number': myNumber
+                });
                 $(this).attr('aria-expanded','false');
                 $('.hx-toggletarget'+myNumber).attr('aria-hidden','true');
             }else{
-                console.log('was not visible');
+                logThatThing({
+                    'Toggle button': 'pressed',
+                    'Toggled to': 'visible',
+                    'Toggle number': myNumber
+                });
                 $(this).attr('aria-expanded','true');
                 $('.hx-toggletarget'+myNumber).attr('aria-hidden','false');
             }
 
-            logThatThing({
-                'Toggle button': 'pressed',
-                'Toggle number': myNumber
-            });
         });
 
 
@@ -721,7 +723,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         var courseInfo = {};
 
         // get the part from the colon to the first +
-        partialURL = partialURL.split(':')[1];
+        partialURL = partialURL.split(':')[2];
         courseInfo.institution = partialURL.split('+')[0];
         courseInfo.id = partialURL.split('+')[1];
         courseInfo.run = partialURL.split('+')[2];
