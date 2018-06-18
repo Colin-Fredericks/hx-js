@@ -258,23 +258,24 @@ var HXTextSlider = (function() {
     });
 
     // Add a FontAwesome icon for external links
-    console.log('linkcheck')
     currentSlide().find('a').each(function(i, linky){
-      console.log('found link ' + i)
       var destination = $(linky).attr('href');
-      if(typeof destination !== 'undefined'){
-        if( destination.includes('edx.org')
-        || destination.includes('mailto')
-        || destination.includes('jump_to_id')
-        || destination.includes('/courses/')
-        || destination.includes('cloudfront.net')
-        || destination.includes('edx-cdn.org')
-        || destination.includes('edxapp')
-        || destination.includes('javascript:void')
-        || destination.slice(0,1) == '#' ){
-          // This is probably an internal link; do nothing.
-        }else{
-          $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
+      if($(linky).find('.fa-external-link').length === 0){
+        if(typeof destination !== 'undefined'){
+          if( destination === ''
+          || destination.includes('edx.org')
+          || destination.includes('mailto')
+          || destination.includes('jump_to_id')
+          || destination.includes('/courses/')
+          || destination.includes('cloudfront.net')
+          || destination.includes('edx-cdn.org')
+          || destination.includes('edxapp')
+          || destination.includes('javascript:void')
+          || destination.slice(0,1) == '#' ){
+            // This is probably an internal link; do nothing.
+          }else{
+            $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
+          }
         }
       }
     });
