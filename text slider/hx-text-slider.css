@@ -43,6 +43,7 @@
 
 .hx-prevnext-icons{
   text-align: center;
+  font-weight: 600; /* Semi-bold */
   display: inline-block;
   margin: 0px 6px 0px 6px;
 }
@@ -50,6 +51,17 @@
 .hx-prevnext-icons img{
   display: block;
   margin: auto;
+}
+
+img.out-of-scope{
+  opacity: 0.6;
+  filter: gray; /* IE6-9 */
+  -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+  filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
+}
+
+div.out-of-scope{
+  font-weight: 300; /* Un-bold */
 }
 
 .hx-next{

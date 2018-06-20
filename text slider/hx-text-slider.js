@@ -21,6 +21,9 @@ var HXTextSlider = (function() {
   var slideData = [];
   var iconsize = 65; //pixels
 
+  // A blank or missing slideScope means everything's in-scope.
+  if('slideScope' in window){} else{ slideScope = []; }
+
   var colorLookup = {
     'red': '#c00000',
     'green': '#00B050',
@@ -80,6 +83,27 @@ var HXTextSlider = (function() {
       });
       newSlideData.push(newElement);
     });
+
+    // Check to make sure the slideScope fits this set of slides.
+    if(slideScope !== []){
+      console.log(slideScope);
+      for(var i=0; i < slideScope.length; i++){
+        scopeInSlides = false;
+        for(var j=0; j< newSlideData.length; j++){
+          if(slideScope[i] == newSlideData[j].id){
+            scopeInSlides = true;
+            break;
+          }
+        }
+        if(!scopeInSlides){
+          console.log(slideScope[i] + ' is in scope but not in the current slide list.');
+        }
+      }
+    }else{
+      console.log('No scoping for these slides.');
+    }
+
+
     return newSlideData;
   }
 
@@ -126,8 +150,9 @@ var HXTextSlider = (function() {
       + '" data-slide-id="' + slide.id
       + '" tabindex="-1">';
 
-    slideHTML += '<img class="hx-slide-icon" alt="" width="' + iconsize + 'px" src="'
-      + staticFolder + slide.ownicon + '"/>';
+    slideHTML += '<img class="hx-slide-icon" alt="" '
+      + 'width="' + iconsize + 'px"'
+      + 'src="' + staticFolder + slide.ownicon + '"/>';
     slideHTML += '<h3 class="hx-slide-title" style="border-bottom: 2px solid '
       + colorLookup[slide.category]
       + ';">' + slide.title + '</h3><br clear="all"/>';
@@ -181,11 +206,16 @@ var HXTextSlider = (function() {
     function prevNextHTML(targetList){
       var html = '';
       targetList.forEach(function(e){
-        tempslide = lookupSlide(e.trim())
-        html += '<div class="hx-prevnext-icons"><a href="#" data-target="' + e.trim() + '">';
+        var tempslide = lookupSlide(e.trim())
+        var outOfScope = (slideScope.indexOf(tempslide.id) === -1) && slideScope.length > 0;
+        html += '<div class="hx-prevnext-icons '
+          + (outOfScope ? 'out-of-scope' : '')
+          + '"><a href="#" data-target="' + e.trim() + '">';
         html += '<img src="' + staticFolder + tempslide.ownicon
-          + '" width="' + iconsize + 'px" height="' + iconsize
-          + 'px" alt="" />'
+          + '" class="' + (outOfScope ? 'out-of-scope' : '')
+          + '" width="' + iconsize + 'px" height="' + iconsize+ 'px" '
+          + 'alt="' +  (outOfScope ? '(optional)' : '')
+          + '" />'
         html += tempslide.breadcrumb;
         html += '</a></div>';
       });
