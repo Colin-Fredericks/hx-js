@@ -1,0 +1,99 @@
+<html>
+<head>
+  <style>
+  #bigbox{
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: #eee;
+  }
+
+  .container{
+    flex: 1 1 25%;
+
+    display: flex;
+    flex-flow: wrap;
+    align-content: center;
+  }
+
+  .item{
+    display: inline;
+    flex: 1 1 auto;
+
+    max-width: 150px;
+    min-width: 50px;
+    margin: 2px;
+  }
+
+  #leftbox{
+  }
+
+  #centerbox{
+    flex: 1 1 50%;
+  }
+
+  #rightbox{
+  }
+
+  .container img{
+    width: 100%;
+  }
+
+  #keystone{
+    margin-left: 10%;
+    margin-right: 10%;
+    flex: 1 1 auto;
+    max-width: 800px;
+    min-width: 150px;
+  }
+
+
+</style>
+</head>
+<body>
+
+  <div id="bigbox" class="master">
+    <div id="leftbox" class="container">
+      <div class="item">
+        <img src="http://placeskull.com/500/500/009900">
+      </div>
+      <div class="item">
+        <img src="http://placeskull.com/500/500/009900">
+      </div>
+      <div class="item">
+        <img src="http://placeskull.com/500/500/009900">
+      </div>
+      <div class="item">
+        <img src="http://placeskull.com/500/500/009900">
+      </div>
+      <div class="item">
+        <img src="http://placeskull.com/500/500/009900">
+      </div>
+      <div class="item">
+        <img src="http://placeskull.com/500/500/009900">
+      </div>
+      <div class="item">
+        <img src="http://placeskull.com/500/500/009900">
+      </div>
+    </div>
+
+    <div id="centerbox" class="container">
+      <div id="keystone" class="item">
+        <img src="http://placeskull.com/500/500/990000">
+      </div>
+    </div>
+
+    <div id="rightbox" class="container">
+      <div class="item">
+        <img src="http://placeskull.com/500/500/000099">
+      </div>
+      <div class="item">
+        <img src="http://placeskull.com/500/500/000099">
+      </div>
+      <div class="item">
+        <img src="http://placeskull.com/500/500/000099">
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
