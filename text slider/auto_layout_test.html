@@ -1,14 +1,46 @@
+<!doctype html>
 <html>
 <head>
-  <style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+  $(document).ready(function(){
+    console.log('working');
+    var leftbox = $('#leftbox');
+    var rightbox = $('#rightbox');
+
+    var left_items = $('#leftbox .item');
+    var right_items = $('#rightbox .item');
+
+    var num_left = left_items.length;
+    var num_right = right_items.length;
+
+    var max_in_side = 3;
+    resizeItems();
+
+    $(window).on('resize', function(){ resizeItems(); });
+
+    function resizeItems(){
+      left_width = leftbox.width() / ( Math.ceil(num_left / 3) ) - 10;
+      right_width = rightbox.width() / ( Math.ceil(num_right / 3) ) - 10;
+      left_items.css('max-width', Math.min(left_width, 200));
+      right_items.css('max-width', Math.min(right_width, 200));
+    }
+
+
+  });
+  </script>
+<style>
   #bigbox{
     display: flex;
     flex-wrap: nowrap;
     background-color: #eee;
+    max-width: 1080px;
+    min-height: 400px
+    max-height: 600px;
   }
 
   .container{
-    flex: 1 1 25%;
+    flex: 1 1 30%;
 
     display: flex;
     flex-flow: wrap;
@@ -19,19 +51,31 @@
     display: inline;
     flex: 1 1 auto;
 
-    max-width: 150px;
     min-width: 50px;
     margin: 2px;
   }
 
   #leftbox{
+    justify-content: flex-end;
   }
 
   #centerbox{
-    flex: 1 1 50%;
+    flex: 1 1 34%;
+    align-content: center;
+    justify-content: center;
   }
 
   #rightbox{
+    justify-content: flex-start;
+  }
+
+  #leftbracket, #rightbracket{
+    flex: 0 0 3%;
+    display:flex;
+
+    text-align: center;
+    align-items: center;
+    justify-content: center;
   }
 
   .container img{
@@ -39,15 +83,12 @@
   }
 
   #keystone{
-    margin-left: 10%;
-    margin-right: 10%;
-    flex: 1 1 auto;
     max-width: 800px;
     min-width: 150px;
   }
 
-
 </style>
+
 </head>
 <body>
 
@@ -76,13 +117,20 @@
       </div>
     </div>
 
+    <div id="leftbracket"><span>}</span></div>
+
     <div id="centerbox" class="container">
       <div id="keystone" class="item">
         <img src="http://placeskull.com/500/500/990000">
       </div>
     </div>
 
+    <div id="rightbracket"><span>}</span></div>
+
     <div id="rightbox" class="container">
+      <div class="item">
+        <img src="http://placeskull.com/500/500/000099">
+      </div>
       <div class="item">
         <img src="http://placeskull.com/500/500/000099">
       </div>
