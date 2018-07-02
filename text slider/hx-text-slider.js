@@ -267,7 +267,10 @@ var HXTextSlider = (function() {
         var tempslide = lookupSlide(e.trim())
         var outOfScope = (slideScope.indexOf(tempslide.id) === -1) && slideScope.length > 0;
         html += '<div class="hxslide-overview-item">';
+        html += '<a href="#" data-target="' + e.trim() + '">'
         html += '<img src="' + staticFolder + tempslide.ownicon + '">';
+        html += tempslide.breadcrumb;
+        html += '</a>';
         html += '</div>';
       });
       return html;
@@ -280,21 +283,24 @@ var HXTextSlider = (function() {
 
     // A bracket, if there are previous items.
     if(slide.previous.length > 0){
-      overview += '<div class="hxslide-overview-leftbracket"><img src="';
-      overview += staticFolder + 'leads-to.jpg"></div>';
+      overview += '<div class="hxslide-overview-leftbracket">';
+      overview += '<img src="' + staticFolder + 'leads-to.jpg">';
+      overview += '</div>';
     }
 
     // Central icon
     overview += '<div class="hxslide-overview-centerbox hxslide-overview-container">';
     overview += '<div class="hxslide-overview-keystone hxslide-overview-item">';
     overview += '<img src="' + staticFolder + slide.ownicon + '">';
+    overview += slide.title;
     overview += '</div>';
     overview += '</div>';
 
     // Another bracket, if there are next items.
     if(slide.next.length > 0){
-      overview += '<div class="hxslide-overview-rightbracket"><img src="';
-      overview += staticFolder + 'leads-to.jpg"></div>';
+      overview += '<div class="hxslide-overview-rightbracket">';
+      overview += '<img src="' + staticFolder + 'leads-to.jpg">';
+      overview += '</div>';
     }
 
     // Rightmost box, with "next" icons.

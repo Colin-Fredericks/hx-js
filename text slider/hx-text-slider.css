@@ -207,6 +207,8 @@ div.out-of-scope{
   max-width: 1080px;
   min-height: 400px
   max-height: 600px;
+  box-shadow: inset 1px 1px 8px #bbb;
+  padding: 8px 0px 8px 0px;
 }
 
 .hxslide-overview-container{
@@ -223,6 +225,10 @@ div.out-of-scope{
 
   min-width: 75px;
   margin: 2px;
+
+  text-align: center;
+  font-size: 12pt;
+  overflow-wrap: normal;
 }
 
 .hxslide-overview-leftbox{
@@ -261,4 +267,5 @@ div.out-of-scope{
 .hxslide-overview-keystone{
   max-width: 800px;
   min-width: 150px;
+  text-align: center;
 }
