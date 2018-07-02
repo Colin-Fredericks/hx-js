@@ -146,10 +146,16 @@ var HXTextSlider = (function() {
     var staticFolder = getAssetURL(window.location.href, 'complete');
 
     var slideHTML = '';
+
+    // Breadcrumbs
     slideHTML += '<div data-breadcrumb="' + slide.breadcrumb
       + '" data-slide-id="' + slide.id
       + '" tabindex="-1">';
 
+    // Hidden navigation drawer right below the breadcrumbs.
+    slideHTML += getOverviewHTML(slide);
+
+    // Icon and title
     slideHTML += '<img class="hx-slide-icon" alt="" '
       + 'width="' + iconsize + 'px"'
       + 'src="' + staticFolder + slide.ownicon + '"/>';
@@ -159,8 +165,10 @@ var HXTextSlider = (function() {
 
     slideHTML += '<div class="hx-slidelayout">';
 
+    // Left part, with text
     slideHTML += '<div class="hx-leftbox">';
     slideHTML += slide.abovefold;
+
     // All the collapsible bits, if any.
     for(var j = 0; j < slide.folds.length; j++){
       if(slide.folds[j].header !== ''){
@@ -175,6 +183,7 @@ var HXTextSlider = (function() {
     }
     slideHTML += '</div>';
 
+    // Right part, with optional figure
     slideHTML += '<div class="hx-rightbox">';
 
     slideHTML += '<figure>'
@@ -222,6 +231,7 @@ var HXTextSlider = (function() {
       return html;
     }
 
+    // Part at the bottom with the previous and next icons.
     slideHTML += '<div class="hx-text-slider-nav">';
 
     if(slide.previous){
@@ -242,6 +252,60 @@ var HXTextSlider = (function() {
     slideHTML += '</div>';
 
     return slideHTML;
+  }
+
+  // Takes a slide object and returns the HTML for the local overview.
+  function getOverviewHTML(slide){
+
+    var staticFolder = getAssetURL(window.location.href, 'complete');
+    var overview = '<div class="hxslide-overview-bigbox hxslide-overview-master" style="display: none">'
+
+    // Split the lists of previous and next slides and return appropriate html
+    function overviewSideHTML(targetList){
+      var html = '';
+      targetList.forEach(function(e){
+        var tempslide = lookupSlide(e.trim())
+        var outOfScope = (slideScope.indexOf(tempslide.id) === -1) && slideScope.length > 0;
+        html += '<div class="hxslide-overview-item">';
+        html += '<img src="' + staticFolder + tempslide.ownicon + '">';
+        html += '</div>';
+      });
+      return html;
+    }
+
+    // Leftmost box, with "previous" icons.
+    overview += '<div class="hxslide-overview-leftbox hxslide-overview-container">'
+    if(slide.previous){ overview += overviewSideHTML( slide.previous.split(',') ); }
+    overview += '</div>'
+
+    // A bracket, if there are previous items.
+    if(slide.previous.length > 0){
+      overview += '<div class="hxslide-overview-leftbracket"><img src="';
+      overview += staticFolder + 'leads-to.jpg"></div>';
+    }
+
+    // Central icon
+    overview += '<div class="hxslide-overview-centerbox hxslide-overview-container">';
+    overview += '<div class="hxslide-overview-keystone hxslide-overview-item">';
+    overview += '<img src="' + staticFolder + slide.ownicon + '">';
+    overview += '</div>';
+    overview += '</div>';
+
+    // Another bracket, if there are next items.
+    if(slide.next.length > 0){
+      overview += '<div class="hxslide-overview-rightbracket"><img src="';
+      overview += staticFolder + 'leads-to.jpg"></div>';
+    }
+
+    // Rightmost box, with "next" icons.
+    overview += '<div class="hxslide-overview-rightbox hxslide-overview-container">';
+    if(slide.next){ overview += overviewSideHTML( slide.next.split(',') ); }
+    overview += '</div>';
+
+    overview += '</div>';
+
+    return overview;
+
   }
 
   // Add one-time link listeners.
@@ -332,6 +396,7 @@ var HXTextSlider = (function() {
     slick.slickAdd(slideHTML);
   }
 
+  // Go to a specific slide and handle the history list.
   function goToSlide(slideID){
     // If we're already at this slide, do nothing.
     if(slideID !== currentSlide().data('slideId')){
@@ -352,6 +417,7 @@ var HXTextSlider = (function() {
 
   // Set up initial listeners
   HXslider.on('init', function(e, slick){
+
     // Set up the first slide and drop it into the slider.
     // But wait for the data first.
     var waitForData = setInterval(function(){
@@ -365,25 +431,59 @@ var HXTextSlider = (function() {
           addSlide(slick, getSlideHTML(slideData[0]));
           homeSlideButton.on('click tap', function(){ goToSlide(slideData[0]); });
         }
-        // Enable overview map if there's one included.
-        if($('.overviewMap').length > 0){
+
+        // Enable hand-built overview map if there's one included.
+        // if($('.overviewMap').length > 0){
+        //   showOverviewMap.addClass('canGoBack');
+        //   showOverviewMap.on('click tap', function(){
+        //     $('.overviewMap').dialog({
+        //       dialogClass: "no-close",
+        //       width: 1080,
+        //       buttons: [
+        //         { text: "Close",
+        //           click: function() {
+        //             $( this ).dialog( "close" );
+        //           }
+        //         }
+        //       ]
+        //     });
+        //   });
+        // }else{
+        //   $('.overviewMap').hide();
+        // }
+
+        // Hide/show auto-generated overview map
+        if(showOverviewMap.length > 0){
           showOverviewMap.addClass('canGoBack');
-          showOverviewMap.on('click tap', function(){
-            $('.overviewMap').dialog({
-              dialogClass: "no-close",
-              width: 1080,
-              buttons: [
-                { text: "Close",
-                  click: function() {
-                    $( this ).dialog( "close" );
-                  }
-                }
-              ]
-            });
+          showOverviewMap.off('click.hxmap tap.hxmap')
+            .on('click.hxmap tap.hxmap', function(){
+            var thisMap = $(currentSlide).find('.hxslide-overview-bigbox');
+            thisMap.slideToggle();
+
+            var leftbox = $(thisMap).find('.hxslide-overview-leftbox');
+            var rightbox = $(thisMap).find('.hxslide-overview-rightbox');
+
+            var left_items = $(leftbox).find('.hxslide-overview-item');
+            var right_items = $(rightbox).find('.hxslide-overview-item');
+
+            var num_left = left_items.length;
+            var num_right = right_items.length;
+
+            var max_in_side = 3;
+            resizeItems();
+
+            $(window).off('resize.hx').on('resize.hx', function(){ resizeItems(); });
+
+            function resizeItems(){
+              left_width = leftbox.width() / ( Math.ceil(num_left / 3) ) - 10;
+              right_width = rightbox.width() / ( Math.ceil(num_right / 3) ) - 10;
+              left_items.css('max-width', Math.min(left_width, 200));
+              right_items.css('max-width', Math.min(right_width, 200));
+            }
+
           });
-        }else{
-          $('.overviewMap').hide();
         }
+
         // Remove the "Initializing" slide.
         slick.slickRemove(0);
         // Set initial history
@@ -398,6 +498,7 @@ var HXTextSlider = (function() {
     }, 250);
   });
 
+  // Handle focus
   HXslider.on('afterChange', function(e, slick){
     // Uncomment below for breadcrumbs.
     // crumbTray.html(formatCrumbs(breadcrumbs));
@@ -406,6 +507,7 @@ var HXTextSlider = (function() {
     addListeners(slick, slideData);
   });
 
+  // Back button backstop
   backButton.on('click tap', function(){
     // Don't go back if we're on the first slide.
     if(breadcrumbs.length > 1){
