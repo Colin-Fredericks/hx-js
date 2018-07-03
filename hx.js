@@ -59,6 +59,14 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             slidesToShow: 1,
             slidesToScroll: 1
         },
+        // Default options for text slider
+        textSliderOptions: {
+            slidesFile: 'TextSliderCards.csv',
+            startingSlide: '',
+            // Add slide IDs to this list to include them, or remove the whole thing to include everything.
+            slideScope: [],
+            openNav: false
+        },
         // Default options for pop-up problems
         PUPOptions: {
             width: 800,

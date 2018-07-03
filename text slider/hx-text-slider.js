@@ -21,8 +21,16 @@ var HXTextSlider = (function() {
   var slideData = [];
   var iconsize = 65; //pixels
 
-  // A blank or missing slideScope means everything's in-scope.
-  if('slideScope' in window){} else{ slideScope = []; }
+  var options = hxLocalOptions.textSliderOptions;
+  console.log(options);
+
+  // Getting options variables with defaults.
+  var slidesFile = options.slidesFile || 'TextSliderCards.csv';
+  var startingSlide = options.startingSlide || '';
+  var slideScope = options.slideScope || [];
+  var openNav = options.openNav || false;
+
+  console.log(slidesFile);
 
   var colorLookup = {
     'red': '#c00000',
@@ -258,7 +266,11 @@ var HXTextSlider = (function() {
   function getOverviewHTML(slide){
 
     var staticFolder = getAssetURL(window.location.href, 'complete');
-    var overview = '<div class="hxslide-overview-bigbox hxslide-overview-master" style="display: none">'
+    var overview = '<div class="hxslide-overview-bigbox hxslide-overview-master" ';
+    if(!openNav){
+      overview += 'style="display: none;"';
+    }
+    overview += '">'
 
     // Split the lists of previous and next slides and return appropriate html
     function overviewSideHTML(targetList){
@@ -314,13 +326,28 @@ var HXTextSlider = (function() {
 
   }
 
+  // For auto-generated map
+  function resizeItems(leftbox, rightbox){
+    var left_items = $(leftbox).find('.hxslide-overview-item');
+    var right_items = $(rightbox).find('.hxslide-overview-item');
+    var num_left = left_items.length;
+    var num_right = right_items.length;
+    var max_in_side = 3;
+
+    left_width = leftbox.width() / ( Math.ceil(num_left / 3) ) - 10;
+    right_width = rightbox.width() / ( Math.ceil(num_right / 3) ) - 10;
+    left_items.css('max-width', Math.min(left_width, 200));
+    right_items.css('max-width', Math.min(right_width, 200));
+  }
+
   // Add one-time link listeners.
   function addListeners(slick, slideData){
 
     // Handle links to other slides
     currentSlide().find('a').filter(function(){
       return typeof $(this).attr('data-target') !== 'undefined';
-    }).off('click.hxsm tap.hxsm').on('click.hxsm tap.hxsm', function(e){
+    }).off('click.hxsm tap.hxsm')
+    .on('click.hxsm tap.hxsm', function(e){
       e.preventDefault();
       // Get the link target and go there.
       var target = $(this).attr('data-target');
@@ -380,6 +407,30 @@ var HXTextSlider = (function() {
       }
     });
 
+    // Hide/show auto-generated overview map
+    if(showOverviewMap.length > 0){
+      showOverviewMap.addClass('canGoBack');
+
+      var thisMap = $(currentSlide).find('.hxslide-overview-bigbox');
+      var leftbox = $(thisMap).find('.hxslide-overview-leftbox');
+      var rightbox = $(thisMap).find('.hxslide-overview-rightbox');
+
+      if(openNav){ resizeItems(leftbox, rightbox); }
+
+      showOverviewMap.off('click.hxmap tap.hxmap')
+        .on('click.hxmap tap.hxmap', function(){
+          thisMap.slideToggle();
+          openNav = !openNav;
+
+          resizeItems(leftbox, rightbox);
+
+          $(window).off('resize.hx').on('resize.hx', function(){
+            resizeItems(leftbox, rightbox);
+          });
+
+      });
+    }
+
   }
 
   // For the back button and the breadcrumbs
@@ -406,6 +457,11 @@ var HXTextSlider = (function() {
   function goToSlide(slideID){
     // If we're already at this slide, do nothing.
     if(slideID !== currentSlide().data('slideId')){
+      // Hide the current nav overview we're in hiding mode
+      if(!openNav){
+        $('.hxslide-overview-bigbox').hide();
+      }
+
       var newSlide = lookupSlide(slideID);
       // Regardless of whether this slide is in the current stack,
       // make a new copy and move to it. Don't slide back.
@@ -430,7 +486,7 @@ var HXTextSlider = (function() {
       console.log('waiting for slide data...');
       if(typeof slideData[0] !== 'undefined'){
         console.log('Slide data loaded.');
-        if('startingSlide' in window){
+        if(startingSlide){
           addSlide(slick, getSlideHTML(lookupSlide(startingSlide)));
           homeSlideButton.on('click tap', function(){ goToSlide(startingSlide); });
         }else{
@@ -457,38 +513,6 @@ var HXTextSlider = (function() {
         // }else{
         //   $('.overviewMap').hide();
         // }
-
-        // Hide/show auto-generated overview map
-        if(showOverviewMap.length > 0){
-          showOverviewMap.addClass('canGoBack');
-          showOverviewMap.off('click.hxmap tap.hxmap')
-            .on('click.hxmap tap.hxmap', function(){
-            var thisMap = $(currentSlide).find('.hxslide-overview-bigbox');
-            thisMap.slideToggle();
-
-            var leftbox = $(thisMap).find('.hxslide-overview-leftbox');
-            var rightbox = $(thisMap).find('.hxslide-overview-rightbox');
-
-            var left_items = $(leftbox).find('.hxslide-overview-item');
-            var right_items = $(rightbox).find('.hxslide-overview-item');
-
-            var num_left = left_items.length;
-            var num_right = right_items.length;
-
-            var max_in_side = 3;
-            resizeItems();
-
-            $(window).off('resize.hx').on('resize.hx', function(){ resizeItems(); });
-
-            function resizeItems(){
-              left_width = leftbox.width() / ( Math.ceil(num_left / 3) ) - 10;
-              right_width = rightbox.width() / ( Math.ceil(num_right / 3) ) - 10;
-              left_items.css('max-width', Math.min(left_width, 200));
-              right_items.css('max-width', Math.min(right_width, 200));
-            }
-
-          });
-        }
 
         // Remove the "Initializing" slide.
         slick.slickRemove(0);
@@ -523,7 +547,7 @@ var HXTextSlider = (function() {
 
 
   // Bring in the CSV file.
-  if('slidesFile' in window){
+  if(slidesFile){
     var csvfile = slidesFile;
     if(slidesFile.indexOf('/static/') != -1){
       csvfile = getAssetURL(window.location.href, 'complete') + csvfile;

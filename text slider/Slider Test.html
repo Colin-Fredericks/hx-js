@@ -9,15 +9,17 @@ var hxLocalOptions =  {
     slidesToScroll: 1,
     swipe: false,
     touchMove: false
+  },
+  textSliderOptions: {
+    slidesFile: '/static/ImpactExplorerCards.csv',
+    startingSlide: 'CO2',
+    // Add slide IDs to this list to include them, or remove the whole thing to include everything.
+    slideScope: ['LowCrop', 'CO2', 'Elderly', 'ChildBearing', 'Children', 'NutritionDisease'],
+    openNav: false
   }
 };
-
-var slidesFile = '/static/ImpactExplorerCards.csv';
-var startingSlide = 'CO2';
-// Add slide IDs to this list to include them, or remove the whole thing to include everything.
-var slideScope = ['LowCrop', 'CO2', 'Elderly', 'ChildBearing', 'Children', 'NutritionDisease']
-
 </script>
+
 
 <script src="/static/papaparse.js"></script>
 <script src="/static/hx.js"></script>
@@ -39,10 +41,4 @@ var slideScope = ['LowCrop', 'CO2', 'Elderly', 'ChildBearing', 'Children', 'Nutr
   <div class="hx-slider">
     <div>Initializing...</div>
   </div>
-</div>
-
-<div class="overviewMap" style="display:none;">
-  <a href="/static/Nutrition_Subset_Flowchart.png" target="_blank">
-    <img src="/static/Nutrition_Subset_Flowchart_small.jpg" alt="Visual overview of this part of the course." />
-  </a>
 </div>
