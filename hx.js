@@ -65,7 +65,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             startingSlide: '',
             // Add slide IDs to this list to include them, or remove the whole thing to include everything.
             slideScope: [],
-            openNav: false
+            overviewIsOpen: false,
+            showBottomNav: true
         },
         // Default options for pop-up problems
         PUPOptions: {

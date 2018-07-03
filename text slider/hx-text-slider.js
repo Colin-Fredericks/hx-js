@@ -21,14 +21,12 @@ var HXTextSlider = (function() {
   var slideData = [];
   var iconsize = 65; //pixels
 
-  var options = hxLocalOptions.textSliderOptions;
-  console.log(options);
-
-  // Getting options variables with defaults.
-  var slidesFile = options.slidesFile || 'TextSliderCards.csv';
-  var startingSlide = options.startingSlide || '';
-  var slideScope = options.slideScope || [];
-  var openNav = options.openNav || false;
+  // Getting options variables.
+  var slidesFile = hxLocalOptions.textSliderOptions.slidesFile;
+  var startingSlide = hxLocalOptions.textSliderOptions.startingSlide;
+  var slideScope = hxLocalOptions.textSliderOptions.slideScope;
+  var overviewIsOpen = hxLocalOptions.textSliderOptions.overviewIsOpen;
+  var showBottomNav = hxLocalOptions.textSliderOptions.showBottomNav;
 
   console.log(slidesFile);
 
@@ -240,24 +238,24 @@ var HXTextSlider = (function() {
     }
 
     // Part at the bottom with the previous and next icons.
-    slideHTML += '<div class="hx-text-slider-nav">';
-
-    if(slide.previous){
-      slideHTML += '<div class="hx-previous">'
-      slideHTML += '<h4>Causes</h4>'
-      slideHTML += '<div class="hx-previous-icons">'
-      slideHTML += prevNextHTML( slide.previous.split(',') );
-      slideHTML += '</div></div>';
+    if(showBottomNav){
+      slideHTML += '<div class="hx-text-slider-nav">';
+      if(slide.previous){
+        slideHTML += '<div class="hx-previous">'
+        slideHTML += '<h4>Causes</h4>'
+        slideHTML += '<div class="hx-previous-icons">'
+        slideHTML += prevNextHTML( slide.previous.split(',') );
+        slideHTML += '</div></div>';
+      }
+      if(slide.next){
+        slideHTML += '<div class="hx-next">'
+        slideHTML += '<h4>Effects</h4>'
+        slideHTML += '<div class="hx-next-icons">'
+        slideHTML += prevNextHTML( slide.next.split(',') );
+        slideHTML += '</div></div>';
+      }
+      slideHTML += '</div>';
     }
-    if(slide.next){
-      slideHTML += '<div class="hx-next">'
-      slideHTML += '<h4>Effects</h4>'
-      slideHTML += '<div class="hx-next-icons">'
-      slideHTML += prevNextHTML( slide.next.split(',') );
-      slideHTML += '</div></div>';
-    }
-
-    slideHTML += '</div>';
 
     return slideHTML;
   }
@@ -267,7 +265,7 @@ var HXTextSlider = (function() {
 
     var staticFolder = getAssetURL(window.location.href, 'complete');
     var overview = '<div class="hxslide-overview-bigbox hxslide-overview-master" ';
-    if(!openNav){
+    if(!overviewIsOpen){
       overview += 'style="display: none;"';
     }
     overview += '">'
@@ -415,12 +413,12 @@ var HXTextSlider = (function() {
       var leftbox = $(thisMap).find('.hxslide-overview-leftbox');
       var rightbox = $(thisMap).find('.hxslide-overview-rightbox');
 
-      if(openNav){ resizeItems(leftbox, rightbox); }
+      if(overviewIsOpen){ resizeItems(leftbox, rightbox); }
 
       showOverviewMap.off('click.hxmap tap.hxmap')
         .on('click.hxmap tap.hxmap', function(){
           thisMap.slideToggle();
-          openNav = !openNav;
+          overviewIsOpen = !overviewIsOpen;
 
           resizeItems(leftbox, rightbox);
 
@@ -458,7 +456,7 @@ var HXTextSlider = (function() {
     // If we're already at this slide, do nothing.
     if(slideID !== currentSlide().data('slideId')){
       // Hide the current nav overview we're in hiding mode
-      if(!openNav){
+      if(!overviewIsOpen){
         $('.hxslide-overview-bigbox').hide();
       }
 
