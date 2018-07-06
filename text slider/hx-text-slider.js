@@ -321,7 +321,6 @@ var HXTextSlider = (function(options) {
     var right_items = $(rightbox).find('.hxslide-overview-item');
     var num_left = left_items.length;
     var num_right = right_items.length;
-    console.log(num_left + ' left items, ' + num_right + ' right items. Max: ' + options.maxIconsTall);
 
     left_width = leftbox.width() / ( Math.ceil(num_left / options.maxIconsTall) ) - 10;
     right_width = rightbox.width() / ( Math.ceil(num_right / options.maxIconsTall) ) - 10;
