@@ -1,3 +1,9 @@
+.hx-dynamic-sliderbox{
+    background-color: #FFF;
+    border: none !important;
+    padding: 10px !important;
+}
+
 .slick-slider {
   -webkit-user-select: text;
   -moz-user-select: text;

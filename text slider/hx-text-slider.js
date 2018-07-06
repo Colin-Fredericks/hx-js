@@ -1,5 +1,6 @@
 /*************************************************************
 / Text slider for use within edX
+/ Dynamically loads a CSV file to create interactive slides.
 / Created at HarvardX
 / Requirements:
 /  * Slick image slider https://kenwheeler.github.io/slick/
@@ -8,7 +9,7 @@
 /           https://github.com/Colin-Fredericks/hx-js
 *************************************************************/
 
-var HXTextSlider = (function() {
+var HXTextSlider = (function(textSliderOptions) {
 
   var history = [];
   var breadcrumbs = [];
@@ -22,13 +23,12 @@ var HXTextSlider = (function() {
   var iconsize = 65; //pixels
 
   // Getting options variables.
-  var slidesFile = hxLocalOptions.textSliderOptions.slidesFile;
-  var startingSlide = hxLocalOptions.textSliderOptions.startingSlide;
-  var slideScope = hxLocalOptions.textSliderOptions.slideScope;
-  var overviewIsOpen = hxLocalOptions.textSliderOptions.overviewIsOpen;
-  var showBottomNav = hxLocalOptions.textSliderOptions.showBottomNav;
-
-  console.log(slidesFile);
+  var slidesFile = textSliderOptions.slidesFile;
+  var startingSlide = textSliderOptions.startingSlide;
+  var slideScope = textSliderOptions.slideScope;
+  var overviewIsOpen = textSliderOptions.overviewIsOpen;
+  var showBottomNav = textSliderOptions.showBottomNav;
+  var maxIconsTall = textSliderOptions.maxIconsTall;
 
   var colorLookup = {
     'red': '#c00000',
@@ -92,7 +92,6 @@ var HXTextSlider = (function() {
 
     // Check to make sure the slideScope fits this set of slides.
     if(slideScope !== []){
-      console.log(slideScope);
       for(var i=0; i < slideScope.length; i++){
         scopeInSlides = false;
         for(var j=0; j< newSlideData.length; j++){
@@ -330,10 +329,10 @@ var HXTextSlider = (function() {
     var right_items = $(rightbox).find('.hxslide-overview-item');
     var num_left = left_items.length;
     var num_right = right_items.length;
-    var max_in_side = 3;
+    console.log(num_left + ' left items, ' + num_right + ' right items. Max: ' + maxIconsTall);
 
-    left_width = leftbox.width() / ( Math.ceil(num_left / 3) ) - 10;
-    right_width = rightbox.width() / ( Math.ceil(num_right / 3) ) - 10;
+    left_width = leftbox.width() / ( Math.ceil(num_left / maxIconsTall) ) - 10;
+    right_width = rightbox.width() / ( Math.ceil(num_right / maxIconsTall) ) - 10;
     left_items.css('max-width', Math.min(left_width, 200));
     right_items.css('max-width', Math.min(right_width, 200));
   }
@@ -409,7 +408,7 @@ var HXTextSlider = (function() {
     if(showOverviewMap.length > 0){
       showOverviewMap.addClass('canGoBack');
 
-      var thisMap = $(currentSlide).find('.hxslide-overview-bigbox');
+      var thisMap = $(currentSlide()).find('.hxslide-overview-bigbox');
       var leftbox = $(thisMap).find('.hxslide-overview-leftbox');
       var rightbox = $(thisMap).find('.hxslide-overview-rightbox');
 
@@ -560,8 +559,8 @@ var HXTextSlider = (function() {
           download: true,
           header: true,
           complete: function(results) {
-            slideData = makeSlideArray(results.data);
             console.log(results);
+            slideData = makeSlideArray(results.data);
             console.log(slideData);
           }
         });
