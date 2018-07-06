@@ -59,6 +59,16 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             slidesToShow: 1,
             slidesToScroll: 1
         },
+        // Default options for text slider
+        textSliderOptions: {
+            slidesFile: 'TextSliderCards.csv',
+            startingSlide: '',
+            // Add slide IDs to this list to include them, or remove the whole thing to include everything.
+            slideScope: [],
+            overviewIsOpen: false,
+            showBottomNav: true,
+            maxIconsTall: 2
+        },
         // Default options for pop-up problems
         PUPOptions: {
             width: 800,
@@ -153,6 +163,15 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         scriptArray.push('imageMapResizer.min.js');
     }
 
+    // Do we load the Dynamic Text Slider?
+    var dynamicSliders = $('.hx-dynamic-sliderbox');
+    if(dynamicSliders.length){
+        logThatThing({'dynamic_slider': 'found'});
+        var HXDTS;
+        scriptArray.push('papaparse.js');  // CSV parser
+        scriptArray.push('hx-text-slider.js');
+    }
+
     // Do we load HXVideoLinks for... um... HarvardX video links?
     // And HXPopUpProblems for pop-up problems.
     // Set hxLocalOptions.dontLoadVideoStuff: true to avoid this,
@@ -193,14 +212,20 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
             }
             keepGoing(hxOptions);
-        }).fail(function(){
-            logThatThing('Did not load scripts.');
+        }).fail(function(jqxhr, settings, exception){
+            console.log(jqxhr);
+            console.log(settings);
+            console.log(exception);
+            logThatThing({'script_load_error': settings});
             hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
             keepGoing(hxOptions);
     });
 
     // Once we have the options, we're ready to proceed.
     function keepGoing(hxOptions){
+
+      window.hxOptions = hxOptions;
+      console.log('Window hxOptions set');
 
         /**************************************/
         // If we have videos, instantiate the functions
@@ -645,6 +670,17 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         }
 
 
+        /**************************************/
+        // If we have dynamic sliders, run them.
+        /**************************************/
+        if(dynamicSliders){
+            // Load CSS and instantiate JS
+            $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'hx-text-slider.css" type="text/css" />'));
+            console.log(hxOptions.textSliderOptions);
+            HXDTS = new HXTextSlider(hxOptions.textSliderOptions);
+            logThatThing({'dynamic slider': 'created'});
+        }
+
         /***********************************/
         // Stuff for the Slick image slider.
         /***********************************/
@@ -666,7 +702,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             bigslider.slick(hxOptions.slickBigOptions);
             logThatThing({'paired slider': 'created'});
         }
-
 
         // Placeholder: Audio player
 

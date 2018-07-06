@@ -9,38 +9,35 @@ var hxLocalOptions =  {
     slidesToScroll: 1,
     swipe: false,
     touchMove: false
+  },
+  textSliderOptions: {
+    slidesFile: '/static/ImpactExplorerCards.csv',
+    startingSlide: 'CO2',
+    // Add slide IDs to this list to include them, or remove the whole thing to include everything.
+    slideScope: ['LowCrop', 'CO2', 'Elderly', 'ChildBearing', 'Children', 'NutritionDisease'],
+    overviewIsOpen: false
   }
 };
 
-var slidesFile = "/static/ImpactExplorerCards.csv";
-var startingSlide = "NutritionDisease";
-
 </script>
 
-<script src="/static/papaparse.js"></script>
 <script src="/static/hx.js"></script>
-<script src="/static/hx-text-slider.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/hx.css">
-<link rel="stylesheet" type="text/css" href="/static/hx-text-slider.css">
 
-<p>Use the interactive below to see how nutrition connects to climate change and human populations. Be sure to explore both the causes of nutritional diseases and the populations that are vulnerable to them.</p>
+<h3>Test Slider</h3>
+
+<p>View Live to see it in action.</p>
 
 <div class="crumbbox">
   <button class="backToParentSlide"><span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span></button>
   <button class="goToHomeSlide canGoBack"><span class="fa fa-home"><span class="sr">Home Slide</span></span></button>
   <!-- <span class="sr">Breadcrumbs: </span> -->
   <!-- <span class="slideBreadcrumbs"></span> -->
-  <button class="showOverviewMap"><span class="fa fa-image"><span class="sr">Visual Map</span></span></button>
+  <button class="showOverviewMap"><span class="fa fa-eye"><span class="sr">Visual Map</span></span></button>
 </div>
 
-<div class="hx-sliderbox">
+<div class="hx-sliderbox hx-dynamic-sliderbox">
   <div class="hx-slider">
     <div>Initializing...</div>
   </div>
-</div>
-
-<div class="overviewMap" style="display:none;">
-  <a href="/static/Nutrition_Subset_Flowchart.png" target="_blank">
-    <img src="/static/Nutrition_Subset_Flowchart_small.jpg" alt="Visual overview of this part of the course." />
-  </a>
 </div>
