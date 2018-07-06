@@ -167,6 +167,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     var dynamicSliders = $('.hx-dynamic-sliderbox');
     if(dynamicSliders.length){
         logThatThing({'dynamic_slider': 'found'});
+        var HXDTS;
         scriptArray.push('papaparse.js');  // CSV parser
         scriptArray.push('hx-text-slider.js');
     }
@@ -211,8 +212,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
             }
             keepGoing(hxOptions);
-        }).fail(function(){
-            logThatThing('Did not load scripts.');
+        }).fail(function(jqxhr, settings, exception){
+            console.log(jqxhr);
+            console.log(settings);
+            console.log(exception);
+            logThatThing({'script_load_error': settings});
             hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
             keepGoing(hxOptions);
     });
@@ -672,7 +676,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         if(dynamicSliders){
             // Load CSS and instantiate JS
             $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'hx-text-slider.css" type="text/css" />'));
-            var HXTS = new HXTextSlider(hxOptions.textSliderOptions);
+            console.log(hxOptions.textSliderOptions);
+            HXDTS = new HXTextSlider(hxOptions.textSliderOptions);
             logThatThing({'dynamic slider': 'created'});
         }
 

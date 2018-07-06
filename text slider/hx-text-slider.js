@@ -9,7 +9,7 @@
 /           https://github.com/Colin-Fredericks/hx-js
 *************************************************************/
 
-var HXTextSlider = (function(textSliderOptions) {
+var HXTextSlider = (function(options) {
 
   var history = [];
   var breadcrumbs = [];
@@ -21,14 +21,6 @@ var HXTextSlider = (function(textSliderOptions) {
   var HXslider = $('.hx-slider');
   var slideData = [];
   var iconsize = 65; //pixels
-
-  // Getting options variables.
-  var slidesFile = textSliderOptions.slidesFile;
-  var startingSlide = textSliderOptions.startingSlide;
-  var slideScope = textSliderOptions.slideScope;
-  var overviewIsOpen = textSliderOptions.overviewIsOpen;
-  var showBottomNav = textSliderOptions.showBottomNav;
-  var maxIconsTall = textSliderOptions.maxIconsTall;
 
   var colorLookup = {
     'red': '#c00000',
@@ -91,17 +83,17 @@ var HXTextSlider = (function(textSliderOptions) {
     });
 
     // Check to make sure the slideScope fits this set of slides.
-    if(slideScope !== []){
-      for(var i=0; i < slideScope.length; i++){
+    if(options.slideScope !== []){
+      for(var i=0; i < options.slideScope.length; i++){
         scopeInSlides = false;
         for(var j=0; j< newSlideData.length; j++){
-          if(slideScope[i] == newSlideData[j].id){
+          if(options.slideScope[i] == newSlideData[j].id){
             scopeInSlides = true;
             break;
           }
         }
         if(!scopeInSlides){
-          console.log(slideScope[i] + ' is in scope but not in the current slide list.');
+          console.log(options.slideScope[i] + ' is in scope but not in the current slide list.');
         }
       }
     }else{
@@ -221,7 +213,7 @@ var HXTextSlider = (function(textSliderOptions) {
       var html = '';
       targetList.forEach(function(e){
         var tempslide = lookupSlide(e.trim())
-        var outOfScope = (slideScope.indexOf(tempslide.id) === -1) && slideScope.length > 0;
+        var outOfScope = (options.slideScope.indexOf(tempslide.id) === -1) && options.slideScope.length > 0;
         html += '<div class="hx-prevnext-icons '
           + (outOfScope ? 'out-of-scope' : '')
           + '"><a href="#" data-target="' + e.trim() + '">';
@@ -237,7 +229,7 @@ var HXTextSlider = (function(textSliderOptions) {
     }
 
     // Part at the bottom with the previous and next icons.
-    if(showBottomNav){
+    if(options.showBottomNav){
       slideHTML += '<div class="hx-text-slider-nav">';
       if(slide.previous){
         slideHTML += '<div class="hx-previous">'
@@ -264,7 +256,7 @@ var HXTextSlider = (function(textSliderOptions) {
 
     var staticFolder = getAssetURL(window.location.href, 'complete');
     var overview = '<div class="hxslide-overview-bigbox hxslide-overview-master" ';
-    if(!overviewIsOpen){
+    if(!options.overviewIsOpen){
       overview += 'style="display: none;"';
     }
     overview += '">'
@@ -274,7 +266,7 @@ var HXTextSlider = (function(textSliderOptions) {
       var html = '';
       targetList.forEach(function(e){
         var tempslide = lookupSlide(e.trim())
-        var outOfScope = (slideScope.indexOf(tempslide.id) === -1) && slideScope.length > 0;
+        var outOfScope = (options.slideScope.indexOf(tempslide.id) === -1) && options.slideScope.length > 0;
         html += '<div class="hxslide-overview-item">';
         html += '<a href="#" data-target="' + e.trim() + '">'
         html += '<img src="' + staticFolder + tempslide.ownicon + '">';
@@ -329,10 +321,10 @@ var HXTextSlider = (function(textSliderOptions) {
     var right_items = $(rightbox).find('.hxslide-overview-item');
     var num_left = left_items.length;
     var num_right = right_items.length;
-    console.log(num_left + ' left items, ' + num_right + ' right items. Max: ' + maxIconsTall);
+    console.log(num_left + ' left items, ' + num_right + ' right items. Max: ' + options.maxIconsTall);
 
-    left_width = leftbox.width() / ( Math.ceil(num_left / maxIconsTall) ) - 10;
-    right_width = rightbox.width() / ( Math.ceil(num_right / maxIconsTall) ) - 10;
+    left_width = leftbox.width() / ( Math.ceil(num_left / options.maxIconsTall) ) - 10;
+    right_width = rightbox.width() / ( Math.ceil(num_right / options.maxIconsTall) ) - 10;
     left_items.css('max-width', Math.min(left_width, 200));
     right_items.css('max-width', Math.min(right_width, 200));
   }
@@ -412,12 +404,12 @@ var HXTextSlider = (function(textSliderOptions) {
       var leftbox = $(thisMap).find('.hxslide-overview-leftbox');
       var rightbox = $(thisMap).find('.hxslide-overview-rightbox');
 
-      if(overviewIsOpen){ resizeItems(leftbox, rightbox); }
+      if(options.overviewIsOpen){ resizeItems(leftbox, rightbox); }
 
       showOverviewMap.off('click.hxmap tap.hxmap')
         .on('click.hxmap tap.hxmap', function(){
           thisMap.slideToggle();
-          overviewIsOpen = !overviewIsOpen;
+          options.overviewIsOpen = !options.overviewIsOpen;
 
           resizeItems(leftbox, rightbox);
 
@@ -455,7 +447,7 @@ var HXTextSlider = (function(textSliderOptions) {
     // If we're already at this slide, do nothing.
     if(slideID !== currentSlide().data('slideId')){
       // Hide the current nav overview we're in hiding mode
-      if(!overviewIsOpen){
+      if(!options.overviewIsOpen){
         $('.hxslide-overview-bigbox').hide();
       }
 
@@ -483,9 +475,9 @@ var HXTextSlider = (function(textSliderOptions) {
       console.log('waiting for slide data...');
       if(typeof slideData[0] !== 'undefined'){
         console.log('Slide data loaded.');
-        if(startingSlide){
-          addSlide(slick, getSlideHTML(lookupSlide(startingSlide)));
-          homeSlideButton.on('click tap', function(){ goToSlide(startingSlide); });
+        if(options.startingSlide){
+          addSlide(slick, getSlideHTML(lookupSlide(options.startingSlide)));
+          homeSlideButton.on('click tap', function(){ goToSlide(options.startingSlide); });
         }else{
           addSlide(slick, getSlideHTML(slideData[0]));
           homeSlideButton.on('click tap', function(){ goToSlide(slideData[0]); });
@@ -544,39 +536,39 @@ var HXTextSlider = (function(textSliderOptions) {
 
 
   // Bring in the CSV file.
-  if(slidesFile){
-    var csvfile = slidesFile;
-    if(slidesFile.indexOf('/static/') != -1){
-      csvfile = getAssetURL(window.location.href, 'complete') + csvfile;
+  if(typeof options !== 'undefined'){
+    if(options.slidesFile){
+      var csvfile = options.slidesFile;
+      if(csvfile.indexOf('/static/') != -1){
+        csvfile = getAssetURL(window.location.href, 'complete') + csvfile;
+      }
+
+      // We're including the Papa CSV parser in the HTML,
+      // so make sure it loads completely before trying to use it.
+      var waitForPapa = setInterval(function(){
+        console.log('waiting for CSV parser...');
+        if(typeof Papa !== 'undefined'){
+          Papa.parse(csvfile, {
+            download: true,
+            header: true,
+            complete: function(results) {
+              console.log(results);
+              slideData = makeSlideArray(results.data);
+              console.log(slideData);
+            }
+          });
+          clearInterval(waitForPapa);
+        }
+      }, 250);
+
+    }else{
+      console.log('Slides file not specified.');
     }
 
-    // We're including the Papa CSV parser in the HTML,
-    // so make sure it loads completely before trying to use it.
-    var waitForPapa = setInterval(function(){
-      console.log('waiting for CSV parser...');
-      if(typeof Papa !== 'undefined'){
-        Papa.parse(csvfile, {
-          download: true,
-          header: true,
-          complete: function(results) {
-            console.log(results);
-            slideData = makeSlideArray(results.data);
-            console.log(slideData);
-          }
-        });
-        clearInterval(waitForPapa);
-      }
-    }, 250);
-
   }else{
-    console.log('Slides file not specified.');
+    console.log('No options specified.');
   }
 
   window.HXGoToSlide = goToSlide;
 
-});
-
-
-$(document).ready(function() {
-  HXTextSlider();
 });
