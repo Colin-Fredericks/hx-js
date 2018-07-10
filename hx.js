@@ -673,7 +673,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         /**************************************/
         // If we have dynamic sliders, run them.
         /**************************************/
-        if(dynamicSliders){
+        if(dynamicSliders.length){
             // Load CSS and instantiate JS
             $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'hx-text-slider.css" type="text/css" />'));
             console.log(hxOptions.textSliderOptions);
