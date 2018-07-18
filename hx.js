@@ -1,5 +1,6 @@
-var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
+"use strict";
 
+var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
     /***********************************************/
     // Setting all the default options.
@@ -156,13 +157,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         scriptArray.push('slick.js');
     }
 
-    // Do we load the Image Map Resizer?
-    var theMaps = $('map');
-    if(theMaps.length){
-        logThatThing({'image_map': 'found'});
-        scriptArray.push('imageMapResizer.min.js');
-    }
-
     // Do we load the Dynamic Text Slider?
     var dynamicSliders = $('.hx-dynamic-sliderbox');
     if(dynamicSliders.length){
@@ -170,6 +164,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         var HXDTS;
         scriptArray.push('papaparse.js');  // CSV parser
         scriptArray.push('hx-text-slider.js');
+    }
+
+    // Do we load the Image Map Resizer?
+    var theMaps = $('map');
+    if(theMaps.length){
+        logThatThing({'image_map': 'found'});
+        scriptArray.push('imageMapResizer.min.js');
     }
 
     // Do we load HXVideoLinks for... um... HarvardX video links?
@@ -396,93 +397,10 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             logThatThing('marking external links');
             $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function(i, linky){
                 var destination = $(linky).attr('href');
-                if(typeof destination !== 'undefined'){
-                    if( destination.includes('edx.org')
-                        || destination.includes('mailto')
-                        || destination.includes('jump_to_id')
-                        || destination.includes('/courses/')
-                        || destination.includes('cloudfront.net')
-                        || destination.includes('edx-cdn.org')
-                        || destination.includes('edxapp')
-                        || destination.includes('javascript:void')
-                        || destination.slice(0,1) == '#' ){
-
-                    }else{
-                        $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
-                    }
+                if(isExternalLink(destination)){
+                    $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
                 }
             });
-        }
-
-
-        /**************************************/
-        // Automatic Table of Contents maker.
-        // Uses h3 and h4 elements, links them up.
-        // Set hxLocalOptions.makeTOC = true to use.
-        /**************************************/
-
-        if(hxOptions.makeTOC){
-            if($('.edx-notes-wrapper-content').length){
-                $('.edx-notes-wrapper-content:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
-            }else{
-                $('#seq_content .xblock:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
-            }
-            // Using text instead of objects to make nesting easier.
-            var autoTOC = '<h3>Table of Contents</h3><ul>';
-
-            // Get all the h3 and h4 elements on the page.
-            var allHeaders = $('h3, h4').filter(function() {
-                // Remove anything that's hidden away.
-                return $(this).is(':visible');
-            });
-
-            var TOCList = $('#autoTOC ul');
-
-            // For each header, add it to the list and make a link.
-            allHeaders.each(function(i){
-                // Set the id of the element to link to.
-                $(this).attr('id','TOCLink'+i);
-
-                var TOCEntry = $(this).text();
-                var TOCLevel;
-                if($(this).is('h3')){
-                    TOCLevel = 3;
-                    if($(allHeaders[i-1]).is('h3') || i===0){
-                        autoTOC += '<li class="autotoc'
-                            + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry
-                            + '</a></li>';
-                    } else if($(allHeaders[i-1]).is('h4')){
-                        autoTOC += '</ul></li><li class="autotoc'
-                            + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry
-                            + '</a></li>';
-                    }
-                }
-                if($(this).is('h4')){
-                    TOCLevel = 4;
-                    if($(allHeaders[i-1]).is('h3')){
-                        if(i>0){ autoTOC.slice(0, autoTOC.length - 5); }
-                        autoTOC += '<ul><li class="autotoc'
-                            + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry
-                            + '</a></li>';
-                    } else if($(allHeaders[i-1]).is('h4')){
-                        autoTOC += '<li class="autotoc'
-                            + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry
-                            + '</a></li>';
-                    }
-                }
-            });
-            autoTOC += '</ul>';
-
-            // Done - add it all to the DOM.
-            $('#autoTOC').append(autoTOC);
         }
 
 
@@ -559,120 +477,21 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         });
 
 
-        /*******************************************/
+        // Automatic Table of Contents maker.
+        if(hxOptions.makeTOC){ makeAutoTOC(); }
+
+
         // Clickable images that pop up dialog boxes.
-        // Clickable area has id "MyID" and class "hx-popup-opener"
-        // Target div has class "MyID hx-popup-content"
-        // Don't put other classes first, but you can put them later if you want.
-        /*******************************************/
-
         var popUpOpener = $('.hx-popup-opener');
-
-        if(popUpOpener.length){
-
-            // First, create lists of areas for the purpose of accessibility.
-            $('map').each(function(index){
-
-                // Make a list element from each area's title
-                var tempList = [];
-                $(this).find('area').each(function(index){
-
-                    tempList.push('<li class="'
-                        + this.className.split(/\s+/)[0]
-                        + ' hx-popup-opener" title="'
-                        + this.title
-                        + '"><a href="javascript:;">'
-                        + this.title
-                        + '</a></li>'
-                    );
-                });
-
-                // Make that list into a big string and wrap it with UL
-                var listHTML = '<ul>' + tempList.join('') + '</ul>';
-                listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
-
-                // Append the list right after the map.
-                $(this).after(listHTML);
-            });
-
-            // Get the list of popup openers again so we can bind properly.
-            popUpOpener = $('.hx-popup-opener');
-
-            // Create the dialogue if we click on the right areas or links.
-            popUpOpener.on('click tap', function(){
-
-                var myClass = this.className;
-                var boxName = myClass.split(/\s+/)[0];
-
-                $('div.'+boxName).dialog({
-                    dialogClass: "hx-popup-dialog",
-                    title: $(this).attr('title'),
-                    show: {
-                        effect: 'fade',
-                        duration: 200,
-                    },
-                    hide: {
-                        effect: 'fade',
-                        duration: 100,
-                    },
-                    buttons: { "Close": function() { $(this).dialog("close"); } },
-                }, function(boxName){
-                    $('div.'+boxName).css({'display':''});
-                    alert(boxName);
-                });
-
-                logThatThing({
-                    'Pop-up Dialog': 'opened',
-                    'Dialog': boxName
-                });
-            });
-
-        }
+        if(popUpOpener.length){ handlePopUpContent(); }
 
 
-        /***********************************/
         // Auto-generation of footnotes.
-        // Finds <span class="hx-footnote#">[#]</span>
-        // Links to <div class="hx-footnote-target#">
-        // Does some rearranging and formatting.
-        // Must have HTML component with h3 header "Footnotes"
-        /***********************************/
-
         var allFootnotes = $('span[class^="hx-footnote"]');
-
-        if(allFootnotes.length){
-            var thisFootnote, thisNumber, thisTarget, footnoteComponents, destinationComponent;
-
-            for(var i = 0; i < allFootnotes.length; i++){
-
-                thisFootnote = allFootnotes[i];
-                thisNumber = getClassNumber(thisFootnote.className, 'hx-footnote');
-                thisTarget = $('div.hx-footnote-target'+thisNumber);
-
-                // Style the footnote marker
-                $(thisFootnote).addClass('hx-footnote-style');
-                $(thisFootnote).wrap('<sup></sup>');
-
-                // Move the footnote target divs to the appropriate location
-                footnoteComponents = $('h3:contains("Footnote")');
-                destinationComponent = $(footnoteComponents[footnoteComponents.length-1]).parent();
-                $(thisTarget).detach().appendTo(destinationComponent);
-
-                // Add links to the footnote markers
-                $(thisFootnote).wrap('<a href="#hxfoot'+thisNumber+'" name="hxfootback'+thisNumber+'"></a>').wrap();
-
-                // Add targets and back-links to the footnotes
-                thisTarget.prepend('<a name="hxfoot'+thisNumber+'"></a>');
-                thisTarget.append('<p><a href="#hxfootback'+thisNumber+'">(back)</a></p>');
-
-            }
-
-        }
+        if(allFootnotes.length){ makeFootnotes(allFootnotes); }
 
 
-        /**************************************/
         // If we have dynamic sliders, run them.
-        /**************************************/
         if(dynamicSliders.length){
             // Load CSS and instantiate JS
             $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'hx-text-slider.css" type="text/css" />'));
@@ -715,9 +534,200 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Various utility functions.
     /***********************************/
 
+    /**************************************/
+    // Automatic Table of Contents maker.
+    // Uses h3 and h4 elements, links them up.
+    // Set hxLocalOptions.makeTOC = true to use.
+    /**************************************/
+    function makeAutoTOC(){
+        // Add the container for the TOC
+        if($('.edx-notes-wrapper-content').length){
+            $('.edx-notes-wrapper-content:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
+        }else{
+            $('#seq_content .xblock:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
+        }
+        // Using text instead of objects to make nesting easier.
+        var autoTOC = '<h3>Table of Contents</h3><ul>';
+
+        // Get all the h3 and h4 elements on the page.
+        var allHeaders = $('h3, h4').filter(function() {
+            // Remove anything that's hidden away.
+            return $(this).is(':visible');
+        });
+
+        var TOCList = $('#autoTOC ul');
+
+        // For each header, add it to the list and make a link.
+        allHeaders.each(function(i){
+            // Set the id of the element to link to.
+            $(this).attr('id','TOCLink'+i);
+
+            var TOCEntry = $(this).text();
+            var TOCLevel;
+            if($(this).is('h3')){
+                TOCLevel = 3;
+                if($(allHeaders[i-1]).is('h3') || i===0){
+                    autoTOC += '<li class="autotoc'
+                    + TOCLevel
+                    + '"><a href="#TOCLink'+i+'">'
+                    + TOCEntry
+                    + '</a></li>';
+                } else if($(allHeaders[i-1]).is('h4')){
+                    autoTOC += '</ul></li><li class="autotoc'
+                    + TOCLevel
+                    + '"><a href="#TOCLink'+i+'">'
+                    + TOCEntry
+                    + '</a></li>';
+                }
+            }
+            if($(this).is('h4')){
+                TOCLevel = 4;
+                if($(allHeaders[i-1]).is('h3')){
+                    if(i>0){ autoTOC.slice(0, autoTOC.length - 5); }
+                    autoTOC += '<ul><li class="autotoc'
+                    + TOCLevel
+                    + '"><a href="#TOCLink'+i+'">'
+                    + TOCEntry
+                    + '</a></li>';
+                } else if($(allHeaders[i-1]).is('h4')){
+                    autoTOC += '<li class="autotoc'
+                    + TOCLevel
+                    + '"><a href="#TOCLink'+i+'">'
+                    + TOCEntry
+                    + '</a></li>';
+                }
+            }
+        });
+        autoTOC += '</ul>';
+
+        $('#autoTOC').append(autoTOC);
+    }
+
+
+    /***********************************/
+    // Auto-generation of footnotes.
+    // Finds <span class="hx-footnote#">[#]</span>
+    // Links to <div class="hx-footnote-target#">
+    // Does some rearranging and formatting.
+    // Must have HTML component with h3 header "Footnotes"
+    /***********************************/
+    function makeFootnotes(allFootnotes){
+        var thisFootnote, thisNumber, thisTarget, footnoteComponents, destinationComponent;
+
+        for(var i = 0; i < allFootnotes.length; i++){
+
+            thisFootnote = allFootnotes[i];
+            thisNumber = getClassNumber(thisFootnote.className, 'hx-footnote');
+            thisTarget = $('div.hx-footnote-target'+thisNumber);
+
+            // Style the footnote marker
+            $(thisFootnote).addClass('hx-footnote-style');
+            $(thisFootnote).wrap('<sup></sup>');
+
+            // Move the footnote target divs to the appropriate location
+            footnoteComponents = $('h3:contains("Footnote")');
+            destinationComponent = $(footnoteComponents[footnoteComponents.length-1]).parent();
+            $(thisTarget).detach().appendTo(destinationComponent);
+
+            // Add links to the footnote markers
+            $(thisFootnote).wrap('<a href="#hxfoot'+thisNumber+'" name="hxfootback'+thisNumber+'"></a>').wrap();
+
+            // Add targets and back-links to the footnotes
+            thisTarget.prepend('<a name="hxfoot'+thisNumber+'"></a>');
+            thisTarget.append('<p><a href="#hxfootback'+thisNumber+'">(back)</a></p>');
+
+        }
+    }
+
+    /*******************************************/
+    // Clickable images that pop up dialog boxes.
+    // Clickable area has id "MyID" and class "hx-popup-opener"
+    // Target div has class "MyID hx-popup-content"
+    // Don't put other classes first, but you can put them later if you want.
+    /*******************************************/
+    function handlePopUpContent(){
+        // First, create lists of areas for the purpose of accessibility.
+        $('map').each(function(index){
+
+            // Make a list element from each area's title
+            var tempList = [];
+            $(this).find('area').each(function(index){
+
+                tempList.push('<li class="'
+                    + this.className.split(/\s+/)[0]
+                    + ' hx-popup-opener" title="'
+                    + this.title
+                    + '"><a href="javascript:;">'
+                    + this.title
+                    + '</a></li>'
+                );
+            });
+
+            // Make that list into a big string and wrap it with UL
+            var listHTML = '<ul>' + tempList.join('') + '</ul>';
+            listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
+
+            // Append the list right after the map.
+            $(this).after(listHTML);
+        });
+
+        // Get the list of popup openers again so we can bind properly.
+        var newPops = $('.hx-popup-opener');
+
+        // Create the dialogue if we click on the right areas or links.
+        newPops.on('click tap', function(){
+
+            var myClass = this.className;
+            var boxName = myClass.split(/\s+/)[0];
+
+            $('div.'+boxName).dialog({
+                dialogClass: "hx-popup-dialog",
+                title: $(this).attr('title'),
+                show: {
+                    effect: 'fade',
+                    duration: 200,
+                },
+                hide: {
+                    effect: 'fade',
+                    duration: 100,
+                },
+                buttons: { "Close": function() { $(this).dialog("close"); } },
+            }, function(boxName){
+                $('div.'+boxName).css({'display':''});
+                alert(boxName);
+            });
+
+            logThatThing({
+                'Pop-up Dialog': 'opened',
+                'Dialog': boxName
+            });
+        });
+
+    }
+
+    // Is a link external or not?
+    function isExternalLink(url){
+        if(typeof url !== 'undefined'){
+            if( url.includes('edx.org')
+                || url.includes('mailto')
+                || url.includes('jump_to_id')
+                || url.includes('/courses/')
+                || url.includes('cloudfront.net')
+                || url.includes('edx-cdn.org')
+                || url.includes('edxapp')
+                || url.includes('javascript:void')
+                || url.slice(0,1) == '#' )
+                {
+                    return false;
+                }
+        }
+        return true;
+    }
+
     // Turns a page URL in edX into an external asset url,
     // because we can't use /static/ from within javascript.
-    // Pass 'complete' for the whole thing, 'site' for the site, or 'partial' for without the site.
+    // Pass option 'complete' for the whole thing, 'site' for the site,
+    // or 'partial' for without the site.
     // Public function.
     function getAssetURL(windowURL, option){
 
@@ -853,9 +863,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         return time;
     }
 
-    this.getAssetURL = getAssetURL;
-    this.hmsToTime = hmsToTime;
-
 
     // Send logs both to the console and to the official edX logamajig.
     function logThatThing(ThatThing){
@@ -863,7 +870,10 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         Logger.log(courseLogID + '.hxjs', ThatThing);
     }
 
-    this.logThatThing = logThatThing;
+    // Let's publish a few of these.
+    window.getAssetURL = getAssetURL;
+    window.hmsToTime = hmsToTime;
+    window.logThatThing = logThatThing;
 
 });
 
