@@ -368,47 +368,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Stuff for a visibility toggle button.
         // Button classes start with "hx-togglebutton#"
         // Target classes start with "hx-toggletarget#"
-        // # is a number, not a pound sign.
+        // (Where # is a number, not a pound sign.)
         /**************************************/
-
-        $('[class^=hx-togglebutton]').each(function(){
-            var myNumber = getClassNumber(this.className, 'hx-togglebutton');
-            $(this).attr('aria-controls' , 'hx-toggletarget'+myNumber);
-
-            if( $('.hx-toggletarget'+myNumber+':visible').length > 0 ){
-                $(this).attr('aria-expanded','true');
-                $('.hx-toggletarget'+myNumber).attr('aria-hidden','false');
-            }else{
-                $(this).attr('aria-expanded','false');
-                $('[class^=hx-toggletarget]').attr('aria-hidden','true');
-            }
-        });
-
-        $('[class^=hx-togglebutton]').on('click tap', function() {
-
-            var myNumber = getClassNumber(this.className, 'hx-togglebutton');
-
-            $('.hx-toggletarget'+myNumber).slideToggle('fast');
-
-            if( $(this).attr('aria-expanded') === 'true'){
-                logThatThing({
-                    'Toggle button': 'pressed',
-                    'Toggled to': 'invisible',
-                    'Toggle number': myNumber
-                });
-                $(this).attr('aria-expanded','false');
-                $('.hx-toggletarget'+myNumber).attr('aria-hidden','true');
-            }else{
-                logThatThing({
-                    'Toggle button': 'pressed',
-                    'Toggled to': 'visible',
-                    'Toggle number': myNumber
-                });
-                $(this).attr('aria-expanded','true');
-                $('.hx-toggletarget'+myNumber).attr('aria-hidden','false');
-            }
-
-        });
+        var togglerClass = 'hx-togglebutton';
+        var toggledClass = 'hx-toggletarget';
+        prepAccessibleToggles(togglerClass, toggledClass);
 
 
         /**************************************/
@@ -494,6 +458,56 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Various utility functions.
     /***********************************/
 
+
+    /**************************************/
+    // Stuff for a visibility toggle button.
+    // One class of items toggles another,
+    // with numbers setting the matching items.
+    // Adds aria attribs for accessibility.
+    /**************************************/
+    function prepAccessibleToggles(press, target){
+
+        // Attach aria attributes to each button and
+        // to each togglable element.
+        $('[class^=' + press + ']').each(function(){
+            var myNumber = getClassNumber(this.className, press);
+            $(this).attr('aria-controls' , target + myNumber);
+
+            if( $('.' + target + myNumber + ':visible').length > 0 ){
+                $(this).attr('aria-expanded','true');
+                $('.' + target + myNumber).attr('aria-hidden','false');
+            }else{
+                $(this).attr('aria-expanded','false');
+                $('[class^=' + target + ']').attr('aria-hidden','true');
+            }
+        });
+
+        // Slidetoggle the elements and reverse the aria attribs.
+        $('[class^=' + press + ']').on('click tap', function() {
+
+            var myNumber = getClassNumber(this.className, press);
+
+            $('.' + target + myNumber).slideToggle('fast');
+
+            if( $(this).attr('aria-expanded') === 'true'){
+                var vis = 'visible'
+                $(this).attr('aria-expanded','false');
+                $('.' + target + myNumber).attr('aria-hidden','true');
+            }else{
+                var vis = 'invisible'
+                $(this).attr('aria-expanded','true');
+                $('.' + target + myNumber).attr('aria-hidden','false');
+            }
+
+            logThatThing({
+                'Toggle button': 'pressed',
+                'Toggled to': vis,
+                'Toggle number': myNumber
+            });
+
+        });
+
+    }
 
     /**************************************/
     // If we have code blocks on the page,
