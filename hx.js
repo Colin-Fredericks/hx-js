@@ -1,5 +1,6 @@
-var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
+"use strict";
 
+var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
     /***********************************************/
     // Setting all the default options.
@@ -156,13 +157,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         scriptArray.push('slick.js');
     }
 
-    // Do we load the Image Map Resizer?
-    var theMaps = $('map');
-    if(theMaps.length){
-        logThatThing({'image_map': 'found'});
-        scriptArray.push('imageMapResizer.min.js');
-    }
-
     // Do we load the Dynamic Text Slider?
     var dynamicSliders = $('.hx-dynamic-sliderbox');
     if(dynamicSliders.length){
@@ -170,6 +164,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         var HXDTS;
         scriptArray.push('papaparse.js');  // CSV parser
         scriptArray.push('hx-text-slider.js');
+    }
+
+    // Do we load the Image Map Resizer?
+    var theMaps = $('map');
+    if(theMaps.length){
+        logThatThing({'image_map': 'found'});
+        scriptArray.push('imageMapResizer.min.js');
     }
 
     // Do we load HXVideoLinks for... um... HarvardX video links?
@@ -241,53 +242,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             }
         }
 
-        /**************************************/
         // If we have image maps, scale them.
-        /**************************************/
         if(theMaps.length && hxOptions.resizeMaps){
             $('map').imageMapResize();
         }
 
-
-        /**************************************/
-        /* If we have code blocks on the page,
-        /* load the style sheet for them, and
-        /* make sure they recolor properly later.
-        /**************************************/
-        if( codeblocks.length && hxOptions.highlightCode){
-          $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'prism.css" type="text/css" />'));
-
-          // If a student submits or resets a problem, we'll need to recolor the code.
-          $('.submit, .reset').on('click tap', function(){
-            // Recoloring function. Needs to remove observer temporarily,
-            // or its brain will explode with all the mutations.
-            var rehighlight = function(mutationsList) {
-              for(var mutation of mutationsList) {
-                if (mutation.type == 'childList') {
-                  $.when( observer.disconnect() ).done(function(){
-                    $.when(Prism.highlightAllUnder(target)).done(function(){
-                      // Submitting or resetting results in a lot of changes.
-                      // Just wait half a second for them to go through.
-                      // It'll save us a lot of overhead.
-                      setTimeout(function(){
-                        observer.observe(target, config);
-                      }, 500);
-                    });
-                  });
-                  break;
-                }
-              }
-            }
-
-            // After learners submit, watch the problem for mutations.
-            // Once the mutations happen, recolor the code in that problem.
-            var target = this.closest('.xblock');
-            var config = {childList: true};
-            var observer = new MutationObserver(rehighlight);
-            observer.observe(target, config);
-          });
-        }
-
+        // If we have code blocks, highlight them.
+        if( codeblocks.length && hxOptions.highlightCode){ highlightCode(); }
 
 
         /**************************************/
@@ -396,93 +357,10 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             logThatThing('marking external links');
             $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function(i, linky){
                 var destination = $(linky).attr('href');
-                if(typeof destination !== 'undefined'){
-                    if( destination.includes('edx.org')
-                        || destination.includes('mailto')
-                        || destination.includes('jump_to_id')
-                        || destination.includes('/courses/')
-                        || destination.includes('cloudfront.net')
-                        || destination.includes('edx-cdn.org')
-                        || destination.includes('edxapp')
-                        || destination.includes('javascript:void')
-                        || destination.slice(0,1) == '#' ){
-
-                    }else{
-                        $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
-                    }
+                if(isExternalLink(destination)){
+                    $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
                 }
             });
-        }
-
-
-        /**************************************/
-        // Automatic Table of Contents maker.
-        // Uses h3 and h4 elements, links them up.
-        // Set hxLocalOptions.makeTOC = true to use.
-        /**************************************/
-
-        if(hxOptions.makeTOC){
-            if($('.edx-notes-wrapper-content').length){
-                $('.edx-notes-wrapper-content:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
-            }else{
-                $('#seq_content .xblock:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
-            }
-            // Using text instead of objects to make nesting easier.
-            var autoTOC = '<h3>Table of Contents</h3><ul>';
-
-            // Get all the h3 and h4 elements on the page.
-            var allHeaders = $('h3, h4').filter(function() {
-                // Remove anything that's hidden away.
-                return $(this).is(':visible');
-            });
-
-            var TOCList = $('#autoTOC ul');
-
-            // For each header, add it to the list and make a link.
-            allHeaders.each(function(i){
-                // Set the id of the element to link to.
-                $(this).attr('id','TOCLink'+i);
-
-                var TOCEntry = $(this).text();
-                var TOCLevel;
-                if($(this).is('h3')){
-                    TOCLevel = 3;
-                    if($(allHeaders[i-1]).is('h3') || i===0){
-                        autoTOC += '<li class="autotoc'
-                            + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry
-                            + '</a></li>';
-                    } else if($(allHeaders[i-1]).is('h4')){
-                        autoTOC += '</ul></li><li class="autotoc'
-                            + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry
-                            + '</a></li>';
-                    }
-                }
-                if($(this).is('h4')){
-                    TOCLevel = 4;
-                    if($(allHeaders[i-1]).is('h3')){
-                        if(i>0){ autoTOC.slice(0, autoTOC.length - 5); }
-                        autoTOC += '<ul><li class="autotoc'
-                            + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry
-                            + '</a></li>';
-                    } else if($(allHeaders[i-1]).is('h4')){
-                        autoTOC += '<li class="autotoc'
-                            + TOCLevel
-                            + '"><a href="#TOCLink'+i+'">'
-                            + TOCEntry
-                            + '</a></li>';
-                    }
-                }
-            });
-            autoTOC += '</ul>';
-
-            // Done - add it all to the DOM.
-            $('#autoTOC').append(autoTOC);
         }
 
 
@@ -490,47 +368,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Stuff for a visibility toggle button.
         // Button classes start with "hx-togglebutton#"
         // Target classes start with "hx-toggletarget#"
-        // # is a number, not a pound sign.
+        // (Where # is a number, not a pound sign.)
         /**************************************/
-
-        $('[class^=hx-togglebutton]').each(function(){
-            var myNumber = getClassNumber(this.className, 'hx-togglebutton');
-            $(this).attr('aria-controls' , 'hx-toggletarget'+myNumber);
-
-            if( $('.hx-toggletarget'+myNumber+':visible').length > 0 ){
-                $(this).attr('aria-expanded','true');
-                $('.hx-toggletarget'+myNumber).attr('aria-hidden','false');
-            }else{
-                $(this).attr('aria-expanded','false');
-                $('[class^=hx-toggletarget]').attr('aria-hidden','true');
-            }
-        });
-
-        $('[class^=hx-togglebutton]').on('click tap', function() {
-
-            var myNumber = getClassNumber(this.className, 'hx-togglebutton');
-
-            $('.hx-toggletarget'+myNumber).slideToggle('fast');
-
-            if( $(this).attr('aria-expanded') === 'true'){
-                logThatThing({
-                    'Toggle button': 'pressed',
-                    'Toggled to': 'invisible',
-                    'Toggle number': myNumber
-                });
-                $(this).attr('aria-expanded','false');
-                $('.hx-toggletarget'+myNumber).attr('aria-hidden','true');
-            }else{
-                logThatThing({
-                    'Toggle button': 'pressed',
-                    'Toggled to': 'visible',
-                    'Toggle number': myNumber
-                });
-                $(this).attr('aria-expanded','true');
-                $('.hx-toggletarget'+myNumber).attr('aria-hidden','false');
-            }
-
-        });
+        var togglerClass = 'hx-togglebutton';
+        var toggledClass = 'hx-toggletarget';
+        prepAccessibleToggles(togglerClass, toggledClass);
 
 
         /**************************************/
@@ -559,120 +401,21 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         });
 
 
-        /*******************************************/
+        // Automatic Table of Contents maker.
+        if(hxOptions.makeTOC){ makeAutoTOC(); }
+
+
         // Clickable images that pop up dialog boxes.
-        // Clickable area has id "MyID" and class "hx-popup-opener"
-        // Target div has class "MyID hx-popup-content"
-        // Don't put other classes first, but you can put them later if you want.
-        /*******************************************/
-
         var popUpOpener = $('.hx-popup-opener');
-
-        if(popUpOpener.length){
-
-            // First, create lists of areas for the purpose of accessibility.
-            $('map').each(function(index){
-
-                // Make a list element from each area's title
-                var tempList = [];
-                $(this).find('area').each(function(index){
-
-                    tempList.push('<li class="'
-                        + this.className.split(/\s+/)[0]
-                        + ' hx-popup-opener" title="'
-                        + this.title
-                        + '"><a href="javascript:;">'
-                        + this.title
-                        + '</a></li>'
-                    );
-                });
-
-                // Make that list into a big string and wrap it with UL
-                var listHTML = '<ul>' + tempList.join('') + '</ul>';
-                listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
-
-                // Append the list right after the map.
-                $(this).after(listHTML);
-            });
-
-            // Get the list of popup openers again so we can bind properly.
-            popUpOpener = $('.hx-popup-opener');
-
-            // Create the dialogue if we click on the right areas or links.
-            popUpOpener.on('click tap', function(){
-
-                var myClass = this.className;
-                var boxName = myClass.split(/\s+/)[0];
-
-                $('div.'+boxName).dialog({
-                    dialogClass: "hx-popup-dialog",
-                    title: $(this).attr('title'),
-                    show: {
-                        effect: 'fade',
-                        duration: 200,
-                    },
-                    hide: {
-                        effect: 'fade',
-                        duration: 100,
-                    },
-                    buttons: { "Close": function() { $(this).dialog("close"); } },
-                }, function(boxName){
-                    $('div.'+boxName).css({'display':''});
-                    alert(boxName);
-                });
-
-                logThatThing({
-                    'Pop-up Dialog': 'opened',
-                    'Dialog': boxName
-                });
-            });
-
-        }
+        if(popUpOpener.length){ handlePopUpContent(); }
 
 
-        /***********************************/
         // Auto-generation of footnotes.
-        // Finds <span class="hx-footnote#">[#]</span>
-        // Links to <div class="hx-footnote-target#">
-        // Does some rearranging and formatting.
-        // Must have HTML component with h3 header "Footnotes"
-        /***********************************/
-
         var allFootnotes = $('span[class^="hx-footnote"]');
-
-        if(allFootnotes.length){
-            var thisFootnote, thisNumber, thisTarget, footnoteComponents, destinationComponent;
-
-            for(var i = 0; i < allFootnotes.length; i++){
-
-                thisFootnote = allFootnotes[i];
-                thisNumber = getClassNumber(thisFootnote.className, 'hx-footnote');
-                thisTarget = $('div.hx-footnote-target'+thisNumber);
-
-                // Style the footnote marker
-                $(thisFootnote).addClass('hx-footnote-style');
-                $(thisFootnote).wrap('<sup></sup>');
-
-                // Move the footnote target divs to the appropriate location
-                footnoteComponents = $('h3:contains("Footnote")');
-                destinationComponent = $(footnoteComponents[footnoteComponents.length-1]).parent();
-                $(thisTarget).detach().appendTo(destinationComponent);
-
-                // Add links to the footnote markers
-                $(thisFootnote).wrap('<a href="#hxfoot'+thisNumber+'" name="hxfootback'+thisNumber+'"></a>').wrap();
-
-                // Add targets and back-links to the footnotes
-                thisTarget.prepend('<a name="hxfoot'+thisNumber+'"></a>');
-                thisTarget.append('<p><a href="#hxfootback'+thisNumber+'">(back)</a></p>');
-
-            }
-
-        }
+        if(allFootnotes.length){ makeFootnotes(allFootnotes); }
 
 
-        /**************************************/
         // If we have dynamic sliders, run them.
-        /**************************************/
         if(dynamicSliders.length){
             // Load CSS and instantiate JS
             $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'hx-text-slider.css" type="text/css" />'));
@@ -715,9 +458,291 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Various utility functions.
     /***********************************/
 
+
+    /**************************************/
+    // Stuff for a visibility toggle button.
+    // One class of items toggles another,
+    // with numbers setting the matching items.
+    // Adds aria attribs for accessibility.
+    /**************************************/
+    function prepAccessibleToggles(press, target){
+
+        // Attach aria attributes to each button and
+        // to each togglable element.
+        $('[class^=' + press + ']').each(function(){
+            var myNumber = getClassNumber(this.className, press);
+            $(this).attr('aria-controls' , target + myNumber);
+
+            if( $('.' + target + myNumber + ':visible').length > 0 ){
+                $(this).attr('aria-expanded','true');
+                $('.' + target + myNumber).attr('aria-hidden','false');
+            }else{
+                $(this).attr('aria-expanded','false');
+                $('[class^=' + target + ']').attr('aria-hidden','true');
+            }
+        });
+
+        // Slidetoggle the elements and reverse the aria attribs.
+        $('[class^=' + press + ']').on('click tap', function() {
+
+            var myNumber = getClassNumber(this.className, press);
+
+            $('.' + target + myNumber).slideToggle('fast');
+
+            if( $(this).attr('aria-expanded') === 'true'){
+                var vis = 'visible'
+                $(this).attr('aria-expanded','false');
+                $('.' + target + myNumber).attr('aria-hidden','true');
+            }else{
+                var vis = 'invisible'
+                $(this).attr('aria-expanded','true');
+                $('.' + target + myNumber).attr('aria-hidden','false');
+            }
+
+            logThatThing({
+                'Toggle button': 'pressed',
+                'Toggled to': vis,
+                'Toggle number': myNumber
+            });
+
+        });
+
+    }
+
+    /**************************************/
+    // If we have code blocks on the page,
+    // load the style sheet for them, and
+    // make sure they recolor properly later.
+    /**************************************/
+    function highlightCode(){
+        $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'prism.css" type="text/css" />'));
+
+        // If a student submits or resets a problem, we'll need to recolor the code.
+        $('.submit, .reset').on('click tap', function(){
+          // Recoloring function. Needs to remove observer temporarily,
+          // or its brain will explode with all the mutations.
+          var rehighlight = function(mutationsList) {
+            for(var mutation of mutationsList) {
+              if (mutation.type == 'childList') {
+                $.when( observer.disconnect() ).done(function(){
+                  $.when(Prism.highlightAllUnder(target)).done(function(){
+                    // Submitting or resetting results in a lot of changes.
+                    // Just wait half a second for them to go through.
+                    // It'll save us a lot of overhead.
+                    setTimeout(function(){
+                      observer.observe(target, config);
+                    }, 500);
+                  });
+                });
+                break;
+              }
+            }
+          }
+
+          // After learners submit, watch the problem for mutations.
+          // Once the mutations happen, recolor the code in that problem.
+          var target = this.closest('.xblock');
+          var config = {childList: true};
+          var observer = new MutationObserver(rehighlight);
+          observer.observe(target, config);
+        });
+
+    }
+
+    /**************************************/
+    // Automatic Table of Contents maker.
+    // Uses h3 and h4 elements, links them up.
+    // Set hxLocalOptions.makeTOC = true to use.
+    /**************************************/
+    function makeAutoTOC(){
+        // Add the container for the TOC
+        if($('.edx-notes-wrapper-content').length){
+            $('.edx-notes-wrapper-content:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
+        }else{
+            $('#seq_content .xblock:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
+        }
+        // Using text instead of objects to make nesting easier.
+        var autoTOC = '<h3>Table of Contents</h3><ul>';
+
+        // Get all the h3 and h4 elements on the page.
+        var allHeaders = $('h3, h4').filter(function() {
+            // Remove anything that's hidden away.
+            return $(this).is(':visible');
+        });
+
+        var TOCList = $('#autoTOC ul');
+
+        // For each header, add it to the list and make a link.
+        allHeaders.each(function(i){
+            // Set the id of the element to link to.
+            $(this).attr('id','TOCLink'+i);
+
+            var TOCEntry = $(this).text();
+            var TOCLevel;
+            if($(this).is('h3')){
+                TOCLevel = 3;
+                if($(allHeaders[i-1]).is('h3') || i===0){
+                    autoTOC += '<li class="autotoc'
+                    + TOCLevel
+                    + '"><a href="#TOCLink'+i+'">'
+                    + TOCEntry
+                    + '</a></li>';
+                } else if($(allHeaders[i-1]).is('h4')){
+                    autoTOC += '</ul></li><li class="autotoc'
+                    + TOCLevel
+                    + '"><a href="#TOCLink'+i+'">'
+                    + TOCEntry
+                    + '</a></li>';
+                }
+            }
+            if($(this).is('h4')){
+                TOCLevel = 4;
+                if($(allHeaders[i-1]).is('h3')){
+                    if(i>0){ autoTOC.slice(0, autoTOC.length - 5); }
+                    autoTOC += '<ul><li class="autotoc'
+                    + TOCLevel
+                    + '"><a href="#TOCLink'+i+'">'
+                    + TOCEntry
+                    + '</a></li>';
+                } else if($(allHeaders[i-1]).is('h4')){
+                    autoTOC += '<li class="autotoc'
+                    + TOCLevel
+                    + '"><a href="#TOCLink'+i+'">'
+                    + TOCEntry
+                    + '</a></li>';
+                }
+            }
+        });
+        autoTOC += '</ul>';
+
+        $('#autoTOC').append(autoTOC);
+    }
+
+
+    /***********************************/
+    // Auto-generation of footnotes.
+    // Finds <span class="hx-footnote#">[#]</span>
+    // Links to <div class="hx-footnote-target#">
+    // Does some rearranging and formatting.
+    // Must have HTML component with h3 header "Footnotes"
+    /***********************************/
+    function makeFootnotes(allFootnotes){
+        var thisFootnote, thisNumber, thisTarget, footnoteComponents, destinationComponent;
+
+        for(var i = 0; i < allFootnotes.length; i++){
+
+            thisFootnote = allFootnotes[i];
+            thisNumber = getClassNumber(thisFootnote.className, 'hx-footnote');
+            thisTarget = $('div.hx-footnote-target'+thisNumber);
+
+            // Style the footnote marker
+            $(thisFootnote).addClass('hx-footnote-style');
+            $(thisFootnote).wrap('<sup></sup>');
+
+            // Move the footnote target divs to the appropriate location
+            footnoteComponents = $('h3:contains("Footnote")');
+            destinationComponent = $(footnoteComponents[footnoteComponents.length-1]).parent();
+            $(thisTarget).detach().appendTo(destinationComponent);
+
+            // Add links to the footnote markers
+            $(thisFootnote).wrap('<a href="#hxfoot'+thisNumber+'" name="hxfootback'+thisNumber+'"></a>').wrap();
+
+            // Add targets and back-links to the footnotes
+            thisTarget.prepend('<a name="hxfoot'+thisNumber+'"></a>');
+            thisTarget.append('<p><a href="#hxfootback'+thisNumber+'">(back)</a></p>');
+
+        }
+    }
+
+    /*******************************************/
+    // Clickable images that pop up dialog boxes.
+    // Clickable area has id "MyID" and class "hx-popup-opener"
+    // Target div has class "MyID hx-popup-content"
+    // Don't put other classes first, but you can put them later if you want.
+    /*******************************************/
+    function handlePopUpContent(){
+        // First, create lists of areas for the purpose of accessibility.
+        $('map').each(function(index){
+
+            // Make a list element from each area's title
+            var tempList = [];
+            $(this).find('area').each(function(index){
+
+                tempList.push('<li class="'
+                    + this.className.split(/\s+/)[0]
+                    + ' hx-popup-opener" title="'
+                    + this.title
+                    + '"><a href="javascript:;">'
+                    + this.title
+                    + '</a></li>'
+                );
+            });
+
+            // Make that list into a big string and wrap it with UL
+            var listHTML = '<ul>' + tempList.join('') + '</ul>';
+            listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
+
+            // Append the list right after the map.
+            $(this).after(listHTML);
+        });
+
+        // Get the list of popup openers again so we can bind properly.
+        var newPops = $('.hx-popup-opener');
+
+        // Create the dialogue if we click on the right areas or links.
+        newPops.on('click tap', function(){
+
+            var myClass = this.className;
+            var boxName = myClass.split(/\s+/)[0];
+
+            $('div.'+boxName).dialog({
+                dialogClass: "hx-popup-dialog",
+                title: $(this).attr('title'),
+                show: {
+                    effect: 'fade',
+                    duration: 200,
+                },
+                hide: {
+                    effect: 'fade',
+                    duration: 100,
+                },
+                buttons: { "Close": function() { $(this).dialog("close"); } },
+            }, function(boxName){
+                $('div.'+boxName).css({'display':''});
+                alert(boxName);
+            });
+
+            logThatThing({
+                'Pop-up Dialog': 'opened',
+                'Dialog': boxName
+            });
+        });
+
+    }
+
+    // Is a link external or not?
+    function isExternalLink(url){
+        if(typeof url !== 'undefined'){
+            if( url.includes('edx.org')
+                || url.includes('mailto')
+                || url.includes('jump_to_id')
+                || url.includes('/courses/')
+                || url.includes('cloudfront.net')
+                || url.includes('edx-cdn.org')
+                || url.includes('edxapp')
+                || url.includes('javascript:void')
+                || url.slice(0,1) == '#' )
+                {
+                    return false;
+                }
+        }
+        return true;
+    }
+
     // Turns a page URL in edX into an external asset url,
     // because we can't use /static/ from within javascript.
-    // Pass 'complete' for the whole thing, 'site' for the site, or 'partial' for without the site.
+    // Pass option 'complete' for the whole thing, 'site' for the site,
+    // or 'partial' for without the site.
     // Public function.
     function getAssetURL(windowURL, option){
 
@@ -853,9 +878,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         return time;
     }
 
-    this.getAssetURL = getAssetURL;
-    this.hmsToTime = hmsToTime;
-
 
     // Send logs both to the console and to the official edX logamajig.
     function logThatThing(ThatThing){
@@ -863,7 +885,10 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         Logger.log(courseLogID + '.hxjs', ThatThing);
     }
 
-    this.logThatThing = logThatThing;
+    // Let's publish a few of these.
+    window.getAssetURL = getAssetURL;
+    window.hmsToTime = hmsToTime;
+    window.logThatThing = logThatThing;
 
 });
 
