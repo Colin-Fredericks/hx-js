@@ -1,0 +1,20 @@
+<script src="/static/hx.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/hx.css">
+<style>
+  figcaption{ font-size: 12px; width: 80%;}
+  .mapwrapper      {width: 100%; max-width: 1080px; height: 100%; margin: 0 auto;}
+  .h_iframe        {position: relative; padding-top: 53%;}
+  .h_iframe iframe {position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;  overflow:hidden;}
+</style>
+<script>
+  var mapDataFile = "/static/Malaria_dalys.csv";
+</script>
+
+<p>Check out the map below, which you should describe in text here so that you don't need to write separate alt text for it.</p>
+
+<p><b>Map: DALYs for Malaria worldwide</b></p>
+<div class="mapwrapper"><div class="h_iframe">
+<iframe id="mapframe" src="/static/World_Data_Map.html" title="Data map, see description below" scrolling="no" />
+</div></div>
+
+<p>Download map data here: <a id="map_data_download" href="/static/Malaria_dalys.csv">Malaria_dalys.csv</a></p>

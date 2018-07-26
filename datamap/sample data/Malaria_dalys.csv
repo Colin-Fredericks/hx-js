@@ -1,0 +1,200 @@
+﻿Location,Year,Age,Sex,Cause of death or injury,Measure,Value,Lower bound,Upper bound,ID
+Mozambique,2016,All ages,Both,Malaria,"DALYs per 100,000",5175.048245,3780.611825,6733.687576,mz
+Mauritius,2016,All ages,Both,Malaria,"DALYs per 100,000",0.489936441,0.152946699,0.692397714,mu
+Malawi,2016,All ages,Both,Malaria,"DALYs per 100,000",4435.387548,3058.927105,6101.221112,mw
+Rwanda,2016,All ages,Both,Malaria,"DALYs per 100,000",1589.454764,936.8537943,2634.83252,rw
+Somalia,2016,All ages,Both,Malaria,"DALYs per 100,000",1774.0007,966.94553,3242.937371,so
+Zambia,2016,All ages,Both,Malaria,"DALYs per 100,000",2440.042775,1630.500258,3496.101005,zm
+Kenya,2016,All ages,Both,Malaria,"DALYs per 100,000",775.6060627,524.5633764,1055.404153,ke
+Madagascar,2016,All ages,Both,Malaria,"DALYs per 100,000",1587.430645,1055.3077,2314.837076,mg
+South Sudan,2016,All ages,Both,Malaria,"DALYs per 100,000",1980.841852,1133.398536,3403.714447,ss
+Seychelles,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,sc
+Tanzania,2016,All ages,Both,Malaria,"DALYs per 100,000",2278.502841,1481.400465,3253.530148,tz
+Uganda,2016,All ages,Both,Malaria,"DALYs per 100,000",4597.450353,3010.367928,6218.652943,ug
+Zimbabwe,2016,All ages,Both,Malaria,"DALYs per 100,000",713.6281209,397.9894018,1233.052554,zw
+Ethiopia,2016,All ages,Both,Malaria,"DALYs per 100,000",117.5317892,84.45116545,162.5162207,et
+Eritrea,2016,All ages,Both,Malaria,"DALYs per 100,000",496.5288912,271.9939942,896.6500974,er
+Djibouti,2016,All ages,Both,Malaria,"DALYs per 100,000",35.63334422,26.84185232,45.72258895,dj
+Comoros,2016,All ages,Both,Malaria,"DALYs per 100,000",37.12561475,29.04358888,46.67387589,km
+Burundi,2016,All ages,Both,Malaria,"DALYs per 100,000",4087.77752,2464.182193,6199.554252,bi
+Gabon,2016,All ages,Both,Malaria,"DALYs per 100,000",3211.202049,2111.081394,4597.624151,ga
+Equatorial Guinea,2016,All ages,Both,Malaria,"DALYs per 100,000",7859.78479,5464.150491,11048.08503,gq
+Chad,2016,All ages,Both,Malaria,"DALYs per 100,000",3574.472716,1820.075317,6076.84055,td
+Sao Tome and Principe,2016,All ages,Both,Malaria,"DALYs per 100,000",68.08914384,51.57917113,85.79161937,st
+Congo,2016,All ages,Both,Malaria,"DALYs per 100,000",4063.544484,2671.491012,5990.630709,cg
+Democratic Republic of the Congo,2016,All ages,Both,Malaria,"DALYs per 100,000",7709.431349,4689.06457,11715.21525,cd
+Cameroon,2016,All ages,Both,Malaria,"DALYs per 100,000",8481.485043,6030.8449,11342.11093,cm
+Central African Republic,2016,All ages,Both,Malaria,"DALYs per 100,000",5083.598459,2897.432533,7746.460271,cf
+Angola,2016,All ages,Both,Malaria,"DALYs per 100,000",2356.392619,1366.383961,3732.316147,ao
+Morocco,2016,All ages,Both,Malaria,"DALYs per 100,000",0.686514086,0.476559281,0.929585261,ma
+Libya,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ly
+Tunisia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,tn
+Algeria,2016,All ages,Both,Malaria,"DALYs per 100,000",1.233917034,0.872609948,2.532979116,dz
+Namibia,2016,All ages,Both,Malaria,"DALYs per 100,000",286.5656319,130.0753936,564.1602055,na
+Swaziland,2016,All ages,Both,Malaria,"DALYs per 100,000",15.256333,11.16331465,19.21506853,sz
+Lesotho,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ls
+South Africa,2016,All ages,Both,Malaria,"DALYs per 100,000",25.4338481,19.59086405,31.27687017,za
+Botswana,2016,All ages,Both,Malaria,"DALYs per 100,000",68.16101253,34.68442592,132.1419951,bw
+Togo,2016,All ages,Both,Malaria,"DALYs per 100,000",7802.83018,6055.652602,9628.111275,tg
+Sierra Leone,2016,All ages,Both,Malaria,"DALYs per 100,000",10954.40421,8107.462699,14290.08491,sl
+Senegal,2016,All ages,Both,Malaria,"DALYs per 100,000",1504.457942,1031.574437,2100.925765,sn
+Nigeria,2016,All ages,Both,Malaria,"DALYs per 100,000",10295.45136,7643.812142,13281.4968,ng
+Niger,2016,All ages,Both,Malaria,"DALYs per 100,000",13424.31787,8929.8374,18245.89826,ne
+Mauritania,2016,All ages,Both,Malaria,"DALYs per 100,000",508.6053569,318.0609576,772.6888434,mr
+Mali,2016,All ages,Both,Malaria,"DALYs per 100,000",13119.72958,10213.20071,16449.46963,ml
+Liberia,2016,All ages,Both,Malaria,"DALYs per 100,000",4113.649588,2817.75423,5771.812425,lr
+Guinea-Bissau,2016,All ages,Both,Malaria,"DALYs per 100,000",1692.525181,879.1641135,2870.262853,gw
+The Gambia,2016,All ages,Both,Malaria,"DALYs per 100,000",1057.571034,653.6081978,1684.38261,gm
+Guinea,2016,All ages,Both,Malaria,"DALYs per 100,000",9042.292034,7036.102038,11357.75754,gn
+Ghana,2016,All ages,Both,Malaria,"DALYs per 100,000",5133.225881,4007.816597,6507.169022,gh
+Cape Verde,2016,All ages,Both,Malaria,"DALYs per 100,000",51.52374187,38.84821271,65.44705668,cv
+Cote d'Ivoire,2016,All ages,Both,Malaria,"DALYs per 100,000",6879.06208,4913.842023,9278.570568,ci
+Burkina Faso,2016,All ages,Both,Malaria,"DALYs per 100,000",14397.32206,10469.23872,18730.12896,bf
+Benin,2016,All ages,Both,Malaria,"DALYs per 100,000",5571.789939,4091.595708,7267.178999,bj
+Dominica,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,dm
+Dominican Republic,2016,All ages,Both,Malaria,"DALYs per 100,000",0.891436566,0.500893997,2.405175535,do
+Antigua and Barbuda,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ag
+Cuba,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,cu
+Grenada,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,gd
+Jamaica,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,jm
+Trinidad and Tobago,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,tt
+The Bahamas,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,bs
+Saint Lucia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,lc
+Saint Vincent and the Grenadines,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,vc
+Barbados,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,bb
+Haiti,2016,All ages,Both,Malaria,"DALYs per 100,000",6.308800202,3.851483407,10.89752089,ht
+Puerto Rico,2016,All ages,Both,Malaria,"DALYs per 100,000",0.452961268,0.18949432,0.621750277,pr
+"Virgin Islands, U.S.",2016,All ages,Both,Malaria,"DALYs per 100,000",0.532493127,0.217733298,0.74140942,vi
+Panama,2016,All ages,Both,Malaria,"DALYs per 100,000",0.508692775,0.20837443,0.711355699,pa
+El Salvador,2016,All ages,Both,Malaria,"DALYs per 100,000",0.36310992,0.28656109,0.465814038,sv
+Nicaragua,2016,All ages,Both,Malaria,"DALYs per 100,000",2.637783619,1.348460658,7.631402119,ni
+Mexico,2016,All ages,Both,Malaria,"DALYs per 100,000",0.259600964,0.225894085,0.30574476,mx
+Honduras,2016,All ages,Both,Malaria,"DALYs per 100,000",15.8414397,7.599416959,33.21137175,hn
+Guatemala,2016,All ages,Both,Malaria,"DALYs per 100,000",5.880593854,1.204760141,29.33589296,gt
+Costa Rica,2016,All ages,Both,Malaria,"DALYs per 100,000",0.180120481,0.150174115,0.217997073,cr
+Belize,2016,All ages,Both,Malaria,"DALYs per 100,000",3.723079665,2.463411854,7.878436465,bz
+United States,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,us
+Greenland,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,gl
+Bermuda,2016,All ages,Both,Malaria,"DALYs per 100,000",0.371996717,0.140426871,0.522933414,bm
+Colombia,2016,All ages,Both,Malaria,"DALYs per 100,000",5.49286279,2.898966051,15.42759135,co
+Guyana,2016,All ages,Both,Malaria,"DALYs per 100,000",85.77739075,59.64924508,133.5231039,gy
+Ecuador,2016,All ages,Both,Malaria,"DALYs per 100,000",2.767333155,1.105146042,10.20153398,ec
+Paraguay,2016,All ages,Both,Malaria,"DALYs per 100,000",0.259114349,0.213454372,0.314857246,py
+Suriname,2016,All ages,Both,Malaria,"DALYs per 100,000",17.36147683,10.717639,40.93523386,sr
+Uruguay,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,uy
+Venezuela,2016,All ages,Both,Malaria,"DALYs per 100,000",4.68300307,3.303657382,7.102761009,ve
+Peru,2016,All ages,Both,Malaria,"DALYs per 100,000",1.69321921,1.076571081,3.366554618,pe
+Chile,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,cl
+Brazil,2016,All ages,Both,Malaria,"DALYs per 100,000",2.518652813,2.037751323,3.861780956,br
+Bolivia,2016,All ages,Both,Malaria,"DALYs per 100,000",4.100404195,2.328419843,8.113101418,bo
+Argentina,2016,All ages,Both,Malaria,"DALYs per 100,000",0.19192454,0.164389894,0.230970305,ar
+Turkmenistan,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,tm
+Uzbekistan,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,uz
+Tajikistan,2016,All ages,Both,Malaria,"DALYs per 100,000",4.442248586,2.346935921,12.92945965,tj
+Kyrgyzstan,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,kg
+Kazakhstan,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,kz
+Mongolia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,mn
+Taiwan,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,tw
+South Korea,2016,All ages,Both,Malaria,"DALYs per 100,000",0.127493726,0.090494794,0.172121071,kr
+North Korea,2016,All ages,Both,Malaria,"DALYs per 100,000",0.382716854,0.317744445,0.464930777,kp
+Japan,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,jp
+Myanmar,2016,All ages,Both,Malaria,"DALYs per 100,000",643.797031,405.4897584,911.1583941,mm
+Cambodia,2016,All ages,Both,Malaria,"DALYs per 100,000",766.6211483,417.0914968,1213.927038,kh
+Vietnam,2016,All ages,Both,Malaria,"DALYs per 100,000",55.59705455,37.89328313,82.70086202,vn
+Laos,2016,All ages,Both,Malaria,"DALYs per 100,000",21.05160377,11.20025139,55.79731581,la
+Malaysia,2016,All ages,Both,Malaria,"DALYs per 100,000",2.965082132,2.172809896,4.827547933,my
+Thailand,2016,All ages,Both,Malaria,"DALYs per 100,000",3.152316321,2.065911753,7.197413516,th
+Brunei,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,bn
+Philippines,2016,All ages,Both,Malaria,"DALYs per 100,000",8.943312424,4.182693656,30.53559895,ph
+Indonesia,2016,All ages,Both,Malaria,"DALYs per 100,000",83.96280628,54.03763031,116.7189565,id
+Singapore,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,sg
+Timor-Leste,2016,All ages,Both,Malaria,"DALYs per 100,000",11.64554968,6.210613609,27.96014545,tl
+Maldives,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,mv
+Nepal,2016,All ages,Both,Malaria,"DALYs per 100,000",151.4750778,47.24891533,353.7184973,np
+Iran,2016,All ages,Both,Malaria,"DALYs per 100,000",1.90969332,1.4798548,2.584531241,ir
+Sri Lanka,2016,All ages,Both,Malaria,"DALYs per 100,000",0.837578654,0.600190255,1.111472889,lk
+Bhutan,2016,All ages,Both,Malaria,"DALYs per 100,000",155.879884,45.40942681,372.7246295,bt
+Bangladesh,2016,All ages,Both,Malaria,"DALYs per 100,000",64.18127005,25.88321065,101.1741007,bd
+Afghanistan,2016,All ages,Both,Malaria,"DALYs per 100,000",398.0015841,241.3496061,712.8961989,af
+Oman,2016,All ages,Both,Malaria,"DALYs per 100,000",0.311455327,0.203617281,0.443533452,om
+Kuwait,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,kw
+Palestine,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ps 
+Lebanon,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,lb
+Qatar,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,qa
+Saudi Arabia,2016,All ages,Both,Malaria,"DALYs per 100,000",3.601695281,1.306526275,4.886088622,sa
+Turkey,2016,All ages,Both,Malaria,"DALYs per 100,000",0.154942055,0.122116883,0.19328845,tr
+Yemen,2016,All ages,Both,Malaria,"DALYs per 100,000",8.037524882,5.504861636,11.41090334,ye
+Iraq,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,iq
+Jordan,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,jo
+Syria,2016,All ages,Both,Malaria,"DALYs per 100,000",0.305231902,0.192974456,0.439614724,sy
+Israel,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,il
+Georgia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ge
+Cyprus,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,cy
+Bahrain,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,bh
+Azerbaijan,2016,All ages,Both,Malaria,"DALYs per 100,000",0.253965488,0.201343393,0.318255022,az
+Armenia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,am
+United Arab Emirates,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ae
+Moldova,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,md
+Hungary,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,hu
+Poland,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,pl
+Romania,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ro
+Ukraine,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ua
+Belarus,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,by
+Czech Republic,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,cz
+Russian Federation,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ru
+Slovakia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,sk
+Bulgaria,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,bg
+Norway,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,no
+Sweden,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,se
+Lithuania,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,lt
+Latvia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,lv
+Ireland,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ie
+Iceland,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,is
+United Kingdom,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,gb
+Finland,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,fi
+Estonia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ee
+Denmark,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,dk
+Macedonia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,mk
+Montenegro,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,me
+Croatia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,hr
+Malta,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,mt
+Slovenia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,si
+Greece,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,gr
+Italy,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,it
+Portugal,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,pt
+Serbia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,rs
+Spain,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,es
+Bosnia and Herzegovina,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ba
+Andorra,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ad
+Albania,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,al
+Netherlands,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,nl
+Luxembourg,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,lu
+France,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,fr
+Germany,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,de
+Switzerland,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ch
+Belgium,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,be
+Austria,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,at
+New Zealand,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,nz
+Australia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,au
+Papua New Guinea,2016,All ages,Both,Malaria,"DALYs per 100,000",678.9661444,373.1081161,1235.840087,pg
+Vanuatu,2016,All ages,Both,Malaria,"DALYs per 100,000",87.63306833,13.78327264,181.050691,vu
+Solomon Islands,2016,All ages,Both,Malaria,"DALYs per 100,000",124.0249189,31.64105846,201.4777378,sb
+Fiji,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,fj
+Guam,2016,All ages,Both,Malaria,"DALYs per 100,000",16.36292691,1.510069795,36.05890113,gu
+Northern Mariana Islands,2016,All ages,Both,Malaria,"DALYs per 100,000",9.31049033,0.814592515,19.58058486,mp
+Marshall Islands,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,mh
+Federated States of Micronesia,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,fm
+Kiribati,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ki
+Samoa,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ws
+Tonga,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,to
+American Samoa,2016,All ages,Both,Malaria,"DALYs per 100,000",6.593621647,0.424729778,13.06274911,as
+Canada,2016,All ages,Both,Malaria,"DALYs per 100,000",0,0,0,ca
+Egypt,2016,All ages,Both,Malaria,"DALYs per 100,000",0.373782764,0.198426605,0.505632107,eg
+Sudan,2016,All ages,Both,Malaria,"DALYs per 100,000",475.8255302,271.6808298,785.5598642,sd
+India,2016,All ages,Both,Malaria,"DALYs per 100,000",247.7089233,114.0413328,352.0055567,in
+Pakistan,2016,All ages,Both,Malaria,"DALYs per 100,000",221.1696673,114.5309481,409.0967943,pk
+China,2016,All ages,Both,Malaria,"DALYs per 100,000",0.553094477,0.379203196,0.783819249,cn
+,,,,,,,,,
+"Global Burden of Disease Study 2016. Global Burden of Disease Study 2016 (GBD 2016) Results. Seattle, United States: Institute for Health Metrics and Evaluation (IHME), 2016.",,,,,,,,,
+Available from from https://http://vizhub.healthdata.org/gbd-compare/,,,,,,,,,
+"For terms and conditions of use, please visit http://www.healthdata.org/about/terms-and-conditions",,,,,,,,,
