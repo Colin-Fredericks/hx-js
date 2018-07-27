@@ -1,6 +1,7 @@
 // Fill your svg world map with semi-beautiful color-coded data!
 // You must define the mapDataFile variable in your html component.
 
+// Called by the map's <object> tag when it's done loading.
 function mapReady(){
     console.log('Map ready');
 
@@ -41,7 +42,7 @@ function colorMap(data){
     var subdoc = $('object')[0].contentDocument;
     var svg = $(subdoc).find('svg');
 
-    // Strip blank final lines
+    // Strip bad lines
     data = data.filter(function(n){ return n['Year'] != null; });
 
     // Get the list of country codes.
@@ -51,21 +52,24 @@ function colorMap(data){
     }else{
         var countries = data.map(a => a.Location);
         var ccodes = [];
-        for(let j=0; j < countries.length; j++){
-            ccodes[j] = countryToCode[countries[j]];
-        }
+        countries.forEach(function(c){
+            ccodes.push( countryToCode[c] );
+        });
     }
 
     // Get the country data and normalize it.
     var values = data.map(a => Number(a.Value));
     var normVals = normalize(values);
-    var colorVals = dataToColor(normVals);
+    var colorVals = dataToColor(normVals, values);
 
-    for(let k=0; k < ccodes.length; k++){
-        var targets = svg.find('#' + ccodes[k] );
-        targets.css( 'fill', colorVals[k] );
-        targets.find('*').css( 'fill', colorVals[k] );
-    }
+    // Set the color fill for each country (skip blanks)
+    ccodes.forEach(function(cc, i){
+        if(cc){
+            var targets = svg.find( '#' + cc );
+            targets.css( 'fill', colorVals[i] );
+            targets.find('*').css( 'fill', colorVals[i] );
+        }
+    });
 }
 
 
@@ -83,7 +87,7 @@ function normalize(data){
 
 // Take in an array of normalized data.
 // Return an array of appropriate web colors.
-function dataToColor(data){
+function dataToColor(data, originalData){
     var hexData = [];
 
     // Map 0-1 decimal range to a set of colors.
@@ -100,6 +104,8 @@ function dataToColor(data){
     for(let i = 0; i < data.length; i++){
 
         hexData[i] = colorArray[ Math.floor(data[i] * 7) ];
+        if(originalData[i] == 0){ hexData[i] = '#ffffff'; }  // Set actual zero to white
+        if(data[i] == 1){ hexData[i] = colorArray[6]; }      // Set highest to dark
 
         /*************************************/
         // Old approach. Didn't work as well.
