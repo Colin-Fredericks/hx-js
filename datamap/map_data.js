@@ -1,6 +1,17 @@
 // Fill your svg world map with semi-beautiful color-coded data!
 // You must define the mapDataFile variable in your html component.
 
+// Example colors from http://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=5
+var colorArray =
+    ['#ffffd9',
+        '#edf8b1',
+        '#c7e9b4',
+        '#7fcdbb',
+        '#41b6c4',
+        '#1d91c0',
+        '#225ea8'];
+
+
 // Called by the map's <object> tag when it's done loading.
 function mapReady(){
     console.log('Map ready');
@@ -70,15 +81,36 @@ function colorMap(data){
             targets.find('*').css( 'fill', colorVals[i] );
         }
     });
+
+    // Insert the key.
+    addKey(values);
+}
+
+
+// Insert a colored key for the data.
+function addKey(values){
+    console.log('adding key');
+    var nonZeroData = values.filter(Number);
+    var maxData = Math.ceil(Math.max(...nonZeroData));
+    var minData = Math.ceil(Math.min(...nonZeroData));
+    var maxColor = colorArray[-1];
+    var minColor = colorArray[0];
+    var mapKey = '<p>Max: ' + maxData + ', Min: ' + minData + '</p>';
+
+    var keySpot = $(parent.document).find('#mapframe').parent();
+    var hasKey = (keySpot.find('#datamapkey').length === 1);
+    if(hasKey){ keySpot.find('#datamapkey').remove(); }
+    var theKey = keySpot.append('<div id="datamapkey"></div>');
+    theKey.append(mapKey);
 }
 
 
 // Take in an array of numerical data.
 // Return a normalized array.
 function normalize(data){
-    max = Math.max(...data);
-    min = Math.min(...data);
-    newData = [];
+    var max = Math.max(...data);
+    var min = Math.min(...data);
+    var newData = [];
     for(let i = 0; i < data.length; i++){
         newData[i] = (data[i] - min)/(max - min);
     }
@@ -90,19 +122,9 @@ function normalize(data){
 function dataToColor(data, originalData){
     var hexData = [];
 
-    // Map 0-1 decimal range to a set of colors.
-    // Example from http://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=5
-    var colorArray =
-        ['#ffffd9',
-            '#edf8b1',
-            '#c7e9b4',
-            '#7fcdbb',
-            '#41b6c4',
-            '#1d91c0',
-            '#225ea8'];
-
     for(let i = 0; i < data.length; i++){
 
+        // We're mapping 0-1 decimal range to a set of colors.
         hexData[i] = colorArray[ Math.floor(data[i] * 7) ];
         if(originalData[i] == 0){ hexData[i] = '#ffffff'; }  // Set actual zero to white
         if(data[i] == 1){ hexData[i] = colorArray[6]; }      // Set highest to dark
