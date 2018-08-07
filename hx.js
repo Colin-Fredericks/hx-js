@@ -441,6 +441,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // thumbnails and one is the full-sized image and/or text.
         // Would be good to handle multiple pairs later on.
         if(navslider.length && bigslider.length){
+            $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'slick.css" type="text/css" />'));
+            $('head').append($('<link rel="stylesheet" href="' + courseAssetURL + 'slick-theme.css" type="text/css" />'));
             navslider.slick(hxOptions.slickNavOptions);
             bigslider.slick(hxOptions.slickBigOptions);
             logThatThing({'paired slider': 'created'});
