@@ -95,13 +95,87 @@ function addKey(values){
     var minData = Math.ceil(Math.min(...nonZeroData));
     var maxColor = colorArray[-1];
     var minColor = colorArray[0];
-    var mapKey = '<p>Max: ' + maxData + ', Min: ' + minData + '</p>';
 
-    var keySpot = $(parent.document).find('#mapframe').parent();
+    // Here's where we're putting the key.
+    var keySpot = $(parent.document).find('.mapwrapper');
     var hasKey = (keySpot.find('#datamapkey').length === 1);
     if(hasKey){ keySpot.find('#datamapkey').remove(); }
-    var theKey = keySpot.append('<div id="datamapkey"></div>');
-    theKey.append(mapKey);
+    var theKey = $('<div id="datamapkey"></div>');
+    keySpot.append(theKey);
+
+    let minText = $('<div/>');
+    minText.html('Min:&nbsp;' + minData);
+    minText.css('float','left');
+    minText.css('width','50%');
+
+    let maxText = $('<div/>');
+    maxText.html('Max:&nbsp;' + maxData);
+    maxText.css('text-align','right');
+    maxText.css('float','right');
+    minText.css('width','50%');
+
+    theKey.append(minText);
+    theKey.append(maxText);
+    theKey.append('<br clear="all" />');
+
+
+    // Colored elements for key
+    for(let i = 0; i < colorArray.length; i++){
+        let thisBlock = $('<div/>');
+        thisBlock.css('display', 'inline-block');
+        thisBlock.css('width', 100/(colorArray.length) + '%');
+
+        let bottomPart = $('<div/>');
+        bottomPart.css('height', '10px');
+        bottomPart.css('background-color', colorArray[i]);
+        bottomPart.css('border','1px solid black');
+        thisBlock.append(bottomPart);
+
+        theKey.append(thisBlock);
+    }
+
+    // White and grey elements for key
+    var whiteKey = $('<div/>');
+    whiteKey.html('White: value is zero ');
+    whiteKey.css({
+            'display': 'inline-block',
+            'text-align': 'right',
+            'width': '50%',
+            'padding': '4px',
+            'box-sizing': 'border-box'
+        });
+    var whiteBox = $('<div/>');
+    whiteBox.css({
+            'display': 'inline-block',
+            'width': '1em',
+            'height': '1em',
+            'background-color': 'white',
+            'border': '1px solid black'
+        });
+    whiteKey.append(whiteBox);
+
+    var greyKey = $('<div/>');
+    greyKey.html(' Grey: no data');
+    greyKey.css({
+            'display': 'inline-block',
+            'text-align': 'left',
+            'width': '50%',
+            'padding': '4px',
+            'box-sizing': 'border-box'
+        });
+    var greyBox = $('<div/>');
+    greyBox.css({
+            'display': 'inline-block',
+            'width': '1em',
+            'height': '1em',
+            'background-color': '#e0e0e0',
+            'border': '1px solid black'
+        });
+    greyKey.prepend(greyBox);
+
+    theKey.append('<br/>');
+    theKey.append(whiteKey);
+    theKey.append(greyKey);
 }
 
 
