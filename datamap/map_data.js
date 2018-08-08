@@ -18,18 +18,16 @@ function mapReady(){
 
     // Bring in the CSV file.
     if('mapDataFiles' in parent.window){
-        var csvfile = parent.window.mapDataFiles[0];
-        if(csvfile.indexOf('/static/') != -1){
-            csvfile = parent.window.getAssetURL(parent.window.location.href, 'complete') + csvfile;
-        }
+        var csvfile = parent.window.mapDataFiles[0].filename;
 
         // We're including the Papa CSV parser in the HTML,
         // so make sure it loads completely before trying to use it.
         var waitForPapa = setInterval(function(){
             console.log('waiting for CSV parser...');
             if(typeof Papa !== 'undefined'){
-                loadNewMapData(csvfile);
                 clearInterval(waitForPapa);
+                loadNewMapData(csvfile);
+                setUpDropDown(parent.window.mapDataFiles);
             }
         }, 250);
 
@@ -39,17 +37,58 @@ function mapReady(){
 
 }
 
+// Loads map data from CSV files
 function loadNewMapData(filename){
+    if(filename.indexOf('/static/') != -1){
+        filename = parent.window.getAssetURL(parent.window.location.href, 'complete') + filename;
+    }
     Papa.parse(filename, {
         download: true,
         header: true,
         complete: function(results) {
             console.log(results);
             colorMap(results.data);
+            return(results.data);
         }
     });
 }
 
+// Dropdown menu to select data file
+function setUpDropDown(datafiles){
+    var wrapper = $(parent.document).find('.mapwrapper');
+    var form = $('<form id="map-data-dropdown"/>');
+    var fieldset = $('<fieldset/>');
+
+    var datalabel = $('<label for="mapdatapicker">Select map data: </label>');
+
+    var sel = $('<select name="mapdatapicker" id="mapdatapicker"></select>');
+
+    for(let i=0; i < datafiles.length; i++){
+        let opt = $('<option>');
+        opt.text(datafiles[i].name);
+        sel.append(opt);
+    }
+
+    wrapper.append(form)
+        .append(fieldset)
+        .append(datalabel)
+        .append(sel);
+
+    // Add dropdown listener.
+    sel.on('change', function(){
+        let newName = this.value;
+        let newData = datafiles.find(x => x.name === newName).filename;
+
+        // Recolor the map.
+        loadNewMapData(newData);
+
+        // Change the download link.
+        let downloadLink = $(parent.document).find('#map_data_download');
+        downloadLink[0].innerHTML = newData.split('/').slice(-1);
+        downloadLink[0].setAttribute('href', newData);
+    });
+
+}
 
 // Take in a csv data object and color the map with it.
 // Data must have a Value column, and either a Location or an ID.
