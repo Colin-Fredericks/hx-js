@@ -1,15 +1,15 @@
 // Fill your svg world map with semi-beautiful color-coded data!
-// You must define the mapDataFile variable in your html component.
+// You must define the mapDataFiles variable in your html component.
 
 // Example colors from http://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=5
 var colorArray =
-    ['#ffffd9',
-        '#edf8b1',
-        '#c7e9b4',
-        '#7fcdbb',
-        '#41b6c4',
-        '#1d91c0',
-        '#225ea8'];
+['#ffffd9',
+'#edf8b1',
+'#c7e9b4',
+'#7fcdbb',
+'#41b6c4',
+'#1d91c0',
+'#225ea8'];
 
 
 // Called by the map's <object> tag when it's done loading.
@@ -17,33 +17,37 @@ function mapReady(){
     console.log('Map ready');
 
     // Bring in the CSV file.
-    if('mapDataFile' in parent.window){
-      var csvfile = parent.window.mapDataFile;
-      if(csvfile.indexOf('/static/') != -1){
-        csvfile = parent.window.getAssetURL(parent.window.location.href, 'complete') + csvfile;
-      }
-
-      // We're including the Papa CSV parser in the HTML,
-      // so make sure it loads completely before trying to use it.
-      var waitForPapa = setInterval(function(){
-        console.log('waiting for CSV parser...');
-        if(typeof Papa !== 'undefined'){
-          Papa.parse(csvfile, {
-            download: true,
-            header: true,
-            complete: function(results) {
-              console.log(results);
-              colorMap(results.data);
-            }
-          });
-          clearInterval(waitForPapa);
+    if('mapDataFiles' in parent.window){
+        var csvfile = parent.window.mapDataFiles[0];
+        if(csvfile.indexOf('/static/') != -1){
+            csvfile = parent.window.getAssetURL(parent.window.location.href, 'complete') + csvfile;
         }
-      }, 250);
+
+        // We're including the Papa CSV parser in the HTML,
+        // so make sure it loads completely before trying to use it.
+        var waitForPapa = setInterval(function(){
+            console.log('waiting for CSV parser...');
+            if(typeof Papa !== 'undefined'){
+                loadNewMapData(csvfile);
+                clearInterval(waitForPapa);
+            }
+        }, 250);
 
     }else{
-      console.log('Data file not specified.');
+        console.log('Data file not specified.');
     }
 
+}
+
+function loadNewMapData(filename){
+    Papa.parse(filename, {
+        download: true,
+        header: true,
+        complete: function(results) {
+            console.log(results);
+            colorMap(results.data);
+        }
+    });
 }
 
 
@@ -138,39 +142,39 @@ function addKey(values){
     var whiteKey = $('<div/>');
     whiteKey.html('White: value is zero ');
     whiteKey.css({
-            'display': 'inline-block',
-            'text-align': 'right',
-            'width': '50%',
-            'padding': '4px',
-            'box-sizing': 'border-box'
-        });
+        'display': 'inline-block',
+        'text-align': 'right',
+        'width': '50%',
+        'padding': '4px',
+        'box-sizing': 'border-box'
+    });
     var whiteBox = $('<div/>');
     whiteBox.css({
-            'display': 'inline-block',
-            'width': '1em',
-            'height': '1em',
-            'background-color': 'white',
-            'border': '1px solid black'
-        });
+        'display': 'inline-block',
+        'width': '1em',
+        'height': '1em',
+        'background-color': 'white',
+        'border': '1px solid black'
+    });
     whiteKey.append(whiteBox);
 
     var greyKey = $('<div/>');
     greyKey.html(' Grey: no data');
     greyKey.css({
-            'display': 'inline-block',
-            'text-align': 'left',
-            'width': '50%',
-            'padding': '4px',
-            'box-sizing': 'border-box'
-        });
+        'display': 'inline-block',
+        'text-align': 'left',
+        'width': '50%',
+        'padding': '4px',
+        'box-sizing': 'border-box'
+    });
     var greyBox = $('<div/>');
     greyBox.css({
-            'display': 'inline-block',
-            'width': '1em',
-            'height': '1em',
-            'background-color': '#e0e0e0',
-            'border': '1px solid black'
-        });
+        'display': 'inline-block',
+        'width': '1em',
+        'height': '1em',
+        'background-color': '#e0e0e0',
+        'border': '1px solid black'
+    });
     greyKey.prepend(greyBox);
 
     theKey.append('<br/>');
