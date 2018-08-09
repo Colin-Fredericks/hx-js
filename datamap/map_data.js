@@ -55,6 +55,11 @@ function loadNewMapData(filename){
 
 // Dropdown menu to select data file
 function setUpDropDown(datafiles){
+    // If there's only one data file, skip this.
+    if(datafiles.length === 1){
+        return false;
+    }
+
     var wrapper = $(parent.document).find('.mapwrapper');
     var form = $('<form id="map-data-dropdown"/>');
     var fieldset = $('<fieldset/>');
@@ -87,6 +92,8 @@ function setUpDropDown(datafiles){
         downloadLink[0].innerHTML = newName;
         downloadLink[0].setAttribute('href', newData);
     });
+
+    return true;
 
 }
 
