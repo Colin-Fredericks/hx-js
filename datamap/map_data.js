@@ -2,7 +2,7 @@
 // You must define the mapDataFiles variable in your html component.
 
 // Example colors from http://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=5
-var colorArray =
+let colorArray =
 ['#ffffd9',
 '#edf8b1',
 '#c7e9b4',
@@ -18,11 +18,11 @@ function mapReady(){
 
     // Bring in the CSV file.
     if('mapDataFiles' in parent.window){
-        var csvfile = parent.window.mapDataFiles[0].filename;
+        let csvfile = parent.window.mapDataFiles[0].filename;
 
         // We're including the Papa CSV parser in the HTML,
         // so make sure it loads completely before trying to use it.
-        var waitForPapa = setInterval(function(){
+        let waitForPapa = setInterval(function(){
             console.log('waiting for CSV parser...');
             if(typeof Papa !== 'undefined'){
                 clearInterval(waitForPapa);
@@ -60,13 +60,13 @@ function setUpDropDown(datafiles){
         return false;
     }
 
-    var wrapper = $(parent.document).find('.mapwrapper');
-    var form = $('<form id="map-data-dropdown"/>');
-    var fieldset = $('<fieldset/>');
+    let wrapper = $(parent.document).find('.mapwrapper');
+    let form = $('<form id="map-data-dropdown"/>');
+    let fieldset = $('<fieldset/>');
 
-    var datalabel = $('<label for="mapdatapicker">Select map data: </label>');
+    let datalabel = $('<label for="mapdatapicker">Select map data: </label>');
 
-    var sel = $('<select name="mapdatapicker" id="mapdatapicker"></select>');
+    let sel = $('<select name="mapdatapicker" id="mapdatapicker"></select>');
 
     for(let i=0; i < datafiles.length; i++){
         let opt = $('<option>');
@@ -100,8 +100,9 @@ function setUpDropDown(datafiles){
 // Take in a csv data object and color the map with it.
 // Data must have a Value column, and either a Location or an ID.
 function colorMap(data){
-    var subdoc = $('object')[0].contentDocument;
-    var svg = $(subdoc).find('svg');
+    let subdoc = $('object')[0].contentDocument;
+    let svg = $(subdoc).find('svg');
+    let ccodes = [];
 
     // Strip bad lines
     data = data.filter(function(n){ return n['Year'] != null; });
@@ -109,24 +110,23 @@ function colorMap(data){
     // Get the list of country codes.
     // Sometimes they're specified explicitly, sometimes not.
     if(data[0]['ID']){
-        var ccodes = data.map(a => a['ID']);
+        ccodes = data.map(a => a['ID']);
     }else{
-        var countries = data.map(a => a.Location);
-        var ccodes = [];
+        let countries = data.map(a => a.Location);
         countries.forEach(function(c){
             ccodes.push( countryToCode[c] );
         });
     }
 
     // Get the country data and normalize it.
-    var values = data.map(a => Number(a.Value));
-    var normVals = normalize(values);
-    var colorVals = dataToColor(normVals, values);
+    let values = data.map(a => Number(a.Value));
+    let normVals = normalize(values);
+    let colorVals = dataToColor(normVals, values);
 
     // Set the color fill for each country (skip blanks)
     ccodes.forEach(function(cc, i){
         if(cc){
-            var targets = svg.find( '#' + cc );
+            let targets = svg.find( '#' + cc );
             targets.css( 'fill', colorVals[i] );
             targets.find('*').css( 'fill', colorVals[i] );
         }
@@ -140,17 +140,17 @@ function colorMap(data){
 // Insert a colored key for the data.
 function addKey(values){
     console.log('adding key');
-    var nonZeroData = values.filter(Number);
-    var maxData = Math.ceil(Math.max(...nonZeroData));
-    var minData = Math.ceil(Math.min(...nonZeroData));
-    var maxColor = colorArray[-1];
-    var minColor = colorArray[0];
+    let nonZeroData = values.filter(Number);
+    let maxData = Math.ceil(Math.max(...nonZeroData));
+    let minData = Math.ceil(Math.min(...nonZeroData));
+    let maxColor = colorArray[-1];
+    let minColor = colorArray[0];
 
     // Here's where we're putting the key.
-    var keySpot = $(parent.document).find('.mapwrapper');
-    var hasKey = (keySpot.find('#datamapkey').length === 1);
+    let keySpot = $(parent.document).find('.mapwrapper');
+    let hasKey = (keySpot.find('#datamapkey').length === 1);
     if(hasKey){ keySpot.find('#datamapkey').remove(); }
-    var theKey = $('<div id="datamapkey"></div>');
+    let theKey = $('<div id="datamapkey"></div>');
     keySpot.append(theKey);
 
     let minText = $('<div/>');
@@ -185,7 +185,7 @@ function addKey(values){
     }
 
     // White and grey elements for key
-    var whiteKey = $('<div/>');
+    let whiteKey = $('<div/>');
     whiteKey.html('White: value is zero ');
     whiteKey.css({
         'display': 'inline-block',
@@ -194,7 +194,7 @@ function addKey(values){
         'padding': '4px',
         'box-sizing': 'border-box'
     });
-    var whiteBox = $('<div/>');
+    let whiteBox = $('<div/>');
     whiteBox.css({
         'display': 'inline-block',
         'width': '1em',
@@ -204,7 +204,7 @@ function addKey(values){
     });
     whiteKey.append(whiteBox);
 
-    var greyKey = $('<div/>');
+    let greyKey = $('<div/>');
     greyKey.html(' Grey: no data');
     greyKey.css({
         'display': 'inline-block',
@@ -213,7 +213,7 @@ function addKey(values){
         'padding': '4px',
         'box-sizing': 'border-box'
     });
-    var greyBox = $('<div/>');
+    let greyBox = $('<div/>');
     greyBox.css({
         'display': 'inline-block',
         'width': '1em',
@@ -232,9 +232,9 @@ function addKey(values){
 // Take in an array of numerical data.
 // Return a normalized array.
 function normalize(data){
-    var max = Math.max(...data);
-    var min = Math.min(...data);
-    var newData = [];
+    let max = Math.max(...data);
+    let min = Math.min(...data);
+    let newData = [];
     for(let i = 0; i < data.length; i++){
         newData[i] = (data[i] - min)/(max - min);
     }
@@ -244,7 +244,7 @@ function normalize(data){
 // Take in an array of normalized data.
 // Return an array of appropriate web colors.
 function dataToColor(data, originalData){
-    var hexData = [];
+    let hexData = [];
 
     for(let i = 0; i < data.length; i++){
 
@@ -257,9 +257,9 @@ function dataToColor(data, originalData){
         // Old approach. Didn't work as well.
         /*************************************/
 
-        // var red   = parseInt(data[i] * (25 - 255) + 255).toString(16);
-        // var green = parseInt(data[i] * (34 - 255) + 255).toString(16);
-        // var blue  = parseInt(data[i] * (94 - 204) + 204).toString(16);
+        // let red   = parseInt(data[i] * (25 - 255) + 255).toString(16);
+        // let green = parseInt(data[i] * (34 - 255) + 255).toString(16);
+        // let blue  = parseInt(data[i] * (94 - 204) + 204).toString(16);
 
         // Need leading zeroes.
         // if(red.length   == 1 ) { red =   '0' + red;   }
@@ -271,7 +271,7 @@ function dataToColor(data, originalData){
     return hexData;
 }
 
-var countryToCode = {
+let countryToCode = {
     "South Sudan": "ss",
     "Georgia": "ge",
     "Abkhazia": "xa",
