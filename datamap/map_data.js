@@ -84,7 +84,7 @@ function setUpDropDown(datafiles){
 
         // Change the download link.
         let downloadLink = $(parent.document).find('#map_data_download');
-        downloadLink[0].innerHTML = newData.split('/').slice(-1);
+        downloadLink[0].innerHTML = newName;
         downloadLink[0].setAttribute('href', newData);
     });
 
