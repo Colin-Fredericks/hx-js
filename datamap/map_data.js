@@ -1,5 +1,7 @@
 // Fill your svg world map with semi-beautiful color-coded data!
 // You must define the mapDataFiles variable in your html component.
+// Use one map per page or you'll accidentally overwrite all of them
+// every time you load new data.
 
 // Example colors from http://colorbrewer2.org/#type=sequential&scheme=YlGnBu&n=5
 let colorArray =
@@ -47,8 +49,11 @@ function loadNewMapData(filename){
         header: true,
         complete: function(results) {
             console.log(results);
-            colorMap(results.data);
-            return(results.data);
+            // Strip bad lines
+            let data = results.data.filter(function(n){ return n.Value != ""; });
+            colorMap(data);
+            setUpDataTable(data);
+            return(data);
         }
     });
 }
@@ -97,15 +102,65 @@ function setUpDropDown(datafiles){
 
 }
 
+// Create a data table for accessibility purposes.
+function setUpDataTable(data){
+    // If there's already a data table, get rid of it.
+    let existingTable = $(parent.document).find('.hx-mapdatatable');
+    if(existingTable.length > 0){ existingTable.remove(); }
+
+    let wrapper = $(parent.document).find('.mapwrapper');
+    // We're giving the data tables high random IDs
+    // so they don't interfere with other collapsible items.
+    let tableID = Math.floor((Math.random() * 1000) + 1000);
+    let toggleButton = $('<button class="hx-togglebutton' + tableID + '">Show Data Table</button>');
+    let dataTable = $('<table id="hx-mapdatatable" class="hx-toggletarget' + tableID + '" style="display:none;">')
+    let caption = $('<caption style="font-size: 18px; font-weight:bold;">Map Data Table</caption>')
+    dataTable.append(caption);
+
+    // Set up header rows. Use Location and Value.
+    // If we have id rather than location, use the lookup table.
+    let header = $('<tr/>');
+    header.append($('<th scope="col">Country</th>'))
+    header.append($('<th scope="col">Value</th>'))
+    dataTable.append(header);
+
+    // Loop through data and create the data rows.
+    let sortedData = sortByCountry(data);
+
+
+    // toggleButton.insertAfter(wrapper);
+    // dataTable.insertAfter(toggleButton);
+
+}
+
+// Sort our data by country. Also, make sure it has a Location.
+function sortByCountry(data){
+
+    // If we country ID codes, replace Location with the "official" name
+    data.forEach(function(row){
+        if(!!row['ID']){
+            row.Location = codeToCountry[row['ID']];
+        }
+    });
+
+    function compareLocations(a,b){
+        if(a.Location < b.Location){ return -1; }
+        if(a.Location > b.Location){ return 1; }
+        return 0;
+    }
+
+    let sortedData = data.sort(compareLocations);
+    console.log(sortedData);
+    return sortedData;
+
+}
+
 // Take in a csv data object and color the map with it.
 // Data must have a Value column, and either a Location or an ID.
 function colorMap(data){
     let subdoc = $('object')[0].contentDocument;
     let svg = $(subdoc).find('svg');
     let ccodes = [];
-
-    // Strip bad lines
-    data = data.filter(function(n){ return n['Year'] != null; });
 
     // Get the list of country codes.
     // Sometimes they're specified explicitly, sometimes not.
@@ -515,3 +570,8 @@ let countryToCode = {
     "Sudan": "sd",
     "American Samoa": "as"
 };
+
+let codeToCountry = {};
+Object.keys(countryToCode).forEach(function(c){
+    codeToCountry[countryToCode[c]] = c;
+});
