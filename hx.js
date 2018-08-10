@@ -492,11 +492,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             $('.' + target + myNumber).slideToggle('fast');
 
             if( $(this).attr('aria-expanded') === 'true'){
-                var vis = 'visible'
+                var vis = 'invisible'
                 $(this).attr('aria-expanded','false');
                 $('.' + target + myNumber).attr('aria-hidden','true');
             }else{
-                var vis = 'invisible'
+                var vis = 'visible'
                 $(this).attr('aria-expanded','true');
                 $('.' + target + myNumber).attr('aria-hidden','false');
             }
@@ -891,6 +891,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     window.getAssetURL = getAssetURL;
     window.hmsToTime = hmsToTime;
     window.logThatThing = logThatThing;
+    window.prepAccessibleToggles = prepAccessibleToggles;
 
 });
 
