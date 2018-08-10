@@ -49,8 +49,12 @@ function loadNewMapData(filename){
         header: true,
         complete: function(results) {
             console.log(results);
-            // Strip bad lines
-            let data = results.data.filter(function(n){ return n.Value != ""; });
+
+            // Strip bad lines (no year, no value)
+            let data = results.data.filter(function(n){
+                return n['Year'] != null && n['Value'] != "";
+            });
+
             colorMap(data);
             setUpDataTable(data);
             return(data);
@@ -112,37 +116,46 @@ function setUpDataTable(data){
     // We're giving the data tables high random IDs
     // so they don't interfere with other collapsible items.
     let tableID = Math.floor((Math.random() * 1000) + 1000);
-    let toggleButton = $('<button class="hx-togglebutton' + tableID + '">Show Data Table</button>');
-    let dataTable = $('<table id="hx-mapdatatable" class="hx-toggletarget' + tableID + '" style="display:none;">')
+    let toggleButton = $('<button class="hx-maptablebutton' + tableID + '">Show/Hide Data Table</button>');
+    let dataTable = $('<table id="hx-mapdatatable" class="hx-maptable' + tableID + '" style="display:none;">')
     let caption = $('<caption style="font-size: 18px; font-weight:bold;">Map Data Table</caption>')
     dataTable.append(caption);
 
     // Set up header rows. Use Location and Value.
     // If we have id rather than location, use the lookup table.
     let header = $('<tr/>');
-    header.append($('<th scope="col">Country</th>'))
-    header.append($('<th scope="col">Value</th>'))
+    header.append('<th scope="col">Location</th>');
+    header.append('<th scope="col">Value</th>');
     dataTable.append(header);
 
     // Loop through data and create the data rows.
     let sortedData = sortByCountry(data);
+    sortedData.forEach(function(row){
+        let rowHTML = $('<tr/>');
+        rowHTML.append('<td>' + row.Location + '</td>');
+        rowHTML.append('<td>' + row.Value + '</td>');
+        dataTable.append(rowHTML);
+    });
 
+    toggleButton.insertAfter(wrapper);
+    dataTable.insertAfter(toggleButton);
 
-    // toggleButton.insertAfter(wrapper);
-    // dataTable.insertAfter(toggleButton);
+    // Add listeners as per HX-JS;
+    parent.window.prepAccessibleToggles('hx-maptablebutton', 'hx-maptable');
 
 }
 
 // Sort our data by country. Also, make sure it has a Location.
 function sortByCountry(data){
 
-    // If we country ID codes, replace Location with the "official" name
+    // If we have country ID codes, replace Location with the "official" name
     data.forEach(function(row){
         if(!!row['ID']){
             row.Location = codeToCountry[row['ID']];
         }
     });
 
+    // Sorting comparison function
     function compareLocations(a,b){
         if(a.Location < b.Location){ return -1; }
         if(a.Location > b.Location){ return 1; }
