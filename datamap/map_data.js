@@ -109,15 +109,21 @@ function setUpDropDown(datafiles){
 // Create a data table for accessibility purposes.
 function setUpDataTable(data){
     // If there's already a data table, get rid of it.
-    let existingTable = $(parent.document).find('.hx-mapdatatable');
+    let existingTable = $(parent.document).find('#hx-mapdatatable');
+    let existingTableButton = $(parent.document).find('#hx-maptablebutton');
+    // Keep table expanded/collapsed status.
+    let tableWasVisible = (existingTableButton.attr('aria-expanded') === 'true');
+    let tableDisplayMode = tableWasVisible ? 'table' : 'none';
+
     if(existingTable.length > 0){ existingTable.remove(); }
+    if(existingTableButton.length > 0){ existingTableButton.remove(); }
 
     let wrapper = $(parent.document).find('.mapwrapper');
     // We're giving the data tables high random IDs
     // so they don't interfere with other collapsible items.
     let tableID = Math.floor((Math.random() * 1000) + 1000);
-    let toggleButton = $('<button class="hx-maptablebutton' + tableID + '">Show/Hide Data Table</button>');
-    let dataTable = $('<table id="hx-mapdatatable" class="hx-maptable' + tableID + '" style="display:none;">')
+    let toggleButton = $('<button id="hx-maptablebutton" class="hx-maptablebutton' + tableID + '">Show/Hide Data Table</button>');
+    let dataTable = $('<table id="hx-mapdatatable" class="hx-maptable' + tableID + '" style="display:' + tableDisplayMode + ';">')
     let caption = $('<caption style="font-size: 18px; font-weight:bold;">Map Data Table</caption>')
     dataTable.append(caption);
 
