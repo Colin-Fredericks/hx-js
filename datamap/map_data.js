@@ -139,7 +139,7 @@ function setUpDataTable(data){
     sortedData.forEach(function(row){
         let rowHTML = $('<tr/>');
         rowHTML.append('<td>' + row.Location + '</td>');
-        rowHTML.append('<td>' + row.Value + '</td>');
+        rowHTML.append('<td>' + Number(row.Value).toFixed(1) + '</td>');
         dataTable.append(rowHTML);
     });
 
