@@ -96,9 +96,11 @@ function setUpDropDown(datafiles){
         // Recolor the map.
         loadNewMapData(newData);
 
-        // Change the download link.
+        // Change the download link and (possibly) map title.
         let downloadLink = $(parent.document).find('#map_data_download');
+        let mapTitle = $(parent.document).find('#map_title');
         downloadLink[0].innerHTML = newName;
+        mapTitle[0].innerHTML = newName;
         downloadLink[0].setAttribute('href', newData);
     });
 
