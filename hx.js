@@ -725,6 +725,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Is a link external or not?
     function isExternalLink(url){
         if(typeof url !== 'undefined'){
+            return false;
+        }else{
             if( url.includes('edx.org')
                 || url.includes('mailto')
                 || url.includes('jump_to_id')
@@ -737,8 +739,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 {
                     return false;
                 }
+            return true;
         }
-        return true;
     }
 
     // Turns a page URL in edX into an external asset url,
