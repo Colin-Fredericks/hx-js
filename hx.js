@@ -724,7 +724,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
     // Is a link external or not?
     function isExternalLink(url){
-        if(typeof url !== 'undefined'){
+        if(typeof url === 'undefined'){
             return false;
         }else{
             if( url.includes('edx.org')
