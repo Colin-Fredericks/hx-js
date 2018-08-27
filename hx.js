@@ -480,7 +480,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 $('.' + target + myNumber).attr('aria-hidden','false');
             }else{
                 $(this).attr('aria-expanded','false');
-                $('[class^=' + target + ']').attr('aria-hidden','true');
+                $('.' + target + myNumber).attr('aria-hidden','true');
             }
         });
 
