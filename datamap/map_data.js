@@ -41,6 +41,7 @@ function mapReady(){
 
 // Loads map data from CSV files
 function loadNewMapData(filename){
+    console.log('Loading new map data.')
     if(filename.indexOf('/static/') != -1){
         filename = parent.window.getAssetURL(parent.window.location.href, 'complete') + filename;
     }
@@ -50,9 +51,18 @@ function loadNewMapData(filename){
         complete: function(results) {
             console.log(results);
 
-            // Strip lines without value, or without either ID or Location
-            let data = results.data.filter(function(n){
-                if('Value' in n && ( 'ID' in n || 'Location' in n)){
+            // Lowercase all the spreadsheet headers.
+            resultsLC = results.data.map(function(row){
+                let newRow = {};
+                Object.keys(row).forEach(function(k){
+                    newRow[k.toLowerCase()] = row[k];
+                });
+                return newRow;
+            });
+
+            // Strip lines without value, or without either ID or location
+            let data = resultsLC.filter(function(n){
+                if('value' in n && ( 'id' in n || 'location' in n)){
                     return true;
                 }
                 else{ return false; }
@@ -67,6 +77,7 @@ function loadNewMapData(filename){
 
 // Dropdown menu to select data file
 function setUpDropDown(datafiles){
+    console.log('Setting up dropdown.')
     // If there's only one data file, skip this.
     if(datafiles.length === 1){
         return false;
@@ -113,6 +124,7 @@ function setUpDropDown(datafiles){
 
 // Create a data table for accessibility purposes.
 function setUpDataTable(data){
+    console.log('Setting up data table.')
     // If there's already a data table, get rid of it.
     let existingTable = $(parent.document).find('#hx-mapdatatable');
     let existingTableButton = $(parent.document).find('#hx-maptablebutton');
@@ -132,7 +144,7 @@ function setUpDataTable(data){
     let caption = $('<caption style="font-size: 18px; font-weight:bold;">Map Data Table</caption>')
     dataTable.append(caption);
 
-    // Set up header rows. Use Location and Value.
+    // Set up header rows. Use location and value.
     // If we have id rather than location, use the lookup table.
     let header = $('<tr/>');
     header.append('<th scope="col">Location</th>');
@@ -143,8 +155,8 @@ function setUpDataTable(data){
     let sortedData = sortByCountry(data);
     sortedData.forEach(function(row){
         let rowHTML = $('<tr/>');
-        rowHTML.append('<td>' + row.Location + '</td>');
-        rowHTML.append('<td>' + Number(row.Value).toFixed(1) + '</td>');
+        rowHTML.append('<td>' + row.location + '</td>');
+        rowHTML.append('<td>' + Number(row.value).toFixed(1) + '</td>');
         dataTable.append(rowHTML);
     });
 
@@ -156,20 +168,20 @@ function setUpDataTable(data){
 
 }
 
-// Sort our data by country. Also, make sure it has a Location.
+// Sort our data by country. Also, make sure it has a location.
 function sortByCountry(data){
 
-    // If we have country ID codes, replace Location with the "official" name
+    // If we have country ID codes, replace location with the "official" name
     data.forEach(function(row){
-        if(!!row['ID']){
-            row.Location = codeToCountry[row['ID']];
+        if('id' in row){
+            row.location = codeToCountry[row['id']];
         }
     });
 
     // Sorting comparison function
     function compareLocations(a,b){
-        if(a.Location < b.Location){ return -1; }
-        if(a.Location > b.Location){ return 1; }
+        if(a.location < b.location){ return -1; }
+        if(a.location > b.location){ return 1; }
         return 0;
     }
 
@@ -180,25 +192,30 @@ function sortByCountry(data){
 }
 
 // Take in a csv data object and color the map with it.
-// Data must have a Value column, and either a Location or an ID.
+// Data must have a value column, and either a location or an ID.
 function colorMap(data){
+    console.log('Coloring the map.')
     let subdoc = $('object')[0].contentDocument;
     let svg = $(subdoc).find('svg');
     let ccodes = [];
 
     // Get the list of country codes.
     // Sometimes they're specified explicitly, sometimes not.
-    if('ID' in data[0]){
-        ccodes = data.map(a => a['ID']);
+    if(typeof data[0] !== 'undefined'){
+        if('id' in data[0]){
+            ccodes = data.map(a => a['id']);
+        }else{
+            let countries = data.map(a => a.location);
+            countries.forEach(function(c){
+                ccodes.push( countryToCode[c] );
+            });
+        }
     }else{
-        let countries = data.map(a => a.Location);
-        countries.forEach(function(c){
-            ccodes.push( countryToCode[c] );
-        });
+        console.log('Data undefined - check your spreadsheet headers.');
     }
 
     // Get the country data and normalize it.
-    let values = data.map(a => Number(a.Value));
+    let values = data.map(a => Number(a.value));
     let normVals = normalize(values);
     let colorVals = dataToColor(normVals, values);
 
@@ -218,7 +235,7 @@ function colorMap(data){
 
 // Insert a colored key for the data.
 function addKey(values){
-    console.log('adding key');
+    console.log('Adding key.');
     let nonZeroData = values.filter(Number);
     let maxData = Math.ceil(Math.max(...nonZeroData));
     let minData = Math.ceil(Math.min(...nonZeroData));
