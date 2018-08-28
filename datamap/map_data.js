@@ -50,9 +50,12 @@ function loadNewMapData(filename){
         complete: function(results) {
             console.log(results);
 
-            // Strip bad lines (no year, no value)
+            // Strip lines without value, or without either ID or Location
             let data = results.data.filter(function(n){
-                return n['Year'] != null && n['Value'] != "";
+                if('Value' in n && ( 'ID' in n || 'Location' in n)){
+                    return true;
+                }
+                else{ return false; }
             });
 
             colorMap(data);
@@ -99,9 +102,12 @@ function setUpDropDown(datafiles){
         // Change the download link and (possibly) map title.
         let downloadLink = $(parent.document).find('#map_data_download');
         let mapTitle = $(parent.document).find('#map_title');
-        downloadLink[0].innerHTML = newName;
-        mapTitle[0].innerHTML = newName;
-        downloadLink[0].setAttribute('href', newData);
+        // This is done in a weird mishmash of jquery and non-jquery
+        // because the svg parser can sometimes muck things up.
+        downloadLink.text(newName);
+        mapTitle.text(newName);
+        downloadLink.prop('href', newData);
+        // downloadLink[0].setAttribute('href', newData);
     });
 
     return true;
@@ -185,7 +191,7 @@ function colorMap(data){
 
     // Get the list of country codes.
     // Sometimes they're specified explicitly, sometimes not.
-    if(data[0]['ID']){
+    if('ID' in data[0]){
         ccodes = data.map(a => a['ID']);
     }else{
         let countries = data.map(a => a.Location);
