@@ -102,12 +102,9 @@ function setUpDropDown(datafiles){
         // Change the download link and (possibly) map title.
         let downloadLink = $(parent.document).find('#map_data_download');
         let mapTitle = $(parent.document).find('#map_title');
-        // This is done in a weird mishmash of jquery and non-jquery
-        // because the svg parser can sometimes muck things up.
         downloadLink.text(newName);
         mapTitle.text(newName);
         downloadLink.prop('href', newData);
-        // downloadLink[0].setAttribute('href', newData);
     });
 
     return true;
