@@ -149,9 +149,6 @@ var HXTextSlider = (function(options) {
       + '" data-slide-id="' + slide.id
       + '" tabindex="-1">';
 
-    // Hidden navigation drawer right below the breadcrumbs.
-    slideHTML += getOverviewHTML(slide);
-
     // Icon and title
     slideHTML += '<img class="hx-slide-icon" alt="" '
       + 'width="' + iconsize + 'px"'
@@ -190,63 +187,12 @@ var HXTextSlider = (function(options) {
     slideHTML += '<figcaption>' + slide.caption + '</figcaption>'
     slideHTML += '</figure>'
 
-
-    // All the icons under the icon, if any.
-    // Commented because it's not currently in use - replaced by previous/next
-    // slideHTML += '<div class="slideicons">';
-    // for(var i = 0; i < slide.icons.length; i++){
-    //   if(slide.icons[i].image !== ''){
-    //     slideHTML += '<a data-target="' + slide.icons[i].target + '" href="">';
-    //     slideHTML += '<img src="' + staticFolder + slide.icons[i].image
-    //       + '" alt="' + slide.icons[i].alt
-    //       + '" width="' + iconsize + 'px" />';
-    //     slideHTML += '</a>';
-    //   }
-    // }
-    // slideHTML += '</div>';
-
     slideHTML += '</div>';
 
     slideHTML += '</div>';
 
-    function prevNextHTML(targetList){
-      var html = '';
-      targetList.forEach(function(e){
-        var tempslide = lookupSlide(e.trim())
-        var outOfScope = (options.slideScope.indexOf(tempslide.id) === -1) && options.slideScope.length > 0;
-        html += '<div class="hx-prevnext-icons '
-          + (outOfScope ? 'out-of-scope' : '')
-          + '"><a href="#" data-target="' + e.trim() + '">';
-        html += '<img src="' + staticFolder + tempslide.ownicon
-          + '" class="' + (outOfScope ? 'out-of-scope' : '')
-          + '" width="' + iconsize + 'px" height="' + iconsize+ 'px" '
-          + 'alt="' +  (outOfScope ? '(optional)' : '')
-          + '" />'
-        html += tempslide.breadcrumb;
-        html += '</a></div>';
-      });
-      return html;
-    }
-
-    // Part at the bottom with the previous and next icons.
-    if(options.showBottomNav){
-      slideHTML += '<div class="hx-text-slider-nav">';
-      if(slide.previous){
-        slideHTML += '<div class="hx-previous">'
-        slideHTML += '<h4>Causes</h4>'
-        slideHTML += '<div class="hx-previous-icons">'
-        slideHTML += prevNextHTML( slide.previous.split(',') );
-        slideHTML += '</div></div>';
-      }
-      if(slide.next){
-        slideHTML += '<div class="hx-next">'
-        slideHTML += '<h4>Effects</h4>'
-        slideHTML += '<div class="hx-next-icons">'
-        slideHTML += prevNextHTML( slide.next.split(',') );
-        slideHTML += '</div></div>';
-      }
-      slideHTML += '</div>';
-    }
+    // Hidden navigation drawer right below the breadcrumbs.
+    slideHTML += getOverviewHTML(slide);
 
     return slideHTML;
   }
@@ -481,26 +427,6 @@ var HXTextSlider = (function(options) {
           addSlide(slick, getSlideHTML(slideData[0]));
           homeSlideButton.on('click tap', function(){ goToSlide(slideData[0]); });
         }
-
-        // Enable hand-built overview map if there's one included.
-        // if($('.overviewMap').length > 0){
-        //   showOverviewMap.addClass('canGoBack');
-        //   showOverviewMap.on('click tap', function(){
-        //     $('.overviewMap').dialog({
-        //       dialogClass: "no-close",
-        //       width: 1080,
-        //       buttons: [
-        //         { text: "Close",
-        //           click: function() {
-        //             $( this ).dialog( "close" );
-        //           }
-        //         }
-        //       ]
-        //     });
-        //   });
-        // }else{
-        //   $('.overviewMap').hide();
-        // }
 
         // Remove the "Initializing" slide.
         slick.slickRemove(0);
