@@ -24,9 +24,9 @@ var HXTextSlider = (function(options) {
 
     var colorLookup = {
         'red': '#c00000',
+        'yellow': '#FFC001',
         'green': '#00B050',
         'cyan': '#4adec4',
-        'yellow': '#FFC001',
         'blue': '#475292'
     }
 
@@ -40,7 +40,7 @@ var HXTextSlider = (function(options) {
             let newElement = {};
             newElement.icons=[];
             newElement.folds=[];
-            Object.keys(e).forEach( function(key, i){
+            Object.keys(e).forEach( function(key){
                 let lowerkey = key.toLowerCase();
                 newElement[lowerkey] = e[key];
 
@@ -85,7 +85,7 @@ var HXTextSlider = (function(options) {
         // Check to make sure the slideScope fits this set of slides.
         if(options.slideScope !== []){
             for(let i=0; i < options.slideScope.length; i++){
-                scopeInSlides = false;
+                let scopeInSlides = false;
                 for(let j=0; j< newSlideData.length; j++){
                     if(options.slideScope[i] == newSlideData[j].id){
                         scopeInSlides = true;
@@ -99,7 +99,6 @@ var HXTextSlider = (function(options) {
         }else{
             console.log('No scoping for these slides.');
         }
-
 
         return newSlideData;
     }
@@ -211,8 +210,12 @@ var HXTextSlider = (function(options) {
         function overviewSideHTML(targetList){
             let html = '';
             targetList.forEach(function(e){
-                let tempslide = lookupSlide(e.trim())
-                let outOfScope = (options.slideScope.indexOf(tempslide.id) === -1) && options.slideScope.length > 0;
+                let tempslide = lookupSlide(e.trim());
+
+                // Testing for whether something's outside the current scope.
+                // Currently unused.
+                // let isOutOfScope = (options.slideScope.indexOf(tempslide.id) === -1) && options.slideScope.length > 0;
+
                 html += '<div class="hxslide-overview-item">';
                 html += '<a href="#" data-target="' + e.trim() + '">'
                 html += '<img src="' + staticFolder + tempslide.ownicon + '">';
@@ -343,7 +346,7 @@ var HXTextSlider = (function(options) {
                 $(this).attr('aria-expanded', 'false');
             }else{
                 $(this).attr('aria-expanded', 'true');
-            };
+            }
             $(this).find('span.hx-expandnote').text('Click to collapse');
             $(this).find('span.hx-collapsenote').text('Click to expand');
             $(this).find('span.fa').toggleClass('fa-caret-down fa-caret-right');
@@ -353,7 +356,7 @@ var HXTextSlider = (function(options) {
                 $(this).next().attr('aria-hidden', 'false');
             }else{
                 $(this).next().attr('aria-hidden', 'true');
-            };
+            }
         });
 
         // Add a FontAwesome icon for external links
@@ -391,7 +394,7 @@ var HXTextSlider = (function(options) {
                     $(this).attr('aria-expanded', 'true');
                     $(this).children('span.showOverviewNote').text(' Hide Overview');
                     thisMap.attr('aria-hidden', 'false');
-                };
+                }
 
                 $(this).children('span.fa').toggleClass('fa-chevron-down fa-chevron-right');
 
