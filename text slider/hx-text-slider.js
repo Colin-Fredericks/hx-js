@@ -15,7 +15,7 @@ var HXTextSlider = (function(options) {
   var breadcrumbs = [];
   var backButton = $('.slick-current.backToParentSlide');
   var homeSlideButton = $('.slick-current.goToHomeSlide');
-  var showOverviewMap = $('.slick-current.showOverviewMap');
+  var showOverviewButton = $('.slick-current.showOverview');
   var HXslider = $('.hx-slider');
   var slideData = [];
   var iconsize = 65; //pixels
@@ -120,9 +120,9 @@ var HXTextSlider = (function(options) {
 
   // Takes a slide object and returns the HTML for it.
   function getSlideHTML(slide){
-    var staticFolder = getAssetURL(window.location.href, 'complete');
+    let staticFolder = getAssetURL(window.location.href, 'complete');
 
-    var slideHTML = '';
+    let slideHTML = '';
 
     // Breadcrumbs
     slideHTML += '<div data-breadcrumb="' + slide.breadcrumb
@@ -144,7 +144,7 @@ var HXTextSlider = (function(options) {
     slideHTML += slide.abovefold;
 
     // All the collapsible bits, if any.
-    for(var j = 0; j < slide.folds.length; j++){
+    for(let j = 0; j < slide.folds.length; j++){
       if(slide.folds[j].header !== ''){
         slideHTML += '<h4 class="hx-togglenext" tabindex="0" '
             + 'aria-expanded="false" aria-controls="hx-folded-' + j + '">';
@@ -160,18 +160,20 @@ var HXTextSlider = (function(options) {
     // Right part, with optional figure
     slideHTML += '<div class="hx-rightbox">';
 
-    slideHTML += '<figure>'
-    slideHTML += '<a href="' + slide.image + '" target="_blank">';
-    slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
-    slideHTML += '</a>';
-    slideHTML += '<figcaption>' + slide.caption + '</figcaption>'
-    slideHTML += '</figure>'
+    if(slide.image){
+      slideHTML += '<figure>'
+      slideHTML += '<a href="' + slide.image + '" target="_blank">';
+      slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
+      slideHTML += '</a>';
+      slideHTML += '<figcaption>' + slide.caption + '</figcaption>'
+      slideHTML += '</figure>'
+    }
 
     slideHTML += '</div>';
 
     slideHTML += '</div>';
 
-    slideHTML += getControlBoxHTML().html();
+    slideHTML += getControlBoxHTML();
 
     // Hidden navigation drawer right below the breadcrumbs.
     slideHTML += getOverviewHTML(slide);
@@ -182,26 +184,17 @@ var HXTextSlider = (function(options) {
   // This is the container for the back, home, and hide/show buttons.
   function getControlBoxHTML(){
     let controlHTML = $('<div/>');
-    let backButton = $('<button/>');
-    let homeButton = $('<button/>');
     let overviewButton = $('<button/>');
 
     controlHTML.addClass('controlbox');
 
-    backButton.addClass('backToParentSlide');
-    backButton.append('<span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span>');
+    overviewButton.addClass('showOverview');
+    overviewButton.append('<span class="fa fa-chevron-right"></span>');
+    overviewButton.append('<span class="showOverviewNote"> Show Overview</span>');
 
-    homeButton.addClass('goToHomeSlide canGoBack');
-    homeButton.append('<span class="fa fa-home"><span class="sr">Home Slide</span></span>');
-
-    overviewButton.addClass('showOverviewMap');
-    overviewButton.append('<span class="fa fa-eye"><span class="sr">Visual Map</span></span>');
-
-    controlHTML.append(backButton);
-    controlHTML.append(homeButton);
     controlHTML.append(overviewButton);
 
-    return controlHTML;
+    return controlHTML[0].outerHTML;
   }
 
   // Takes a slide object and returns the HTML for the local overview.
@@ -229,6 +222,23 @@ var HXTextSlider = (function(options) {
       });
       return html;
     }
+
+    // Navigation controls
+    let controlHTML = $('<div/>');
+    let backButton = $('<button/>');
+    let homeButton = $('<button/>');
+
+    controlHTML.addClass('overviewNavControls')
+
+    backButton.addClass('backToParentSlide inactiveControl');
+    backButton.append('<span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span>');
+    homeButton.addClass('goToHomeSlide inactiveControl');
+    homeButton.append('<span class="fa fa-home"><span class="sr">Home Slide</span></span>');
+    controlHTML.append(backButton);
+    controlHTML.append(homeButton);
+
+    overview += controlHTML[0].outerHTML;
+
 
     // Leftmost box, with "previous" icons.
     overview += '<div class="hxslide-overview-leftbox hxslide-overview-container">'
@@ -287,7 +297,7 @@ var HXTextSlider = (function(options) {
     // Add listeners to icons in *current* slide.
     backButton = $('.slick-current .backToParentSlide');
     homeSlideButton = $('.slick-current .goToHomeSlide');
-    showOverviewMap = $('.slick-current .showOverviewMap');
+    showOverviewButton = $('.slick-current .showOverview');
 
     // Home button
     if(options.startingSlide){
@@ -306,9 +316,10 @@ var HXTextSlider = (function(options) {
       }
     });
 
-    // Make the back button active if needed.
+    // Make the back and home buttons active if needed.
     if(breadcrumbs.length > 1){
-        backButton.addClass('canGoBack');
+        homeSlideButton.removeClass('inactiveControl');
+        backButton.removeClass('inactiveControl');
     }
 
     // Handle links to other slides
@@ -357,8 +368,8 @@ var HXTextSlider = (function(options) {
     });
 
     // Hide/show auto-generated overview map
-    if(showOverviewMap.length > 0){
-      showOverviewMap.addClass('canGoBack');
+    if(showOverviewButton.length > 0){
+      showOverviewButton.removeClass('inactiveControl');
 
       var thisMap = $(currentSlide()).find('.hxslide-overview-bigbox');
       var leftbox = $(thisMap).find('.hxslide-overview-leftbox');
@@ -366,10 +377,23 @@ var HXTextSlider = (function(options) {
 
       if(options.overviewIsOpen){ resizeItems(leftbox, rightbox); }
 
-      showOverviewMap.off('click.hxmap tap.hxmap')
+      showOverviewButton.off('click.hxmap tap.hxmap')
         .on('click.hxmap tap.hxmap', function(){
           thisMap.slideToggle();
           options.overviewIsOpen = !options.overviewIsOpen;
+
+          // Accessibility and beautification toggles.
+          if( $(this).attr('aria-expanded') === 'true' ){
+            $(this).attr('aria-expanded', 'false');
+            $(this).children('span.showOverviewNote').text(' Show Overview');
+            thisMap.attr('aria-hidden', 'true');
+          }else{
+            $(this).attr('aria-expanded', 'true');
+            $(this).children('span.showOverviewNote').text(' Hide Overview');
+            thisMap.attr('aria-hidden', 'false');
+          };
+
+          $(this).children('span.fa').toggleClass('fa-chevron-down fa-chevron-right');
 
           resizeItems(leftbox, rightbox);
 
@@ -393,7 +417,8 @@ var HXTextSlider = (function(options) {
     HXslider.slick('slickRemove', removeBefore=false);
     // If appropriate, grey out the back button.
     if(breadcrumbs.length == 1){
-      backButton.removeClass('canGoBack');
+      backButton.addClass('inactiveControl');
+      homeSlideButton.addClass('inactiveControl');
     }
   }
 
@@ -406,7 +431,7 @@ var HXTextSlider = (function(options) {
   function goToSlide(slideID){
     // If we're already at this slide, do nothing.
     if(slideID !== currentSlide().data('slideId')){
-      // Hide the current nav overview we're in hiding mode
+      // Hide the current nav overview if we're in hiding mode.
       if(!options.overviewIsOpen){
         $('.hxslide-overview-bigbox').hide();
       }
@@ -421,6 +446,20 @@ var HXTextSlider = (function(options) {
       history.push( currentSlide().attr('data-slide-id') );
       // Update breadcrumb list.
       breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
+
+      // Hide/Show handler
+      let overviewButton = $('.showOverview');
+      if( $('.hxslide-overview-bigbox').is(':visible') ){
+        overviewButton.attr('aria-expanded','true');
+        overviewButton.children('.fa').addClass('fa-chevron-down');
+        overviewButton.children('.fa').removeClass('fa-chevron-right');
+        overviewButton.children('.showOverviewNote').text(' Hide Overview');
+      }else{
+        overviewButton.attr('aria-expanded','false');
+        overviewButton.children('.fa').addClass('fa-chevron-right');
+        overviewButton.children('.fa').removeClass('fa-chevron-down');
+        overviewButton.children('.showOverviewNote').text(' Show Overview');
+      }
     }
   }
 
