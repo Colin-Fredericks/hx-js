@@ -13,11 +13,9 @@ var HXTextSlider = (function(options) {
 
   var history = [];
   var breadcrumbs = [];
-  // Uncomment below for breadcrumbs.
-  // var crumbTray = $('.slideBreadcrumbs');
-  var backButton = $('.backToParentSlide');
-  var homeSlideButton = $('.goToHomeSlide');
-  var showOverviewMap = $('.showOverviewMap');
+  var backButton = $('.slick-current.backToParentSlide');
+  var homeSlideButton = $('.slick-current.goToHomeSlide');
+  var showOverviewMap = $('.slick-current.showOverviewMap');
   var HXslider = $('.hx-slider');
   var slideData = [];
   var iconsize = 65; //pixels
@@ -110,24 +108,6 @@ var HXTextSlider = (function(options) {
   	return cs;
   }
 
-  // HTML formatting for the breadcrumbs
-  // Uncomment below for breadcrumbs.
-  // function formatCrumbs(crumbs){
-  //   var crumbtext = '';
-  //   // crumbtext = crumbs.join(' » ');
-  //   for (var i = 0; i < crumbs.length; i++){
-  //     crumbtext += '<a href="#" class="bclink" data-target="' + history[i]
-  //       + '" data-goback="' + (crumbs.length - i)
-  //       + '">';
-  //     crumbtext += crumbs[i];
-  //     crumbtext += '</a>';
-  //     if(i+1 < crumbs.length){
-  //       crumbtext += ' » ';
-  //     }
-  //   }
-  // 	return crumbtext;
-  // }
-
   // Returns the object for the slide with id slideName
   function lookupSlide(slideName){
     for(var i = 0; i < slideData.length; i++){
@@ -191,10 +171,37 @@ var HXTextSlider = (function(options) {
 
     slideHTML += '</div>';
 
+    slideHTML += getControlBoxHTML().html();
+
     // Hidden navigation drawer right below the breadcrumbs.
     slideHTML += getOverviewHTML(slide);
 
     return slideHTML;
+  }
+
+  // This is the container for the back, home, and hide/show buttons.
+  function getControlBoxHTML(){
+    let controlHTML = $('<div/>');
+    let backButton = $('<button/>');
+    let homeButton = $('<button/>');
+    let overviewButton = $('<button/>');
+
+    controlHTML.addClass('controlbox');
+
+    backButton.addClass('backToParentSlide');
+    backButton.append('<span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span>');
+
+    homeButton.addClass('goToHomeSlide canGoBack');
+    homeButton.append('<span class="fa fa-home"><span class="sr">Home Slide</span></span>');
+
+    overviewButton.addClass('showOverviewMap');
+    overviewButton.append('<span class="fa fa-eye"><span class="sr">Visual Map</span></span>');
+
+    controlHTML.append(backButton);
+    controlHTML.append(homeButton);
+    controlHTML.append(overviewButton);
+
+    return controlHTML;
   }
 
   // Takes a slide object and returns the HTML for the local overview.
@@ -277,6 +284,33 @@ var HXTextSlider = (function(options) {
   // Add one-time link listeners.
   function addListeners(slick, slideData){
 
+    // Add listeners to icons in *current* slide.
+    backButton = $('.slick-current .backToParentSlide');
+    homeSlideButton = $('.slick-current .goToHomeSlide');
+    showOverviewMap = $('.slick-current .showOverviewMap');
+
+    // Home button
+    if(options.startingSlide){
+      homeSlideButton.off('click.hxhome tap.hxhome')
+        .on('click.hxhome tap.hxhome', function(){ goToSlide(options.startingSlide); });
+    }else{
+      homeSlideButton.off('click.hxhome tap.hxhome')
+        .on('click.hxhome tap.hxhome', function(){ goToSlide(slideData[0]); });
+    }
+
+    // Back button with backstop
+    backButton.off('click.hxbk tap.hxbk').on('click.hxbk tap.hxbk', function(){
+      // Don't go back if we're on the first slide.
+      if(breadcrumbs.length > 1){
+        goBackOne();
+      }
+    });
+
+    // Make the back button active if needed.
+    if(breadcrumbs.length > 1){
+        backButton.addClass('canGoBack');
+    }
+
     // Handle links to other slides
     currentSlide().find('a').filter(function(){
       return typeof $(this).attr('data-target') !== 'undefined';
@@ -287,13 +321,6 @@ var HXTextSlider = (function(options) {
       var target = $(this).attr('data-target');
       goToSlide(target);
     });
-
-    // Uncomment to handle breadcrumb clicks
-    // $('.bclink').one('click tap', function(e){
-    //   e.preventDefault();
-    //   var backNum = $(this).attr('data-goback');
-    //   for(var i = 1; i < backNum; i++){ goBackOne(); }
-    // });
 
     // Enable collapsible sections
     var togglers = currentSlide().find('.hx-togglenext');
@@ -322,21 +349,9 @@ var HXTextSlider = (function(options) {
     currentSlide().find('a').each(function(i, linky){
       var destination = $(linky).attr('href');
       if($(linky).find('.fa-external-link').length === 0){
-        if(typeof destination !== 'undefined'){
-          if( destination === ''
-          || destination.includes('edx.org')
-          || destination.includes('mailto')
-          || destination.includes('jump_to_id')
-          || destination.includes('/courses/')
-          || destination.includes('cloudfront.net')
-          || destination.includes('edx-cdn.org')
-          || destination.includes('edxapp')
-          || destination.includes('javascript:void')
-          || destination.slice(0,1) == '#' ){
-            // This is probably an internal link; do nothing.
-          }else{
-            $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
-          }
+        // isExternalLink() is defined in hx-js.
+        if(isExternalLink(destination)){
+          $(linky).append(' <span class="fa fa-external-link"><span class="sr">External link</span></span>');
         }
       }
     });
@@ -402,8 +417,6 @@ var HXTextSlider = (function(options) {
       HXslider.slick('addSlide', getSlideHTML(newSlide));
       // Go to that slide.
       HXslider.slick('slickGoTo',history.length + 1);
-      // Make the back button active.
-      backButton.addClass('canGoBack');
       // Update history list.
       history.push( currentSlide().attr('data-slide-id') );
       // Update breadcrumb list.
@@ -422,10 +435,8 @@ var HXTextSlider = (function(options) {
         console.log('Slide data loaded.');
         if(options.startingSlide){
           addSlide(slick, getSlideHTML(lookupSlide(options.startingSlide)));
-          homeSlideButton.on('click tap', function(){ goToSlide(options.startingSlide); });
         }else{
           addSlide(slick, getSlideHTML(slideData[0]));
-          homeSlideButton.on('click tap', function(){ goToSlide(slideData[0]); });
         }
 
         // Remove the "Initializing" slide.
@@ -434,8 +445,6 @@ var HXTextSlider = (function(options) {
         history.push( currentSlide().attr('data-slide-id') );
         // Set initial breadcrumbs
         breadcrumbs.push( currentSlide().attr('data-breadcrumb') );
-        // Uncomment below for breadcrumbs.
-        // crumbTray.html(formatCrumbs(breadcrumbs));
         addListeners(slick, slideData);
         clearInterval(waitForData);
       }
@@ -450,15 +459,6 @@ var HXTextSlider = (function(options) {
     currentSlide().focus();
     addListeners(slick, slideData);
   });
-
-  // Back button backstop
-  backButton.on('click tap', function(){
-    // Don't go back if we're on the first slide.
-    if(breadcrumbs.length > 1){
-      goBackOne();
-    }
-  });
-
 
   // Bring in the CSV file.
   if(typeof options !== 'undefined'){
