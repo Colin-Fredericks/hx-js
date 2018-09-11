@@ -735,6 +735,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 || url.includes('edx-cdn.org')
                 || url.includes('edxapp')
                 || url.includes('javascript:void')
+                || url.includes('javascript:;')
                 || url.slice(0,1) == '#' )
                 {
                     return false;
@@ -894,6 +895,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     window.hmsToTime = hmsToTime;
     window.logThatThing = logThatThing;
     window.prepAccessibleToggles = prepAccessibleToggles;
+    window.isExternalLink = isExternalLink;
 
 });
 
