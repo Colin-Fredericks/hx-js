@@ -387,9 +387,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             var myNumber = getClassNumber(this.className, 'hx-highlighter');
 
             if ( hxOptions.highlightState ) {
-                $( '.hx-highlight'+myNumber ).animate( { backgroundColor: hxOptions.highlightColor }, 200 );
+                $( '.hx-highlight'+myNumber ).css({'background-color': hxOptions.highlightColor, 'transition': 'background 0.2s'});
             } else {
-                $( '.hx-highlight'+myNumber ).animate( { backgroundColor: hxOptions.highlightBackground }, 200 );
+                $( '.hx-highlight'+myNumber ).css({'background-color': hxOptions.highlightBackground, 'transition': 'background 0.2s'});
             }
 
             hxOptions.highlightState = !hxOptions.highlightState;
