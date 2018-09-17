@@ -80,8 +80,8 @@ p > small.hx-caption {
     font-size: small !important;
 }
 
-/* Larger UL and OL left-hand margins. */
-#main .vert .xblock ul {
+/* Larger UL and OL left-hand margins. */{
+#}main .vert .xblock ul {
     margin-left: 1em !important;
 }
 
@@ -457,15 +457,6 @@ h4.hx-superbold {
 /***************************************/
 /* This block is for video links.
 /***************************************/
-
-#hx-vidlinks-static {
-}
-
-#hx-vidlinks-live {
-}
-
-.hx-link-text-live {
-}
 
 .hx-vidlink_bl {
 	display: none;
