@@ -31,6 +31,19 @@ var HXTextSlider = (function(options) {
         'blue': '#475292'
     };
 
+    function hexToRGB(hex){
+        var c;
+        if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+            c= hex.substring(1).split('');
+            if(c.length== 3){
+                c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+            }
+            c= '0x'+c.join('');
+            return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+')';
+        }
+        throw new Error('Bad Hex');
+    }
+
     // Process flat data into more useful structure. Particularly,
     // get icons as array instead of a bunch of separate entries.
     function makeSlideArray(sd){
@@ -185,10 +198,19 @@ var HXTextSlider = (function(options) {
     // This is the container for the back, home, and hide/show buttons.
     function getControlBoxHTML(){
         let controlHTML = $('<div/>');
-        let overviewButton = $('<button/>');
-
         controlHTML.addClass('controlbox');
 
+        let backButton = $('<button/>');
+        backButton.addClass('overviewNavControl backToParentSlide inactiveControl');
+        backButton.append('<span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span>');
+        controlHTML.append(backButton);
+
+        let homeButton = $('<button/>');
+        homeButton.addClass('overviewNavControl goToHomeSlide inactiveControl');
+        homeButton.append('<span class="fa fa-home"><span class="sr">Home Slide</span></span>');
+        controlHTML.append(homeButton);
+
+        let overviewButton = $('<button/>');
         overviewButton.addClass('showOverview');
         overviewButton.append('<span class="fa fa-chevron-right"></span>');
         overviewButton.append('<span class="showOverviewNote"> Show Overview</span>');
@@ -207,22 +229,6 @@ var HXTextSlider = (function(options) {
         if(!options.overviewIsOpen){
             overview.css('display','none');
         }
-
-        // Navigation controls
-        let controlHTML = $('<div/>');
-        controlHTML.addClass('overviewNavControls');
-
-        let backButton = $('<button/>');
-        backButton.addClass('backToParentSlide inactiveControl');
-        backButton.append('<span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span>');
-        controlHTML.append(backButton);
-
-        let homeButton = $('<button/>');
-        homeButton.addClass('goToHomeSlide inactiveControl');
-        homeButton.append('<span class="fa fa-home"><span class="sr">Home Slide</span></span>');
-        controlHTML.append(homeButton);
-
-        overview.append(controlHTML);
 
         // Add a column for each category (color) in the spreadsheet.
         let allCategories = slideData.map(x => x.category);
@@ -277,7 +283,9 @@ var HXTextSlider = (function(options) {
                     iconImage.attr('src', staticFolder + s.ownicon);
                     iconLink.append(iconImage);
                     if(s.id === slide.id){
-                        iconLink.append('<strong>' + s.breadcrumb + '</strong>');
+                        iconLink.append('<strong style="color:black;">' + s.breadcrumb + '</strong>');
+                        iconHTML.addClass('hxslide-active-item');
+                        iconImage.css('filter','drop-shadow(0px 0px 10px rgb(0,0,0))');
                     }else{
                         iconLink.append(s.breadcrumb);
                     }
@@ -290,7 +298,7 @@ var HXTextSlider = (function(options) {
         });
 
         // Insert a separator if this isn't the last column
-        console.log(overview);
+
         return overview;
 
     }
