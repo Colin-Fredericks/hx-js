@@ -9,6 +9,7 @@
 /           https://github.com/Colin-Fredericks/hx-js
 / Last update: 11 September 2018
 *************************************************************/
+/* jshint esversion: 6 */
 
 var HXTextSlider = (function(options) {
 
@@ -28,7 +29,7 @@ var HXTextSlider = (function(options) {
         'green': '#00B050',
         'cyan': '#4adec4',
         'blue': '#475292'
-    }
+    };
 
     // Process flat data into more useful structure. Particularly,
     // get icons as array instead of a bunch of separate entries.
@@ -161,12 +162,12 @@ var HXTextSlider = (function(options) {
         slideHTML += '<div class="hx-rightbox">';
 
         if(slide.image){
-            slideHTML += '<figure>'
+            slideHTML += '<figure>';
             slideHTML += '<a href="' + slide.image + '" target="_blank">';
             slideHTML += '<img src="' + slide.image + '" alt="' + slide.alt + '" />';
             slideHTML += '</a>';
-            slideHTML += '<figcaption>' + slide.caption + '</figcaption>'
-            slideHTML += '</figure>'
+            slideHTML += '<figcaption>' + slide.caption + '</figcaption>';
+            slideHTML += '</figure>';
         }
 
         slideHTML += '</div>';
@@ -176,7 +177,7 @@ var HXTextSlider = (function(options) {
         slideHTML += getControlBoxHTML();
 
         // Hidden navigation drawer right below the breadcrumbs.
-        slideHTML += getOverviewHTML(slide);
+        slideHTML += getOverviewHTML(slide)[0].outerHTML;
 
         return slideHTML;
     }
@@ -197,101 +198,209 @@ var HXTextSlider = (function(options) {
         return controlHTML[0].outerHTML;
     }
 
+
     // Takes a slide object and returns the HTML for the local overview.
     function getOverviewHTML(slide){
 
-        let overview = '<div class="hxslide-overview-bigbox hxslide-overview-master" ';
+        let overview = $('<div/>');
+        overview.addClass('hxslide-overview-bigbox hxslide-overview-master');
         if(!options.overviewIsOpen){
-            overview += 'style="display: none;"';
-        }
-        overview += '">'
-
-        // Split the lists of previous and next slides and return appropriate html
-        function overviewSideHTML(targetList){
-            let html = '';
-            targetList.forEach(function(e){
-                let tempslide = lookupSlide(e.trim());
-
-                // Testing for whether something's outside the current scope.
-                // Currently unused.
-                // let isOutOfScope = (options.slideScope.indexOf(tempslide.id) === -1) && options.slideScope.length > 0;
-
-                html += '<div class="hxslide-overview-item">';
-                html += '<a href="#" data-target="' + e.trim() + '">'
-                html += '<img src="' + staticFolder + tempslide.ownicon + '">';
-                html += tempslide.breadcrumb;
-                html += '</a>';
-                html += '</div>';
-            });
-            return html;
+            overview.css('display','none');
         }
 
         // Navigation controls
         let controlHTML = $('<div/>');
+        controlHTML.addClass('overviewNavControls');
+
         let backButton = $('<button/>');
-        let homeButton = $('<button/>');
-
-        controlHTML.addClass('overviewNavControls')
-
         backButton.addClass('backToParentSlide inactiveControl');
         backButton.append('<span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span>');
+        controlHTML.append(backButton);
+
+        let homeButton = $('<button/>');
         homeButton.addClass('goToHomeSlide inactiveControl');
         homeButton.append('<span class="fa fa-home"><span class="sr">Home Slide</span></span>');
-        controlHTML.append(backButton);
         controlHTML.append(homeButton);
 
-        overview += controlHTML[0].outerHTML;
+        overview.append(controlHTML);
+
+        // Add a column for each category (color) in the spreadsheet.
+        let allCategories = slideData.map(x => x.category);
+        let cats = [... new Set(allCategories)];
+        cats.forEach(function(cat, i){
+
+            // Create a column
+            let column = $('<div/>');
+            column.addClass('hxslide-overview-container');
+
+            // Insert the category indicator
+            let indicator = $('<div/>');
+            indicator.addClass('hxslide-column-indicator' + ' indicator-bar-' + cat);
+            indicator.css('background-color',colorLookup[cat]);
+            indicator.text(options.categoryTitles[cat]);
+            column.append(indicator);
+
+            // Indicate the active category
+            if(slide.category === cat){
+                let svgIndicator = $('<svg viewBox="0 0 100 20" width="100%" height="20px" preserveAspectRatio="none"></svg>');
+                svgIndicator.append('<polygon points="0,0 50,20 100,0" style="fill: ' + colorLookup[cat] + ';" />');
+                let activeIndicator = $('<div/>');
+                activeIndicator.append(svgIndicator);
+                activeIndicator.addClass('hx-indicator-spacer hx-indicator-active');
+                column.append(activeIndicator);
+            }else{
+                column.append('<div class="hx-indicator-spacer"></div>');
+            }
 
 
-        // Leftmost box, with "previous" icons.
-        overview += '<div class="hxslide-overview-leftbox hxslide-overview-container">'
-        if(slide.previous){ overview += overviewSideHTML( slide.previous.split(',') ); }
-        overview += '</div>'
+            // Insert icons of the right category, whether they're
+            // the current one, its predecessors, or its successors.
+            let rightIcons = [];
+            rightIcons = rightIcons.concat(slide.id);
+            rightIcons = rightIcons.concat(slide.previous.split(','));
+            rightIcons = rightIcons.concat(slide.next.split(','));
+            rightIcons = rightIcons.filter(x => x !== '');
+            rightIcons = rightIcons.map(x => x.trim());
 
-        // A bracket, if there are previous items.
-        if(slide.previous.length > 0){
-            overview += '<div class="hxslide-overview-leftbracket">';
-            overview += '<img src="' + staticFolder + 'leads-to.jpg">';
-            overview += '</div>';
-        }
+            rightIcons.forEach(function(e){
+                s = lookupSlide(e);
+                if(s.category === cat){
+                    let iconHTML = $('<div/>');
+                    iconHTML.addClass('hxslide-overview-item');
 
-        // Central icon
-        overview += '<div class="hxslide-overview-centerbox hxslide-overview-container">';
-        overview += '<div class="hxslide-overview-keystone hxslide-overview-item">';
-        overview += '<img src="' + staticFolder + slide.ownicon + '">';
-        overview += slide.title;
-        overview += '</div>';
-        overview += '</div>';
+                    let iconLink = $('<a/>');
+                    iconLink.attr('href','#');
+                    iconLink.attr('data-target', s.id);
+                    iconHTML.append(iconLink);
 
-        // Another bracket, if there are next items.
-        if(slide.next.length > 0){
-            overview += '<div class="hxslide-overview-rightbracket">';
-            overview += '<img src="' + staticFolder + 'leads-to.jpg">';
-            overview += '</div>';
-        }
+                    let iconImage = $('<img/>');
+                    iconImage.attr('src', staticFolder + s.ownicon);
+                    iconLink.append(iconImage);
+                    if(s.id === slide.id){
+                        iconLink.append('<strong>' + s.breadcrumb + '</strong>');
+                    }else{
+                        iconLink.append(s.breadcrumb);
+                    }
 
-        // Rightmost box, with "next" icons.
-        overview += '<div class="hxslide-overview-rightbox hxslide-overview-container">';
-        if(slide.next){ overview += overviewSideHTML( slide.next.split(',') ); }
-        overview += '</div>';
+                    column.append(iconHTML);
+                }
+            });
 
-        overview += '</div>';
+            overview.append(column);
+        });
 
+        // Insert a separator if this isn't the last column
+        console.log(overview);
         return overview;
 
     }
 
-    // For auto-generated map
-    function resizeItems(leftbox, rightbox){
-        let left_items = $(leftbox).find('.hxslide-overview-item');
-        let right_items = $(rightbox).find('.hxslide-overview-item');
-        let num_left = left_items.length;
-        let num_right = right_items.length;
+    // Takes a slide object and returns the HTML for the local overview.
+    // function getOverviewHTML(slide){
+    //
+    //     // Split the lists of previous and next slides and return appropriate html
+    //     function overviewSideHTML(targetList){
+    //         let html = '';
+    //         targetList.forEach(function(e){
+    //             let tempslide = lookupSlide(e.trim());
+    //
+    //             // Testing for whether something's outside the current scope.
+    //             // Currently unused.
+    //             // let isOutOfScope = (options.slideScope.indexOf(tempslide.id) === -1) && options.slideScope.length > 0;
+    //
+    //             html += '<div class="hxslide-overview-item">';
+    //             html += '<a href="#" data-target="' + e.trim() + '">'
+    //             html += '<img src="' + staticFolder + tempslide.ownicon + '">';
+    //             html += tempslide.breadcrumb;
+    //             html += '</a>';
+    //             html += '</div>';
+    //         });
+    //         return html;
+    //     }
+    //
+    //     let overview = '<div class="hxslide-overview-bigbox hxslide-overview-master" ';
+    //     if(!options.overviewIsOpen){
+    //         overview += 'style="display: none;"';
+    //     }
+    //     overview += '">'
+    //
+    //     // Navigation controls
+    //     let controlHTML = $('<div/>');
+    //     let backButton = $('<button/>');
+    //     let homeButton = $('<button/>');
+    //
+    //     controlHTML.addClass('overviewNavControls')
+    //
+    //     backButton.addClass('backToParentSlide inactiveControl');
+    //     backButton.append('<span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span>');
+    //     homeButton.addClass('goToHomeSlide inactiveControl');
+    //     homeButton.append('<span class="fa fa-home"><span class="sr">Home Slide</span></span>');
+    //     controlHTML.append(backButton);
+    //     controlHTML.append(homeButton);
+    //
+    //     overview += controlHTML[0].outerHTML;
+    //
+    //
+    //     // Leftmost box, with "previous" icons.
+    //     overview += '<div class="hxslide-overview-leftbox hxslide-overview-container">'
+    //     if(slide.previous){ overview += overviewSideHTML( slide.previous.split(',') ); }
+    //     overview += '</div>'
+    //
+    //     // A bracket, if there are previous items.
+    //     if(slide.previous.length > 0){
+    //         overview += '<div class="hxslide-overview-leftbracket">';
+    //         overview += '<img src="' + staticFolder + 'leads-to.jpg">';
+    //         overview += '</div>';
+    //     }
+    //
+    //     // Central icon
+    //     overview += '<div class="hxslide-overview-centerbox hxslide-overview-container">';
+    //     overview += '<div class="hxslide-overview-keystone hxslide-overview-item">';
+    //     overview += '<img src="' + staticFolder + slide.ownicon + '">';
+    //     overview += slide.title;
+    //     overview += '</div>';
+    //     overview += '</div>';
+    //
+    //     // Another bracket, if there are next items.
+    //     if(slide.next.length > 0){
+    //         overview += '<div class="hxslide-overview-rightbracket">';
+    //         overview += '<img src="' + staticFolder + 'leads-to.jpg">';
+    //         overview += '</div>';
+    //     }
+    //
+    //     // Rightmost box, with "next" icons.
+    //     overview += '<div class="hxslide-overview-rightbox hxslide-overview-container">';
+    //     if(slide.next){ overview += overviewSideHTML( slide.next.split(',') ); }
+    //     overview += '</div>';
+    //
+    //     overview += '</div>';
+    //
+    //     return overview;
+    //
+    // }
 
-        left_width = leftbox.width() / ( Math.ceil(num_left / options.maxIconsTall) ) - 10;
-        right_width = rightbox.width() / ( Math.ceil(num_right / options.maxIconsTall) ) - 10;
-        left_items.css('max-width', Math.min(left_width, 200));
-        right_items.css('max-width', Math.min(right_width, 200));
+    // For auto-generated map.
+    // Currently unused and didn't quite work in the first place.
+    function resizeItems(slide, options={}){
+        let iconContainers = slide.find('.hxslide-overview-container');
+        iconContainers.each(function(){
+            let items = $(this).find('.hxslide-overview-item');
+            let containerForSize = $(this);
+
+            if(typeof options.fromCurrent !== 'undefined'){
+                // Find the equivalent container in the current slide using class names.
+                let allClassNames = $(this).attr('class').split(' ');
+                let containerForSize = $(currentSlide()).find('.' + allClassNames.join('.'));
+            }
+
+            // Older version
+            // let num_icons = left_items.length;
+            let num_icons = 4;
+            console.log(containerForSize.width());
+            let newWidth = containerForSize.width() / ( Math.ceil(num_icons / options.maxIconsTall) ) - 10;
+            items.css('max-width', Math.min(newWidth, 200));
+        });
+
     }
 
     // Add one-time link listeners.
@@ -378,7 +487,7 @@ var HXTextSlider = (function(options) {
             let leftbox = $(thisMap).find('.hxslide-overview-leftbox');
             let rightbox = $(thisMap).find('.hxslide-overview-rightbox');
 
-            if(options.overviewIsOpen){ resizeItems(leftbox, rightbox); }
+            // if(options.overviewIsOpen){ resizeItems(currentSlide()); }
 
             showOverviewButton.off('click.hxmap tap.hxmap')
             .on('click.hxmap tap.hxmap', function(){
@@ -398,10 +507,10 @@ var HXTextSlider = (function(options) {
 
                 $(this).children('span.fa').toggleClass('fa-chevron-down fa-chevron-right');
 
-                resizeItems(leftbox, rightbox);
+                // resizeItems(currentSlide());
 
                 $(window).off('resize.hx').on('resize.hx', function(){
-                    resizeItems(leftbox, rightbox);
+                    // resizeItems(currentSlide());
                 });
 
             });
@@ -414,6 +523,10 @@ var HXTextSlider = (function(options) {
         // Update breadcrumb list and the history.
         breadcrumbs.pop();
         history.pop();
+
+        // Get the position of the back button.
+        let oldHeight = $(currentSlide()).find('.backToParentSlide').offset().top;
+
         // Go to the last slide in the history.
         HXslider.slick('slickGoTo', HXslider.slick('slickCurrentSlide') - 1);
         // Remove the last slide on our list.
@@ -423,6 +536,10 @@ var HXTextSlider = (function(options) {
             backButton.addClass('inactiveControl');
             homeSlideButton.addClass('inactiveControl');
         }
+
+        // Scroll the screen so the cursor is over the back button again.
+        let heightDiff = $(currentSlide()).find('.backToParentSlide').offset().top - oldHeight;
+        window.scrollBy(0, heightDiff);
     }
 
     // Takes slide HTML, adds it to the DOM, and sets listeners.
@@ -443,6 +560,10 @@ var HXTextSlider = (function(options) {
             // Regardless of whether this slide is in the current stack,
             // make a new copy and move to it. Don't slide back.
             HXslider.slick('addSlide', getSlideHTML(newSlide));
+            // TODO: Resize images on new slide before we go there.
+            // Use this slide's current to set sizes on (hidden) next slide?
+            // This is all for smoother interface, not 100% vital.
+            // resizeItems(currentSlide(), {fromCurrent: true});
             // Go to that slide.
             HXslider.slick('slickGoTo',history.length + 1);
             // Update history list.
