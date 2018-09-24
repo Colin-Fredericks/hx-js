@@ -248,8 +248,8 @@ var HXTextSlider = (function(options) {
 
             // Indicate the active category
             if(slide.category === cat){
-                let svgIndicator = $('<svg viewBox="0 0 100 20" width="100%" height="20px" preserveAspectRatio="none"></svg>');
-                svgIndicator.append('<polygon points="0,0 50,20 100,0" style="fill: ' + colorLookup[cat] + ';" />');
+                let svgIndicator = $('<svg viewBox="0 0 100 30" width="100%" height="30px" preserveAspectRatio="none"></svg>');
+                svgIndicator.append('<polygon points="0,0 50,30 100,0" style="fill: ' + colorLookup[cat] + ';" />');
                 let activeIndicator = $('<div/>');
                 activeIndicator.append(svgIndicator);
                 activeIndicator.addClass('hx-indicator-spacer hx-indicator-active');
