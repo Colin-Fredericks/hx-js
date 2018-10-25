@@ -492,11 +492,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             $('.' + target + myNumber).slideToggle('fast');
 
             if( $(this).attr('aria-expanded') === 'true'){
-                var vis = 'invisible'
+                var vis = 'invisible';
                 $(this).attr('aria-expanded','false');
                 $('.' + target + myNumber).attr('aria-hidden','true');
             }else{
-                var vis = 'visible'
+                var vis = 'visible';
                 $(this).attr('aria-expanded','true');
                 $('.' + target + myNumber).attr('aria-hidden','false');
             }
@@ -728,12 +728,12 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             return false;
         }else{
             if( url.includes('edx.org')
-                || url.includes('mailto')
-                || url.includes('jump_to_id')
-                || url.includes('/courses/')
-                || url.includes('cloudfront.net')
-                || url.includes('edx-cdn.org')
                 || url.includes('edxapp')
+                || url.includes('edx-cdn.org')
+                || url.includes('/courses/')
+                || url.includes('jump_to_id')
+                || url.includes('cloudfront.net')
+                || url.includes('mailto')
                 || url.includes('javascript:void')
                 || url.slice(0,1) == '#' )
                 {
@@ -851,7 +851,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
     })(jQuery);
 
-    // Should probably add code to make sure this doesn't get run multiple times.
     $(window).hxKonami(function(){
         alert('+30 Lives');
         logThatThing({'easter egg': 'Konami Code'});
