@@ -40,25 +40,6 @@
   margin: 0px 0px 10px 0px;
 }
 
-.hx-text-slider-nav{
-  padding: 5px;
-  background-color: #eee;
-  box-shadow: inset 1px 1px 8px #aaa;
-  border-radius: 3px;
-}
-
-.hx-prevnext-icons{
-  text-align: center;
-  font-weight: 600; /* Semi-bold */
-  display: inline-block;
-  margin: 0px 6px 0px 6px;
-}
-
-.hx-prevnext-icons img{
-  display: block;
-  margin: auto;
-}
-
 img.out-of-scope{
   opacity: 0.6;
   filter: gray; /* IE6-9 */
@@ -70,15 +51,6 @@ div.out-of-scope{
   font-weight: 300; /* Un-bold */
 }
 
-.hx-next{
-  text-align: right;
-}
-
-.hx-next h4{
-  text-align: right;
-}
-
-
 @media only screen and (min-width: 820px) {
     /* For desktop: */
 
@@ -86,58 +58,12 @@ div.out-of-scope{
     display: flex;
   }
 
-  .hx-leftbox{
-    flex: 1 1 auto;
-    min-width: 300px;
-    display: inline-block;
-    padding-right: 8px;
-  }
-
-  .hx-rightbox{
-    flex: 0 0 auto;
-    padding: 10px;
-    display: inline-block;
-  }
-
-  .hx-text-slider-nav{
-    display: flex;
-    padding: 5px;
-    background-color: #eee;
-    box-shadow: inset 1px 1px 8px #aaa;
-    border-radius: 3px;
-  }
-
-  .hx-previous{
-    flex: 1 0 50%;
-  }
-
-  .hx-previous-icons{
-  }
-
-  .hx-next{
-    flex: 1 0 50%;
-    text-align: right;
-  }
-
-  .hx-next h4{
-    text-align: right;
-  }
-
-  .hx-next-icons{
-  }
-
-  .hx-prevnext-icons{
-    text-align: center;
-    display: inline-block;
-    margin: 0px 6px 0px 6px;
-  }
-
 }
 
-.crumbbox{
+.controlbox{
   background-color: #eee;
-  box-shadow: inset 1px 1px 8px #bbb;
-  border-radius: 3px;
+  border: 1px solid #ddd;
+  display: flex;
 }
 
 .hx-sliderbox {
@@ -157,19 +83,31 @@ div.out-of-scope{
   left: 15px;
 }
 
-.backToParentSlide, .goToHomeSlide, .showOverviewMap {
-  border: none;
-  box-shadow: none;
-  color: #999;
-  background-color: transparent;
-  background-image: none;
-  font-size: 16pt;
-  padding: 4px 4px 4px 8px;
+.overviewNavControl{
+    flex: 0 1 auto;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    background-image: none;
+    font-size: 16pt;
+    padding: 4px 4px 4px 8px;
+    display: inline-block;
 }
 
-.showOverviewMap {
-  float: right;
-  padding: 4px 8px 4px 4px;
+.showOverview {
+  flex: 0 1 auto;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  background-image: none;
+  font-size: 13pt;
+  padding: 0px 4px 0px 8px;
+  width: 100%;
+  text-align: left;
+}
+
+.showOverviewNote{
+  font-weight: bold;
 }
 
 .overviewMap {
@@ -180,23 +118,13 @@ div.out-of-scope{
   display: none;
 }
 
-.canGoBack {
-  color: black;
-}
-
-.slideBreadcrumbs {
-  color: #999;
-  font-size: 12pt;
-  font-style: italic;
+.inactiveControl {
+  color: #ccc;
 }
 
 .slideicons a{
   float:left;
   margin: 2px 2px 2px 0px;
-}
-
-.slideBreadcrumbs .bclink{
-  color: #389;
 }
 
 .hx-togglenext{
@@ -213,9 +141,9 @@ div.out-of-scope{
   max-width: 1080px;
   min-height: 300px
   max-height: 350px;
-  box-shadow: inset 1px 1px 8px #bbb;
-  padding: 8px 0px 8px 0px;
-  margin: 0px 0px 8px 0px;
+  padding-bottom: 8px;
+  /* border: 1px solid #ccc; */
+  box-shadow: inset 0px 0px 2px 1px rgba(204,204,204,1) !important;
 }
 
 .hxslide-overview-container{
@@ -223,49 +151,35 @@ div.out-of-scope{
 
   display: flex;
   flex-flow: wrap;
-  align-content: center;
+  align-content: flex-start;
+  justify-content: center;
+}
+
+.hxslide-column-indicator{
+  font-weight: bold;
+  color: white;
+  width: 100%;
+  padding: 4px 4px 4px 8px;
+}
+
+.hx-indicator-spacer{
+  margin-bottom: 4px;
+  width: 100%;
+  height: 30px;
 }
 
 .hxslide-overview-item{
-  display: inline;
+  display: block;
   flex: 1 1 auto;
 
-  min-width: 75px;
+  min-width: 65px;
+  max-width: 200px;
   margin: 2px;
 
   text-align: center;
   font-size: 12pt;
   overflow-wrap: normal;
   hyphens: auto;
-}
-
-.hxslide-overview-leftbox{
-  justify-content: flex-end;
-}
-
-.hxslide-overview-centerbox{
-  flex: 1 .5 34%;
-  align-content: center;
-  justify-content: center;
-}
-
-.hxslide-overview-rightbox{
-  justify-content: flex-start;
-}
-
-.hxslide-overview-leftbracket, .hxslide-overview-rightbracket{
-  flex: 0 .5 5%;
-  display: flex;
-
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-}
-
-.hxslide-overview-leftbracket img, .hxslide-overview-rightbracket img{
-  height: 100%;
-  max-width: 100%;
-  min-width: 20px;
 }
 
 .hxslide-overview-container img{

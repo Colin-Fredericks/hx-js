@@ -387,9 +387,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             var myNumber = getClassNumber(this.className, 'hx-highlighter');
 
             if ( hxOptions.highlightState ) {
-                $( '.hx-highlight'+myNumber ).animate( { backgroundColor: hxOptions.highlightColor }, 200 );
+                $( '.hx-highlight'+myNumber ).css({'background-color': hxOptions.highlightColor, 'transition': 'background 0.2s'});
             } else {
-                $( '.hx-highlight'+myNumber ).animate( { backgroundColor: hxOptions.highlightBackground }, 200 );
+                $( '.hx-highlight'+myNumber ).css({'background-color': hxOptions.highlightBackground, 'transition': 'background 0.2s'});
             }
 
             hxOptions.highlightState = !hxOptions.highlightState;
@@ -684,8 +684,14 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             var listHTML = '<ul>' + tempList.join('') + '</ul>';
             listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
 
-            // Append the list right after the map.
-            $(this).after(listHTML);
+            // If we're going to make a list by hand, do nothing.
+            var listSwitch = $(this).data('make-accessible-list');
+            if(listSwitch === 'false' || listSwitch === false){
+                //do nothing
+            }else{
+                // Otherwise, append the list right after the map.
+                $(this).after(listHTML);
+            }
         });
 
         // Get the list of popup openers again so we can bind properly.
@@ -735,6 +741,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 || url.includes('cloudfront.net')
                 || url.includes('mailto')
                 || url.includes('javascript:void')
+                || url.includes('javascript:;')
                 || url.slice(0,1) == '#' )
                 {
                     return false;
@@ -893,6 +900,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     window.hmsToTime = hmsToTime;
     window.logThatThing = logThatThing;
     window.prepAccessibleToggles = prepAccessibleToggles;
+    window.isExternalLink = isExternalLink;
 
 });
 
