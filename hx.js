@@ -684,8 +684,14 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             var listHTML = '<ul>' + tempList.join('') + '</ul>';
             listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
 
-            // Append the list right after the map.
-            $(this).after(listHTML);
+            // If we're going to make a list by hand, do nothing.
+            var listSwitch = $(this).data('make-accessible-list');
+            if(listSwitch === 'false' || listSwitch === false){
+                //do nothing
+            }else{
+                // Otherwise, append the list right after the map.
+                $(this).after(listHTML);
+            }
         });
 
         // Get the list of popup openers again so we can bind properly.
