@@ -247,7 +247,7 @@ Note the classes, Bear1 and Bear2. You can name them anything you want, but *the
 
 You can put them anywhere; they'll hide until you need them. When you click on the areas, the divs pop up.
 
-Underneath, the javascript will automatically create a list with all of the targets, based on their "title" attribute. This list will also pop up the dialogs. If you would like to NOT have this (because you're going to write that list by hand), then you should include the following attribute on the map: `make-accessible-list="false"`.
+Underneath, the javascript will automatically create a list with all of the targets, based on their "title" attribute. This list will also pop up the dialogs. If you would like to NOT have this (because you're going to write that list by hand), then you should include the following attribute on the map: `data-make-accessible-list="false"`.
 
 ### Automated Footnotes
 
