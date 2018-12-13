@@ -57,6 +57,7 @@ var HXTextSlider = (function(options) {
             Object.keys(e).forEach( function(key){
                 let lowerkey = key.toLowerCase();
                 newElement[lowerkey] = e[key];
+                newElement.inScope = false;
 
                 // Make arrays for headers and folded texts
                 if(key.indexOf('Fold') === 0){
@@ -97,12 +98,13 @@ var HXTextSlider = (function(options) {
         });
 
         // Check to make sure the slideScope fits this set of slides.
-        if(options.slideScope !== []){
+        if(options.slideScope.length !== 0){
             for(let i=0; i < options.slideScope.length; i++){
                 let scopeInSlides = false;
                 for(let j=0; j< newSlideData.length; j++){
                     if(options.slideScope[i] == newSlideData[j].id){
                         scopeInSlides = true;
+                        newSlideData[j].inScope = true;
                         break;
                     }
                 }
@@ -112,6 +114,7 @@ var HXTextSlider = (function(options) {
             }
         }else{
             console.log('No scoping for these slides.');
+            newSlideData.forEach( function(s){ s.inScope = true; } );
         }
 
         return newSlideData;
@@ -274,13 +277,20 @@ var HXTextSlider = (function(options) {
                     let iconHTML = $('<div/>');
                     iconHTML.addClass('hxslide-overview-item');
 
-                    let iconLink = $('<a/>');
-                    iconLink.attr('href','#');
-                    iconLink.attr('data-target', s.id);
+                    // If icons are in-scope, link them up.
+                    let iconLink;
+                    if(s.inScope){
+                        iconLink = $('<a/>');
+                        iconLink.attr('href','#');
+                        iconLink.attr('data-target', s.id);
+                    }else{
+                        iconLink = $('<span/>');
+                    }
                     iconHTML.append(iconLink);
 
                     let iconImage = $('<img/>');
                     iconImage.attr('src', staticFolder + s.ownicon);
+                    if(!s.inScope){ iconImage.addClass('out-of-scope'); }
                     iconLink.append(iconImage);
                     if(s.id === slide.id){
                         iconLink.append('<strong style="color:black;">' + s.breadcrumb + '</strong>');
@@ -302,90 +312,6 @@ var HXTextSlider = (function(options) {
         return overview;
 
     }
-
-    // Takes a slide object and returns the HTML for the local overview.
-    // function getOverviewHTML(slide){
-    //
-    //     // Split the lists of previous and next slides and return appropriate html
-    //     function overviewSideHTML(targetList){
-    //         let html = '';
-    //         targetList.forEach(function(e){
-    //             let tempslide = lookupSlide(e.trim());
-    //
-    //             // Testing for whether something's outside the current scope.
-    //             // Currently unused.
-    //             // let isOutOfScope = (options.slideScope.indexOf(tempslide.id) === -1) && options.slideScope.length > 0;
-    //
-    //             html += '<div class="hxslide-overview-item">';
-    //             html += '<a href="#" data-target="' + e.trim() + '">'
-    //             html += '<img src="' + staticFolder + tempslide.ownicon + '">';
-    //             html += tempslide.breadcrumb;
-    //             html += '</a>';
-    //             html += '</div>';
-    //         });
-    //         return html;
-    //     }
-    //
-    //     let overview = '<div class="hxslide-overview-bigbox hxslide-overview-master" ';
-    //     if(!options.overviewIsOpen){
-    //         overview += 'style="display: none;"';
-    //     }
-    //     overview += '">'
-    //
-    //     // Navigation controls
-    //     let controlHTML = $('<div/>');
-    //     let backButton = $('<button/>');
-    //     let homeButton = $('<button/>');
-    //
-    //     controlHTML.addClass('overviewNavControls')
-    //
-    //     backButton.addClass('backToParentSlide inactiveControl');
-    //     backButton.append('<span class="fa fa-arrow-circle-left"><span class="sr">Previous Topic</span></span>');
-    //     homeButton.addClass('goToHomeSlide inactiveControl');
-    //     homeButton.append('<span class="fa fa-home"><span class="sr">Home Slide</span></span>');
-    //     controlHTML.append(backButton);
-    //     controlHTML.append(homeButton);
-    //
-    //     overview += controlHTML[0].outerHTML;
-    //
-    //
-    //     // Leftmost box, with "previous" icons.
-    //     overview += '<div class="hxslide-overview-leftbox hxslide-overview-container">'
-    //     if(slide.previous){ overview += overviewSideHTML( slide.previous.split(',') ); }
-    //     overview += '</div>'
-    //
-    //     // A bracket, if there are previous items.
-    //     if(slide.previous.length > 0){
-    //         overview += '<div class="hxslide-overview-leftbracket">';
-    //         overview += '<img src="' + staticFolder + 'leads-to.jpg">';
-    //         overview += '</div>';
-    //     }
-    //
-    //     // Central icon
-    //     overview += '<div class="hxslide-overview-centerbox hxslide-overview-container">';
-    //     overview += '<div class="hxslide-overview-keystone hxslide-overview-item">';
-    //     overview += '<img src="' + staticFolder + slide.ownicon + '">';
-    //     overview += slide.title;
-    //     overview += '</div>';
-    //     overview += '</div>';
-    //
-    //     // Another bracket, if there are next items.
-    //     if(slide.next.length > 0){
-    //         overview += '<div class="hxslide-overview-rightbracket">';
-    //         overview += '<img src="' + staticFolder + 'leads-to.jpg">';
-    //         overview += '</div>';
-    //     }
-    //
-    //     // Rightmost box, with "next" icons.
-    //     overview += '<div class="hxslide-overview-rightbox hxslide-overview-container">';
-    //     if(slide.next){ overview += overviewSideHTML( slide.next.split(',') ); }
-    //     overview += '</div>';
-    //
-    //     overview += '</div>';
-    //
-    //     return overview;
-    //
-    // }
 
     // For auto-generated map.
     // Currently unused and didn't quite work in the first place.
@@ -442,10 +368,27 @@ var HXTextSlider = (function(options) {
             backButton.removeClass('inactiveControl');
         }
 
-        // Handle links to other slides
-        currentSlide().find('a').filter(function(){
-            return typeof $(this).attr('data-target') !== 'undefined';
-        }).off('click.hxsm tap.hxsm')
+        // Find links to other slides.
+        let slideLinks = currentSlide().find('a').filter(function(){
+            let slideTarget = $(this).attr('data-target');
+            return typeof slideTarget !== 'undefined';
+        });
+        inScopeLinks = slideLinks.filter(function(){
+            let slideTarget = $(this).attr('data-target');
+            return lookupSlide(slideTarget).inScope;
+        });
+        outOfScopeLinks = slideLinks.filter(function(){
+            let slideTarget = $(this).attr('data-target');
+            return !lookupSlide(slideTarget).inScope;
+        });
+
+        // Remove out-of-scope links.
+        outOfScopeLinks.each(function(){
+            $(this).replaceWith($('<span>' + this.innerHTML + '</span>'));
+        });
+
+        // Go to in-scope links when they're clicked.
+        inScopeLinks.off('click.hxsm tap.hxsm')
         .on('click.hxsm tap.hxsm', function(e){
             e.preventDefault();
             // Get the link target and go there.
