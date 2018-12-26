@@ -30,6 +30,7 @@ function mapReady(){
                 clearInterval(waitForPapa);
                 loadNewMapData(csvfile);
                 setUpDropDown(parent.window.mapDataFiles);
+                setUpOpenLarge();
             }
         }, 250);
 
@@ -82,6 +83,10 @@ function setUpDropDown(datafiles){
     if(datafiles.length === 1){
         return false;
     }
+
+    // If we've already got a dropdown, skip this.
+    let hasDropDown = $(parent.document).find('#map-data-dropdown').length > 0;
+    if(hasDropDown){ return; }
 
     let wrapper = $(parent.document).find('.mapwrapper');
     let form = $('<form id="map-data-dropdown"/>');
@@ -166,6 +171,53 @@ function setUpDataTable(data){
     // Add listeners as per HX-JS;
     parent.window.prepAccessibleToggles('hx-maptablebutton', 'hx-maptable');
 
+}
+
+// An "open in new window" button, kind of.
+// Not currently working due to various issues.
+// New approach for next time:
+// * Add button INSIDE the iframe
+// * Call functions OUTSIDE the iframe to make modal dialog.
+// * (remove button while modal?)
+function setUpOpenLarge(){
+  return;
+
+/*
+  console.log('Setting up open-large button.')
+
+  let wrapper = $(parent.document).find('.mapwrapper');
+  let openLargeButton = $(parent.document).find('#LargeMapView');
+
+  if(openLargeButton.length > 0){
+    console.log('got button already');
+  }else{
+    console.log('no button so far');
+    openLargeButton = $('<button id="LargeMapView"></button>');
+    openLargeButton.text('View Large');
+    wrapper.prepend(openLargeButton);
+  }
+
+  openLargeButton.on('click tap', function(){
+    console.log('Open full-sized image.')
+    wrapper.dialog({
+      modal: true,
+      dialogClass: "hx-popup no-close",
+      resizable: true,
+      width: window.innerWidth,
+      buttons: {
+        'Close': function() {
+          $( this ).dialog( 'destroy' );  // Put the map back when we're done.
+        }
+      },
+      open: function() {
+        console.log('map opened full-screen');
+      },
+      closed: function() {
+        console.log('full-screen map closed');
+      }
+    });
+  });
+*/
 }
 
 // Sort our data by country. Also, make sure it has a location.
