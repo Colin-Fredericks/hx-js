@@ -180,13 +180,11 @@ function setUpDataTable(data){
 // * Call functions OUTSIDE the iframe to make modal dialog.
 // * (remove button while modal?)
 function setUpOpenLarge(){
-  return;
 
-/*
   console.log('Setting up open-large button.')
 
-  let wrapper = $(parent.document).find('.mapwrapper');
-  let openLargeButton = $(parent.document).find('#LargeMapView');
+  let wrapper = $('#innerwrapper');
+  let openLargeButton = $('#LargeMapView');
 
   if(openLargeButton.length > 0){
     console.log('got button already');
@@ -197,27 +195,8 @@ function setUpOpenLarge(){
     wrapper.prepend(openLargeButton);
   }
 
-  openLargeButton.on('click tap', function(){
-    console.log('Open full-sized image.')
-    wrapper.dialog({
-      modal: true,
-      dialogClass: "hx-popup no-close",
-      resizable: true,
-      width: window.innerWidth,
-      buttons: {
-        'Close': function() {
-          $( this ).dialog( 'destroy' );  // Put the map back when we're done.
-        }
-      },
-      open: function() {
-        console.log('map opened full-screen');
-      },
-      closed: function() {
-        console.log('full-screen map closed');
-      }
-    });
-  });
-*/
+  openLargeButton.on('click tap', function(){ parent.popDataMap() });
+
 }
 
 // Sort our data by country. Also, make sure it has a location.

@@ -728,6 +728,39 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
     }
 
+
+    // Pops up data-based maps that are colored with map_data.js
+    function popDataMap(){
+        console.log('Open full-sized map image.');
+        let mf = $('#mapframe');
+        let zoombutton = mf.contents().find('#LargeMapView')
+        mf.toggleClass('hx-svg-view');
+        if( mf.hasClass('hx-svg-view') ){
+            zoombutton.text('View Regular');
+        }else{
+            zoombutton.text('View Large');
+        }
+
+        // $('#mapframe').dialog({
+        //     modal: true,
+        //     dialogClass: "hx-popup hx-svg-view no-close",
+        //     resizable: true,
+        //     width: window.innerWidth,
+        //     height: window.innerHeight,
+        //     buttons: {
+        //         'Close': function() {
+        //             $( this ).dialog( 'destroy' );  // Put the map back when we're done.
+        //         }
+        //     },
+        //     open: function() {
+        //         console.log('map opened full-screen');
+        //     },
+        //     closed: function() {
+        //         console.log('full-screen map closed');
+        //     }
+        // });
+    }
+
     // Is a link external or not?
     function isExternalLink(url){
         if(typeof url === 'undefined'){
@@ -901,6 +934,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     window.logThatThing = logThatThing;
     window.prepAccessibleToggles = prepAccessibleToggles;
     window.isExternalLink = isExternalLink;
+    window.popDataMap = popDataMap;
 
 });
 
