@@ -258,14 +258,14 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Set the number to which video you want. Top one is 1.
         /**************************************/
 
-        var allTimeLinks = $('a.hx-vidtime');
+        let allTimeLinks = $('a.hx-vidtime');
         allTimeLinks.on('click tap', function(){
-            var thisTime = hmsToTime($(this).attr('data-time'));
-            var href = $(this).attr('href');
-            var anchor = href.slice(href.indexOf('#video'));
-            var vidNumber = anchor.replace('#video', '');
-            var unitNumber = href.slice(href.indexOf('/jump_to_id/') + 13, href.indexOf('#video'));
-            var startsWithHash = href.indexOf('#') === 0 ? true : false;
+            let thisTime = hmsToTime($(this).attr('data-time'));
+            let href = $(this).attr('href');
+            let anchor = href.slice(href.indexOf('#video'));
+            let vidNumber = anchor.replace('#video', '');
+            let unitNumber = href.slice(href.indexOf('/jump_to_id/') + 13, href.indexOf('#video'));
+            let startsWithHash = href.indexOf('#') === 0 ? true : false;
 
             // If the href starts with a pound sign, go on this page.
             if(startsWithHash){
@@ -311,9 +311,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         if(hxOptions.makeSmiles){
 
             // var smileLocation = $('.sequence-nav .nav-item.active').attr('data-id');
-            var mehFace = $('<span class="hx-smileystack hx-meh fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-meh-o fa-stack-2x"></span></span>');
-            var smileFace = $('<span class="hx-smileystack hx-smile fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-smile-o fa-stack-2x"></span></span>');
-            var spacer = $('<span class="hx-smileyspacer"></span>');
+            let mehFace = $('<span class="hx-smileystack hx-meh fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-meh-o fa-stack-2x"></span></span>');
+            let smileFace = $('<span class="hx-smileystack hx-smile fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-smile-o fa-stack-2x"></span></span>');
+            let spacer = $('<span class="hx-smileyspacer"></span>');
             // Remove any existing elements, because the way edX loads pages calls javascript multiple times
             $('.hx-smileystack').remove();
             $('.hx-smileyspacer').remove();
@@ -331,7 +331,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // for people with dyslexia.
         // Still a work in progress.
         /**************************************/
-        var tintButton = $('#hx-tint');
+        let tintButton = $('#hx-tint');
         if(tintButton.length){
             $(tintButton).on('click tap', function(){
                 $('p').animate({'color': 'blue'});
@@ -370,8 +370,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Target classes start with "hx-toggletarget#"
         // (Where # is a number, not a pound sign.)
         /**************************************/
-        var togglerClass = 'hx-togglebutton';
-        var toggledClass = 'hx-toggletarget';
+        let togglerClass = 'hx-togglebutton';
+        let toggledClass = 'hx-toggletarget';
         prepAccessibleToggles(togglerClass, toggledClass);
 
 
@@ -384,7 +384,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         $('[class^=hx-highlighter]').on('click tap', function() {
 
-            var myNumber = getClassNumber(this.className, 'hx-highlighter');
+            let myNumber = getClassNumber(this.className, 'hx-highlighter');
 
             if ( hxOptions.highlightState ) {
                 $( '.hx-highlight'+myNumber ).css({'background-color': hxOptions.highlightColor, 'transition': 'background 0.2s'});
@@ -406,12 +406,12 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
 
         // Clickable images that pop up dialog boxes.
-        var popUpOpener = $('.hx-popup-opener');
+        let popUpOpener = $('.hx-popup-opener');
         if(popUpOpener.length){ handlePopUpContent(); }
 
 
         // Auto-generation of footnotes.
-        var allFootnotes = $('span[class^="hx-footnote"]');
+        let allFootnotes = $('span[class^="hx-footnote"]');
         if(allFootnotes.length){ makeFootnotes(allFootnotes); }
 
 
@@ -472,7 +472,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Attach aria attributes to each button and
         // to each togglable element.
         $('[class^=' + press + ']').each(function(){
-            var myNumber = getClassNumber(this.className, press);
+            let myNumber = getClassNumber(this.className, press);
             $(this).attr('aria-controls' , target + myNumber);
 
             if( $('.' + target + myNumber + ':visible').length > 0 ){
@@ -487,7 +487,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         // Slidetoggle the elements and reverse the aria attribs.
         $('[class^=' + press + ']').on('click tap', function() {
 
-            var myNumber = getClassNumber(this.className, press);
+            let myNumber = getClassNumber(this.className, press);
 
             $('.' + target + myNumber).slideToggle('fast');
 
@@ -543,9 +543,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
           // After learners submit, watch the problem for mutations.
           // Once the mutations happen, recolor the code in that problem.
-          var target = this.closest('.xblock');
-          var config = {childList: true};
-          var observer = new MutationObserver(rehighlight);
+          let target = this.closest('.xblock');
+          let config = {childList: true};
+          let observer = new MutationObserver(rehighlight);
           observer.observe(target, config);
         });
 
@@ -564,23 +564,23 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             $('#seq_content .xblock:first-of-type').prepend('<div id="autoTOC" class="hx-autotoc"></div>');
         }
         // Using text instead of objects to make nesting easier.
-        var autoTOC = '<h3>Table of Contents</h3><ul>';
+        let autoTOC = '<h3>Table of Contents</h3><ul>';
 
         // Get all the h3 and h4 elements on the page.
-        var allHeaders = $('h3, h4').filter(function() {
+        let allHeaders = $('h3, h4').filter(function() {
             // Remove anything that's hidden away.
             return $(this).is(':visible');
         });
 
-        var TOCList = $('#autoTOC ul');
+        let TOCList = $('#autoTOC ul');
 
         // For each header, add it to the list and make a link.
         allHeaders.each(function(i){
             // Set the id of the element to link to.
             $(this).attr('id','TOCLink'+i);
 
-            var TOCEntry = $(this).text();
-            var TOCLevel;
+            let TOCEntry = $(this).text();
+            let TOCLevel;
             if($(this).is('h3')){
                 TOCLevel = 3;
                 if($(allHeaders[i-1]).is('h3') || i===0){
@@ -629,9 +629,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Must have HTML component with h3 header "Footnotes"
     /***********************************/
     function makeFootnotes(allFootnotes){
-        var thisFootnote, thisNumber, thisTarget, footnoteComponents, destinationComponent;
+        let thisFootnote, thisNumber, thisTarget, footnoteComponents, destinationComponent;
 
-        for(var i = 0; i < allFootnotes.length; i++){
+        for(let i = 0; i < allFootnotes.length; i++){
 
             thisFootnote = allFootnotes[i];
             thisNumber = getClassNumber(thisFootnote.className, 'hx-footnote');
@@ -667,7 +667,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         $('map').each(function(index){
 
             // Make a list element from each area's title
-            var tempList = [];
+            let tempList = [];
             $(this).find('area').each(function(index){
 
                 tempList.push('<li class="'
@@ -681,11 +681,11 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             });
 
             // Make that list into a big string and wrap it with UL
-            var listHTML = '<ul>' + tempList.join('') + '</ul>';
+            let listHTML = '<ul>' + tempList.join('') + '</ul>';
             listHTML = '<h4>Clickable Areas:</h4>' + listHTML;
 
             // If we're going to make a list by hand, do nothing.
-            var listSwitch = $(this).data('make-accessible-list');
+            let listSwitch = $(this).data('make-accessible-list');
             if(listSwitch === 'false' || listSwitch === false){
                 //do nothing
             }else{
@@ -695,13 +695,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         });
 
         // Get the list of popup openers again so we can bind properly.
-        var newPops = $('.hx-popup-opener');
+        let newPops = $('.hx-popup-opener');
 
         // Create the dialogue if we click on the right areas or links.
         newPops.on('click tap', function(){
 
-            var myClass = this.className;
-            var boxName = myClass.split(/\s+/)[0];
+            let myClass = this.className;
+            let boxName = myClass.split(/\s+/)[0];
 
             $('div.'+boxName).dialog({
                 dialogClass: "hx-popup-dialog",
@@ -740,25 +740,6 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         }else{
             zoombutton.text('View Large');
         }
-
-        // $('#mapframe').dialog({
-        //     modal: true,
-        //     dialogClass: "hx-popup hx-svg-view no-close",
-        //     resizable: true,
-        //     width: window.innerWidth,
-        //     height: window.innerHeight,
-        //     buttons: {
-        //         'Close': function() {
-        //             $( this ).dialog( 'destroy' );  // Put the map back when we're done.
-        //         }
-        //     },
-        //     open: function() {
-        //         console.log('map opened full-screen');
-        //     },
-        //     closed: function() {
-        //         console.log('full-screen map closed');
-        //     }
-        // });
     }
 
     // Is a link external or not?
@@ -795,12 +776,12 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         windowURL = windowURL.replace('%3A', ':');
 
         // Match the site in case we need it for something later.
-        var courseSiteURL = windowURL.match(/https:\/\/.+\//)[0];
+        let courseSiteURL = windowURL.match(/https:\/\/.+\//)[0];
 
         if(option == 'site'){ return courseSiteURL; }
 
         // Switch from course to asset
-        var staticFolderURL = windowURL.replace('courses/course', 'asset');
+        let staticFolderURL = windowURL.replace('courses/course', 'asset');
 
         // In case we're rendering in XBlock URL mode:
         if(staticFolderURL.search('xblock/block-v1') > -1){
@@ -809,8 +790,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         }
 
         // Ditch the unique identifier for this resource.
-        var pluslocation = staticFolderURL.indexOf('+');
-        var finalLocation = staticFolderURL.indexOf('/', pluslocation);
+        let pluslocation = staticFolderURL.indexOf('+');
+        let finalLocation = staticFolderURL.indexOf('/', pluslocation);
         staticFolderURL = staticFolderURL.slice(0, finalLocation);
 
         // Switch from courseware to type
@@ -823,8 +804,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
     // Gets the institution, course ID, and course run from the URL.
     function getCourseInfo(windowURL){
-        var partialURL = getAssetURL(windowURL, 'partial');
-        var courseInfo = {};
+        let partialURL = getAssetURL(windowURL, 'partial');
+        let courseInfo = {};
 
         // get the part from the colon to the first +
         partialURL = partialURL.split(':')[2];
@@ -839,8 +820,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Takes in all the classes, as from a className function.
     // Returns the number attached to the important class.
     function getClassNumber(className, importantClass){
-        var allClasses = className.split(/\s+/);
-        for(var i = 0; i < allClasses.length; i++){
+        let allClasses = className.split(/\s+/);
+        for(let i = 0; i < allClasses.length; i++){
             if(allClasses[i].indexOf(importantClass) === 0){
                 return allClasses[i].slice(importantClass.length);
             }
@@ -853,7 +834,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     // Does deep copy (clone)
     function setDefaultOptions(localOptions, globalOptions, fallbackOptions){
 
-        var tempOptions = {};
+        let tempOptions = {};
 
         if (!localOptions && !globalOptions) {
             return fallbackOptions;
@@ -875,7 +856,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             if(code === undefined) code = "38,38,40,40,37,39,37,39,66,65";
 
             return this.each(function() {
-                var kkeys = [];
+                let kkeys = [];
                 $(this).keydown(function(e){
                     kkeys.push( e.keyCode );
                     while (kkeys.length > code.split(',').length) {
@@ -904,8 +885,8 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         hms = hms.toString();
 
-        var hmsArray = hms.split(':');
-        var time = 0;
+        let hmsArray = hms.split(':');
+        let time = 0;
 
         if(hmsArray.length == 3){
             time = 3600*parseInt(hmsArray[0]) + 60*parseInt(hmsArray[1]) + Number(hmsArray[2]);
