@@ -173,12 +173,7 @@ function setUpDataTable(data){
 
 }
 
-// An "open in new window" button, kind of.
-// Not currently working due to various issues.
-// New approach for next time:
-// * Add button INSIDE the iframe
-// * Call functions OUTSIDE the iframe to make modal dialog.
-// * (remove button while modal?)
+// Blows image up larger for closer viewing.
 function setUpOpenLarge(){
 
   console.log('Setting up open-large button.')
