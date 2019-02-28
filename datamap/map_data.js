@@ -241,16 +241,18 @@ function colorMap(data){
     }
 
     // Get the country data and normalize it.
-    let values = data.map(a => Number(a.value));
+    let values = data.map( a => ( a.value === "" ? "" : Number(a.value) ) );
     let normVals = normalize(values);
+    // console.log('normalized values');
+    // console.log(normVals);
     let colorVals = dataToColor(normVals, values);
 
     // Set the color fill for each country (skip blanks)
     ccodes.forEach(function(cc, i){
         if(cc){
             let targets = svg.find( '#' + cc );
-            targets.css( 'fill', colorVals[i] );
-            targets.find('*').css( 'fill', colorVals[i] );
+            if(colorVals[i]){ targets.css( 'fill', colorVals[i] ); }
+            if(colorVals[i]){ targets.find('*').css( 'fill', colorVals[i] ); }
         }
     });
 
@@ -354,11 +356,18 @@ function addKey(values){
 // Take in an array of numerical data.
 // Return a normalized array.
 function normalize(data){
-    let max = Math.max(...data);
-    let min = Math.min(...data);
+    let filtered = data.filter(a => a !== "");
+    let max = Math.max(...filtered);
+    let min = Math.min(...filtered);
+    // console.log(data);
+    // console.log('max: ' + max + ' min: ' + min);
     let newData = [];
     for(let i = 0; i < data.length; i++){
-        newData[i] = (data[i] - min)/(max - min);
+        if(data[i] === ""){
+            newData[i] = false;
+        }else{
+            newData[i] = (data[i] - min)/(max - min);
+        }
     }
     return newData;
 }
@@ -371,9 +380,14 @@ function dataToColor(data, originalData){
     for(let i = 0; i < data.length; i++){
 
         // We're mapping 0-1 decimal range to a set of colors.
-        hexData[i] = colorArray[ Math.floor(data[i] * 7) ];
-        if(originalData[i] == 0){ hexData[i] = '#ffffff'; }  // Set actual zero to white
-        if(data[i] == 1){ hexData[i] = colorArray[6]; }      // Set highest to dark
+        if(data[i]){
+            hexData[i] = colorArray[ Math.floor(data[i] * 7) ];
+            if(originalData[i] == 0){ hexData[i] = '#ffffff'; }  // Set actual zero to white
+            if(data[i] == 1){ hexData[i] = colorArray[6]; }      // Set highest to dark
+        }else{
+            // If it's no value, keep passing it as no value.
+            hexData[i] = false;
+        }
 
         /*************************************/
         // Old approach. Didn't work as well.
