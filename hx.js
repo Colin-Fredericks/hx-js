@@ -1,6 +1,5 @@
-"use strict";
-
 var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
+"use strict";
 
     /***********************************************/
     // Setting all the default options.
@@ -540,7 +539,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
                 break;
               }
             }
-          }
+        };
 
           // After learners submit, watch the problem for mutations.
           // Once the mutations happen, recolor the code in that problem.
@@ -585,34 +584,34 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             if($(this).is('h3')){
                 TOCLevel = 3;
                 if($(allHeaders[i-1]).is('h3') || i===0){
-                    autoTOC += '<li class="autotoc'
-                    + TOCLevel
-                    + '"><a href="#TOCLink'+i+'">'
-                    + TOCEntry
-                    + '</a></li>';
+                    autoTOC += '<li class="autotoc' +
+                        TOCLevel +
+                        '"><a href="#TOCLink'+i+'">' +
+                        TOCEntry +
+                        '</a></li>';
                 } else if($(allHeaders[i-1]).is('h4')){
-                    autoTOC += '</ul></li><li class="autotoc'
-                    + TOCLevel
-                    + '"><a href="#TOCLink'+i+'">'
-                    + TOCEntry
-                    + '</a></li>';
+                    autoTOC += '</ul></li><li class="autotoc' +
+                        TOCLevel +
+                        '"><a href="#TOCLink'+i+'">' +
+                        TOCEntry +
+                        '</a></li>';
                 }
             }
             if($(this).is('h4')){
                 TOCLevel = 4;
                 if($(allHeaders[i-1]).is('h3')){
                     if(i>0){ autoTOC.slice(0, autoTOC.length - 5); }
-                    autoTOC += '<ul><li class="autotoc'
-                    + TOCLevel
-                    + '"><a href="#TOCLink'+i+'">'
-                    + TOCEntry
-                    + '</a></li>';
+                    autoTOC += '<ul><li class="autotoc' +
+                        TOCLevel +
+                        '"><a href="#TOCLink'+i+'">' +
+                        TOCEntry +
+                        '</a></li>';
                 } else if($(allHeaders[i-1]).is('h4')){
-                    autoTOC += '<li class="autotoc'
-                    + TOCLevel
-                    + '"><a href="#TOCLink'+i+'">'
-                    + TOCEntry
-                    + '</a></li>';
+                    autoTOC += '<li class="autotoc' +
+                        TOCLevel +
+                        '"><a href="#TOCLink'+i+'">' +
+                        TOCEntry +
+                        '</a></li>';
                 }
             }
         });
@@ -671,13 +670,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
             let tempList = [];
             $(this).find('area').each(function(index){
 
-                tempList.push('<li class="'
-                    + this.className.split(/\s+/)[0]
-                    + ' hx-popup-opener" title="'
-                    + this.title
-                    + '"><a href="javascript:;">'
-                    + this.title
-                    + '</a></li>'
+                tempList.push('<li class="' +
+                    this.className.split(/\s+/)[0] +
+                        ' hx-popup-opener" title="' +
+                        this.title +
+                        '"><a href="javascript:;">' +
+                        this.title +
+                        '</a></li>'
                 );
             });
 
@@ -734,7 +733,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
     function popDataMap(){
         console.log('Open full-sized map image.');
         let mf = $('#mapframe');
-        let zoombutton = mf.contents().find('#LargeMapView')
+        let zoombutton = mf.contents().find('#LargeMapView');
         mf.toggleClass('hx-svg-view');
         if( mf.hasClass('hx-svg-view') ){
             zoombutton.text('View Regular');
@@ -748,16 +747,16 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         if(typeof url === 'undefined'){
             return false;
         }else{
-            if( url.includes('edx.org')
-                || url.includes('edxapp')
-                || url.includes('edx-cdn.org')
-                || url.includes('/courses/')
-                || url.includes('jump_to_id')
-                || url.includes('cloudfront.net')
-                || url.includes('mailto')
-                || url.includes('javascript:void')
-                || url.includes('javascript:;')
-                || url.slice(0,1) == '#' )
+            if( url.includes('edx.org') ||
+                url.includes('edxapp') ||
+                url.includes('edx-cdn.org') ||
+                url.includes('/courses/') ||
+                url.includes('jump_to_id') ||
+                url.includes('cloudfront.net') ||
+                url.includes('mailto') ||
+                url.includes('javascript:void') ||
+                url.includes('javascript:;') ||
+                url.slice(0,1) == '#' )
                 {
                     return false;
                 }
