@@ -242,14 +242,18 @@ var HXTextSlider = (function(options) {
             column.addClass('hxslide-overview-container');
 
             // Insert the category indicator
-            let indicator = $('<div/>');
-            indicator.addClass('hxslide-column-indicator' + ' indicator-bar-' + cat);
-            indicator.css('background-color',colorLookup[cat]);
-            indicator.text(options.categoryTitles[cat]);
-            column.append(indicator);
+            // Unless there's only one category.
+            if(cats.length > 1){
+                let indicator = $('<div/>');
+                indicator.addClass('hxslide-column-indicator' + ' indicator-bar-' + cat);
+                indicator.css('background-color',colorLookup[cat]);
+                indicator.text(options.categoryTitles[cat]);
+                column.append(indicator);
+            }
 
             // Indicate the active category
-            if(slide.category === cat){
+            // Unless there's only one category. Then just put in the spacer.
+            if(slide.category === cat && cats.length > 1){
                 let svgIndicator = $('<svg viewBox="0 0 100 30" width="100%" height="30px" preserveAspectRatio="none"></svg>');
                 svgIndicator.append('<polygon points="0,0 50,30 100,0" style="fill: ' + colorLookup[cat] + ';" />');
                 let activeIndicator = $('<div/>');
