@@ -282,6 +282,14 @@ var HXTextSlider = (function(options) {
                     let iconHTML = $('<div/>');
                     iconHTML.addClass('hxslide-overview-item');
 
+                    // If there's only one category, shrink the icons to
+                    // allow more on the same line.
+                    if(cats.length === 1){
+                        iconHTML.css('max-width','100px');
+                        iconHTML.css('min-width','50px');
+                        iconHTML.css('padding','5px');
+                    }
+
                     // If icons are in-scope, link them up.
                     let iconLink;
                     if(s.inScope){
@@ -332,8 +340,6 @@ var HXTextSlider = (function(options) {
                 let containerForSize = $(currentSlide()).find('.' + allClassNames.join('.'));
             }
 
-            // Older version
-            // let num_icons = left_items.length;
             let num_icons = 4;
             console.log(containerForSize.width());
             let newWidth = containerForSize.width() / ( Math.ceil(num_icons / options.maxIconsTall) ) - 10;
