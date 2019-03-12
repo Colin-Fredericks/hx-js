@@ -27,7 +27,9 @@ var HXTextSlider = (function(options) {
         'yellow': '#FFC001',
         'green': '#00B050',
         'cyan': '#4adec4',
-        'blue': '#475292'
+        'blue': '#475292',
+        'grey': '#6e6e6e',
+        'gray': '#6e6e6e'
     };
 
     function hexToRGB(hex){
