@@ -18,6 +18,18 @@ var hxGlobalOptions = {
     slickNavOptions: {},
     slickBigOptions: {},
     textSliderOptions: {},
+
+    // Pop-up questions and links for videos
     PUPOptions: {},
-    VidLinkOptions: {}
+    VidLinkOptions: {},
+
+    // Custom emoji for Emoji Response questions (not yet implemented)
+    // Use this format:
+    // [ { 'emoji': '&#10003;', 'alt': 'I understand' },
+    //   { 'emoji': '&#10067;', 'alt': 'I am confused' },
+    //   { 'emoji': '&#128559;', 'alt': 'I am surprised' },
+    //   { 'emoji': '&#129300;', 'alt': 'I am skeptical' },
+    //   { 'emoji': '&#128564;', 'name': 'I am bored' } ]
+    custom_emoji: []
+
 };
