@@ -9,7 +9,6 @@
 /           https://github.com/Colin-Fredericks/hx-js
 / Last update: 11 September 2018
 *************************************************************/
-/* jshint esversion: 6 */
 
 var HXTextSlider = (function(options) {
 
@@ -142,17 +141,17 @@ var HXTextSlider = (function(options) {
         let slideHTML = '';
 
         // Breadcrumbs
-        slideHTML += '<div data-breadcrumb="' + slide.breadcrumb
-        + '" data-slide-id="' + slide.id
-        + '" tabindex="-1">';
+        slideHTML += '<div data-breadcrumb="' + slide.breadcrumb +
+            '" data-slide-id="' + slide.id +
+            '" tabindex="-1">';
 
         // Icon and title
-        slideHTML += '<img class="hx-slide-icon" alt="" '
-        + 'width="' + iconsize + 'px"'
-        + 'src="' + staticFolder + slide.ownicon + '"/>';
-        slideHTML += '<h3 class="hx-slide-title" style="border-bottom: 2px solid '
-        + colorLookup[slide.category]
-        + ';">' + slide.title + '</h3><br clear="all"/>';
+        slideHTML += '<img class="hx-slide-icon" alt="" ' +
+            'width="' + iconsize + 'px"' +
+            'src="' + staticFolder + slide.ownicon + '"/>';
+        slideHTML += '<h3 class="hx-slide-title" style="border-bottom: 2px solid ' +
+            colorLookup[slide.category] +
+            ';">' + slide.title + '</h3><br clear="all"/>';
 
         slideHTML += '<div class="hx-slidelayout">';
 
@@ -163,13 +162,13 @@ var HXTextSlider = (function(options) {
         // All the collapsible bits, if any.
         for(let j = 0; j < slide.folds.length; j++){
             if(slide.folds[j].header !== ''){
-                slideHTML += '<h4 class="hx-togglenext" tabindex="0" '
-                + 'aria-expanded="false" aria-controls="hx-folded-' + j + '">';
+                slideHTML += '<h4 class="hx-togglenext" tabindex="0" ' +
+                    'aria-expanded="false" aria-controls="hx-folded-' + j + '">';
                 slideHTML += '<span class="fa fa-caret-right"></span> ';
                 slideHTML += slide.folds[j].header;
                 slideHTML += ' <span class="sr hx-expandnote">Click to expand</span></h4>';
-                slideHTML += '<div id="hx-folded-' + j + '" aria-hidden="true">'
-                + slide.folds[j].text + '</div>';
+                slideHTML += '<div id="hx-folded-' + j + '" aria-hidden="true">' +
+                    slide.folds[j].text + '</div>';
             }
         }
         slideHTML += '</div>';

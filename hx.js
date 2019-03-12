@@ -488,15 +488,16 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         $('[class^=' + press + ']').on('click tap', function() {
 
             let myNumber = getClassNumber(this.className, press);
+            let vis = '';
 
             $('.' + target + myNumber).slideToggle('fast');
 
             if( $(this).attr('aria-expanded') === 'true'){
-                var vis = 'invisible';
+                vis = 'invisible';
                 $(this).attr('aria-expanded','false');
                 $('.' + target + myNumber).attr('aria-hidden','true');
             }else{
-                var vis = 'visible';
+                vis = 'visible';
                 $(this).attr('aria-expanded','true');
                 $('.' + target + myNumber).attr('aria-hidden','false');
             }
