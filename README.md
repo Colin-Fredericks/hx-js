@@ -177,7 +177,18 @@ Then you match the number on -togglebutton# to your toggle target:
 </div>
 ```
 
-Button 1 toggles target 1, button 2 toggles target 2, etc.
+Button 1 toggles target 1, button 2 toggles target 2, etc. If you toggle something that's offscreen (and if there's only a single target) then the target will scroll quickly into view.
+
+If you want to have multiple buttons where clicking one disables the others, use a toggleset in their container:
+
+```html
+<p class="hx-toggleset">
+  <button class="hx-togglebutton1">These buttons</button>
+  <button class="hx-togglebutton2">Are exclusive</button>
+  <button class="hx-togglebutton3">Of one another</button>
+</p>
+```
+
 
 ### Highlighter Toggle
 
