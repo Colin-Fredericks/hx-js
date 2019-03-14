@@ -226,6 +226,9 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
       window.hxOptions = hxOptions;
       console.log('Window hxOptions set');
+      // Keep track of what we have open/closed.
+      // window.hxToggled = [];
+      // window.hxToggleLast = [];
 
         /**************************************/
         // If we have videos, instantiate the functions
@@ -470,6 +473,7 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
         // Attach aria attributes to each button and
         // to each togglable element.
+        // Also disable other buttons in a set when you press one.
         $('[class^=' + press + ']').each(function(){
             let myNumber = getClassNumber(this.className, press);
             $(this).attr('aria-controls' , target + myNumber);
@@ -493,12 +497,20 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
 
             if( $(this).attr('aria-expanded') === 'true'){
                 vis = 'invisible';
-                $(this).attr('aria-expanded','false');
+                $('.' + press + myNumber).attr('aria-expanded','false');
                 $('.' + target + myNumber).attr('aria-hidden','true');
+                $('.hx-toggleset .' + press + myNumber).siblings().attr('disabled', false);
             }else{
                 vis = 'visible';
-                $(this).attr('aria-expanded','true');
+                $('.' + press + myNumber).attr('aria-expanded','true');
                 $('.' + target + myNumber).attr('aria-hidden','false');
+                $('.hx-toggleset .' + press + myNumber).siblings().attr('disabled', true);
+                // Scroll to single target if it's offscreen
+                if( $('.' + target + myNumber).length === 1){
+                    if(!isVisible($('.' + target + myNumber)[0])){
+                        $('.' + target + myNumber)[0].scrollIntoView();
+                    }
+                }
             }
 
             logThatThing({
@@ -900,6 +912,13 @@ var HXGlobalJS = (function(hxLocalOptions, HXPUPTimer) {
         }
 
         return time;
+    }
+
+    // Checks to see if an element is on-screen.
+    function isVisible(elm) {
+        var rect = elm.getBoundingClientRect();
+        var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
+        return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
     }
 
 
