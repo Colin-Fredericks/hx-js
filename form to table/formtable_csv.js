@@ -128,7 +128,7 @@ function setUpDataTable(data) {
     dataMap = sourceDataHeaders;
   } else {
     dataHeaders = dataKeys;
-    dataHeaders.forEach((k, i) => (dataMap[k] = dataKeys[idx]));
+    dataHeaders.forEach((k, i) => (dataKeys[idx] = dataMap[k]));
   }
 
   console.log('keys:');
@@ -136,6 +136,9 @@ function setUpDataTable(data) {
 
   console.log('headers:');
   console.log(dataHeaders);
+
+  console.log('map:');
+  console.log(dataMap);
 
   let dataTable = $('#responseTable');
 
@@ -149,10 +152,10 @@ function setUpDataTable(data) {
   // Loop through data and create the data rows.
   data.forEach(function(row) {
     let rowHTML = $('<tr/>');
-    dataHeaders.forEach(k => {
+    dataKeys.forEach(k => {
       console.log(k);
-      console.log(dataMap[k]);
-      rowHTML.append('<td scope="col">' + row[dataMap[k]] + '</td>');
+      console.log(dataMap[k.toLowerCase()]);
+      rowHTML.append('<td scope="col">' + row[k.toLowerCase()] + '</td>');
     });
     dataTable.append(rowHTML);
   });
