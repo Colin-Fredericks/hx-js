@@ -2,15 +2,15 @@
   var sourceDataFile =
     'https://docs.google.com/spreadsheets/d/e/2PACX-1vThv7lwZAl5rEnmnTsAf0-I90-uwKXZ8JLUA3bOWESn-7981gXBi4lnPluuzFVWCHoPFpuAM5wFDvtp/pub?gid=2013682473&single=true&output=csv';
   var sourceDataHeaders = {
-    URL: 'link url',
-    Name: 'what will people find here?',
-    Description: 'why is it interesting?',
-    Categories: 'categories'
+    'link url': 'URL',
+    'what will people find here?': 'Name',
+    'why is it interesting?': 'Description',
+    categories: 'Categories'
   };
 </script>
 <script src="/static/hx.js"></script>
 <script defer src="/static/papaparse.min.js"></script>
-<script defer src="/static/formtable_google.js"></script>
+<script defer src="/static/formtable_csv.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/hx.css" />
 
 <table id="responseTable" style="border: 1px solid grey;">
@@ -18,3 +18,4 @@
     Link Sharing Table
   </caption>
 </table>
+<p><button id="reloadTable">Reload table data</button></p>

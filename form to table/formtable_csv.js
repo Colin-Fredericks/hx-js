@@ -21,6 +21,11 @@ $(document).ready(function() {
   } else {
     console.log('Data file not specified.');
   }
+
+  $('#reloadTable').on('click tap', function() {
+    $('#responseTable').empty();
+    loadNewData(sourceDataFile);
+  });
 });
 
 // Loads data from CSV files
@@ -114,6 +119,20 @@ function setUpControls(datafiles) {
 }
 */
 
+function shortenText(text, n) {
+  if (text.indexOf('https://courses.edx.org/courses') !== -1) {
+    return (
+      'https://courses.edx' + '...' + text.split('/')[4].split(':')[1] + '...'
+    );
+  } else {
+    if (text.length < n) {
+      return text;
+    } else {
+      return text.slice(0, n - 3) + '...';
+    }
+  }
+}
+
 // Create a data table for accessibility purposes.
 function setUpDataTable(data) {
   console.log('Setting up data table.');
@@ -131,14 +150,14 @@ function setUpDataTable(data) {
     dataHeaders.forEach((k, i) => (dataKeys[idx] = dataMap[k]));
   }
 
-  console.log('keys:');
-  console.log(dataKeys);
-
-  console.log('headers:');
-  console.log(dataHeaders);
-
-  console.log('map:');
-  console.log(dataMap);
+  // console.log('keys:');
+  // console.log(dataKeys);
+  //
+  // console.log('headers:');
+  // console.log(dataHeaders);
+  //
+  // console.log('map:');
+  // console.log(dataMap);
 
   let dataTable = $('#responseTable');
 
@@ -153,9 +172,25 @@ function setUpDataTable(data) {
   data.forEach(function(row) {
     let rowHTML = $('<tr/>');
     dataKeys.forEach(k => {
-      console.log(k);
-      console.log(dataMap[k.toLowerCase()]);
-      rowHTML.append('<td scope="col">' + row[k.toLowerCase()] + '</td>');
+      console.log(dataMap[k]);
+      // console.log(dataMap[k]);
+      if (
+        dataMap[k].toLowerCase() === 'url' ||
+        dataMap[k].toLowerCase() === 'link'
+      ) {
+        // If it's a link, link it.
+        rowHTML.append(
+          '<td scope="col">' +
+            '<a href="' +
+            row[k] +
+            '" target="_blank">' +
+            shortenText(row[k], 40) +
+            '</a>' +
+            '</td>'
+        );
+      } else {
+        rowHTML.append('<td scope="col">' + row[k] + '</td>');
+      }
     });
     dataTable.append(rowHTML);
   });
