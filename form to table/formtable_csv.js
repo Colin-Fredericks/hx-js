@@ -207,7 +207,13 @@ function setUpDataTable(data) {
   let filter_row = $('<tr/>');
   dataHeaders.forEach((k, i) => {
     let filter_box = $(
-      '<td><input type="text" id="columnfilter_' + i + '"></td>'
+      '<td><label class="sr" for="' +
+        k +
+        '_filter">Filter for ' +
+        k +
+        ' </label><input type="text" id="' +
+        k +
+        '_filter"></td>'
     );
     filter_row.append(filter_box);
     filter_box.on('input', function(e) {
