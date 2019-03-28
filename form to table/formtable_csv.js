@@ -133,6 +133,31 @@ function shortenText(text, n) {
   }
 }
 
+function filterColumn(column, filterText) {
+  console.log('Filtering column ' + column + ' on ' + filterText);
+  // If the input is blank, show all authors and be done.
+  if (filterText === '') {
+    $('#responseTable tr').show();
+  } else {
+    // Hide every row beyond the first two.
+    var dataRows = $('#responseTable tr').filter(function(i, e) {
+      return i > 1;
+    });
+    dataRows.hide();
+    // Show any columns whose data matches the filter text.
+    dataRows
+      .filter(function(i, e) {
+        // console.log(i, column);
+        // console.log($(e).find(':nth-child(' + (column + 1) + ')'));
+        let cell = $(e).find(':nth-child(' + (column + 1) + ')');
+        let cellText = cell[0].innerText.toLowerCase();
+        let cellHasText = cellText.indexOf(filterText.toLowerCase()) !== -1;
+        return cellHasText;
+      })
+      .show();
+  }
+}
+
 // Create a data table for accessibility purposes.
 function setUpDataTable(data) {
   console.log('Setting up data table.');
@@ -168,11 +193,24 @@ function setUpDataTable(data) {
   });
   dataTable.append(header);
 
+  // Set up filter rows
+  let filter_row = $('<tr/>');
+  dataHeaders.forEach((k, i) => {
+    let filter_box = $(
+      '<td><input type="text" id="columnfilter_' + i + '"></td>'
+    );
+    filter_row.append(filter_box);
+    filter_box.on('input', function(e) {
+      filterColumn(i, e.target.value);
+    });
+  });
+  dataTable.append(filter_row);
+
   // Loop through data and create the data rows.
   data.forEach(function(row) {
     let rowHTML = $('<tr/>');
     dataKeys.forEach(k => {
-      console.log(dataMap[k]);
+      // console.log(dataMap[k]);
       // console.log(dataMap[k]);
       if (
         dataMap[k].toLowerCase() === 'url' ||
@@ -180,7 +218,7 @@ function setUpDataTable(data) {
       ) {
         // If it's a link, link it.
         rowHTML.append(
-          '<td scope="col">' +
+          '<td>' +
             '<a href="' +
             row[k] +
             '" target="_blank">' +
@@ -189,7 +227,7 @@ function setUpDataTable(data) {
             '</td>'
         );
       } else {
-        rowHTML.append('<td scope="col">' + row[k] + '</td>');
+        rowHTML.append('<td>' + row[k] + '</td>');
       }
     });
     dataTable.append(rowHTML);
