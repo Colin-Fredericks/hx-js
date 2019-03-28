@@ -133,10 +133,18 @@ function shortenText(text, n) {
   }
 }
 
+// Show only rows with text that matches the text in the filter.
 function filterColumn(column, filterText) {
   console.log('Filtering column ' + column + ' on ' + filterText);
+
+  // Split the filterText by commas. Drop whitespace.
+  let filtersArray = filterText.split(',');
+  filtersArray = filtersArray.map(e => e.trim());
+  filtersArray = filtersArray.filter(e => e !== '');
+  console.log(filtersArray);
+
   // If the input is blank, show all authors and be done.
-  if (filterText === '') {
+  if (filtersArray.length === 0) {
     $('#responseTable tr').show();
   } else {
     // Hide every row beyond the first two.
@@ -144,17 +152,19 @@ function filterColumn(column, filterText) {
       return i > 1;
     });
     dataRows.hide();
-    // Show any columns whose data matches the filter text.
-    dataRows
-      .filter(function(i, e) {
-        // console.log(i, column);
-        // console.log($(e).find(':nth-child(' + (column + 1) + ')'));
-        let cell = $(e).find(':nth-child(' + (column + 1) + ')');
-        let cellText = cell[0].innerText.toLowerCase();
-        let cellHasText = cellText.indexOf(filterText.toLowerCase()) !== -1;
-        return cellHasText;
-      })
-      .show();
+    filtersArray.forEach(function(ft) {
+      // Show any columns whose data matches the filter text.
+      dataRows
+        .filter(function(i, e) {
+          // console.log(i, column);
+          // console.log($(e).find(':nth-child(' + (column + 1) + ')'));
+          let cell = $(e).find(':nth-child(' + (column + 1) + ')');
+          let cellText = cell[0].innerText.toLowerCase();
+          let cellHasText = cellText.indexOf(ft.toLowerCase()) !== -1;
+          return cellHasText;
+        })
+        .show();
+    });
   }
 }
 
