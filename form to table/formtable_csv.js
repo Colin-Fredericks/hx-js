@@ -41,11 +41,14 @@ function loadNewData(filename) {
 
       // Strip lines without links entered
       let data = results.data.filter(function(n) {
-        console.log(n);
+        // console.log(n);
         let ret = false;
         $.each(n, function(k) {
           if (k.toLowerCase().indexOf('url') !== -1) {
-            ret = true;
+            // Make sure the link is actually present. No blanks.
+            if (n[k] !== '') {
+              ret = true;
+            }
           }
         });
         return ret;
