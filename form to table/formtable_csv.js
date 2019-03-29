@@ -40,22 +40,16 @@ function loadNewData(filename) {
     complete: function(results) {
       console.log(results);
 
-      // Lowercase all the spreadsheet headers.
-      resultsLC = results.data.map(function(row) {
-        let newRow = {};
-        Object.keys(row).forEach(function(k) {
-          newRow[k.toLowerCase()] = row[k];
-        });
-        return newRow;
-      });
-
       // Strip lines without links entered
-      let data = resultsLC.filter(function(n) {
-        if ('link url' in n) {
-          return true;
-        } else {
-          return false;
-        }
+      let data = results.data.filter(function(n) {
+        console.log(n);
+        let ret = false;
+        $.each(n, function(k) {
+          if (k.toLowerCase().indexOf('url') !== -1) {
+            ret = true;
+          }
+        });
+        return ret;
       });
 
       setUpDataTable(data);
@@ -65,7 +59,7 @@ function loadNewData(filename) {
 }
 
 /*
-// Filter and sort table columns
+// Sort table columns
 function setUpControls(datafiles) {
   console.log('Setting up data table controls.');
   // If there's only one data file, skip this.
@@ -141,7 +135,7 @@ function filterColumn(column, filterText) {
   let filtersArray = filterText.split(',');
   filtersArray = filtersArray.map(e => e.trim());
   filtersArray = filtersArray.filter(e => e !== '');
-  console.log(filtersArray);
+  // console.log(filtersArray);
 
   // If the input is blank, show all authors and be done.
   if (filtersArray.length === 0) {
@@ -248,9 +242,4 @@ function setUpDataTable(data) {
     });
     dataTable.append(rowHTML);
   });
-
-  /*
-  toggleButton.insertAfter(wrapper);
-  dataTable.insertAfter(toggleButton);
-  */
 }
