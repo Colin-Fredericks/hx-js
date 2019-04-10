@@ -1,4 +1,4 @@
-var HXGlobalJS = function(hxLocalOptions, HXPUPTimer) {
+var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
   'use strict';
 
   /***********************************************/
@@ -86,7 +86,9 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer) {
       show: { direction: 'down' },
       speed: 500,
       location: 'bl' // Bottom Left. bl, br, tl, and tr are all ok.
-    }
+    },
+    // No options for chimes right now.
+    ChimeOptions: {}
   };
 
   /***********************************************/
@@ -175,7 +177,7 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer) {
   }
 
   // Do we load HXVideoLinks for... um... HarvardX video links?
-  // And HXPopUpProblems for pop-up problems.
+  // And HXPopUpProblems for pop-up problems, and Chime for etc.
   // Set hxLocalOptions.dontLoadVideoStuff: true to avoid this,
   // for instance if you have several videos on one page that don't need it.
   var loadVideoStuff = true;
@@ -190,16 +192,22 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer) {
   // - we're not specifically told not to
   // - and there's a video on the page
   // - and, for pop-up problems, there needs to be a timer.
+  // - and, for the chimes, there needs to be that timer.
   var allVideos = $('.video');
   if (loadVideoStuff) {
     if (allVideos.length) {
       logThatThing({ video: 'found' });
       scriptArray.push('HXVideoLinks.js');
       var HXVL;
-      // Only do pop-up problems if there's a timer in place.
+      // Only do pop-up problems if the right timer is in place.
       if (HXPUPTimer.length !== 0) {
         scriptArray.push('HXPopUpProblems.js');
         var HXPUP;
+      }
+      // Only do video chimes if the right timer is in place.
+      if (HXChimeTimer.length !== 0) {
+        scriptArray.push('HXVideoChime.js');
+        var HXVC;
       }
     }
   }
@@ -253,6 +261,10 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer) {
       // Only do pop-up problems if there's a timer in place.
       if (HXPUPTimer.length !== 0) {
         HXPUP = new HXPopUpProblems(hxDefaultOptions.PUPOptions, HXPUPTimer);
+      }
+      // Only do pop-up problems if there's a timer in place.
+      if (HXVideoChime.length !== 0) {
+        HXVC = new HXVideoChime(hxDefaultOptions.ChimeOptions, HXChimeTimer);
       }
     }
 
@@ -1016,6 +1028,38 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer) {
     return time;
   }
 
+  // Converts time in seconds to hh:mm:ss format.
+  // Will use just mm:ss if no hours.
+  // Public function.
+  function timeToHMS(time) {
+    var hours;
+    var minutes;
+    var seconds;
+    var timestring = '';
+
+    time = Math.floor(time);
+    hours = Math.floor(time / 3600);
+    minutes = Math.floor((time / 60) % 60);
+    seconds = Math.floor(time % 60);
+
+    if (minutes < 10) {
+      minutes = '0' + minutes;
+    }
+    if (seconds < 10) {
+      seconds = '0' + seconds;
+    }
+
+    timestring = '0:' + seconds;
+    if (minutes > 0) {
+      timestring = minutes + ':' + seconds;
+    }
+    if (hours > 0) {
+      timestring = hours + ':' + minutes + ':' + seconds;
+    }
+
+    return timestring;
+  }
+
   // Checks to see if an element is on-screen.
   function isVisible(elm) {
     var rect = elm.getBoundingClientRect();
@@ -1035,6 +1079,7 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer) {
   // Let's publish a few of these.
   window.getAssetURL = getAssetURL;
   window.hmsToTime = hmsToTime;
+  window.timeToHMS = timeToHMS;
   window.logThatThing = logThatThing;
   window.prepAccessibleToggles = prepAccessibleToggles;
   window.isExternalLink = isExternalLink;
@@ -1051,6 +1096,11 @@ if (typeof HXPUPTimer === 'undefined') {
   var HXPUPTimer = [];
 }
 
+// Check for local timers for chimes.
+if (typeof HXChimeTimer === 'undefined') {
+  var HXChimeTimer = [];
+}
+
 $(document).ready(function() {
-  HXGlobalJS(hxLocalOptions, HXPUPTimer);
+  HXGlobalJS(hxLocalOptions, HXPUPTimer, HXChimeTimer);
 });
