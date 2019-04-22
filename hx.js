@@ -37,6 +37,7 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
     slickOptions: {
       arrows: true,
       dots: true,
+      focusOnChange: true,
       infinite: true,
       slidesToShow: 3,
       slidesToScroll: 3
@@ -55,11 +56,13 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
       arrows: false,
       dots: true,
       fade: true,
+      focusOnChange: true,
       adaptiveHeight: true,
       slidesToShow: 1,
       slidesToScroll: 1
     },
     // Default options for text slider
+    // Also inherits settings from slickOptions
     textSliderOptions: {
       slidesFile: 'TextSliderCards.csv',
       startingSlide: '',
