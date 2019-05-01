@@ -266,7 +266,7 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
         HXPUP = new HXPopUpProblems(hxDefaultOptions.PUPOptions, HXPUPTimer);
       }
       // Only do pop-up problems if there's a timer in place.
-      if (HXVideoChime.length !== 0) {
+      if (HXChimeTimer.length !== 0) {
         HXVC = new HXVideoChime(hxDefaultOptions.ChimeOptions, HXChimeTimer);
       }
     }
