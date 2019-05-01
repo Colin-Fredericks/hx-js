@@ -7,29 +7,30 @@
 /********************************************/
 
 var hxGlobalOptions = {
-    hasGlobalOptions: true,
-    makeSmiles: false,
-    markExternalLinks: true,
+  hasGlobalOptions: true,
+  makeSmiles: false,
+  markExternalLinks: true,
 
-    /********************************************/
-    // Slick Image Slider Options
-    /********************************************/
-    slickOptions: {},
-    slickNavOptions: {},
-    slickBigOptions: {},
-    textSliderOptions: {},
+  /********************************************/
+  // Slick Image Slider Options
+  /********************************************/
+  slickOptions: {},
+  slickNavOptions: {},
+  slickBigOptions: {},
+  textSliderOptions: {
+    causeEffect: ['Causes', 'Effects']
+  },
 
-    // Pop-up questions and links for videos
-    PUPOptions: {},
-    VidLinkOptions: {},
+  // Pop-up questions and links for videos
+  PUPOptions: {},
+  VidLinkOptions: {},
 
-    // Custom emoji for Emoji Response questions (not yet implemented)
-    // Use this format:
-    // [ { 'emoji': '&#10003;', 'alt': 'I understand' },
-    //   { 'emoji': '&#10067;', 'alt': 'I am confused' },
-    //   { 'emoji': '&#128559;', 'alt': 'I am surprised' },
-    //   { 'emoji': '&#129300;', 'alt': 'I am skeptical' },
-    //   { 'emoji': '&#128564;', 'name': 'I am bored' } ]
-    custom_emoji: []
-
+  // Custom emoji for Emoji Response questions (not yet implemented)
+  // Use this format:
+  // [ { 'emoji': '&#10003;', 'alt': 'I understand' },
+  //   { 'emoji': '&#10067;', 'alt': 'I am confused' },
+  //   { 'emoji': '&#128559;', 'alt': 'I am surprised' },
+  //   { 'emoji': '&#129300;', 'alt': 'I am skeptical' },
+  //   { 'emoji': '&#128564;', 'name': 'I am bored' } ]
+  custom_emoji: []
 };
