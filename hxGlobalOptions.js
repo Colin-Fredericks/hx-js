@@ -17,9 +17,7 @@ var hxGlobalOptions = {
   slickOptions: {},
   slickNavOptions: {},
   slickBigOptions: {},
-  textSliderOptions: {
-    causeEffect: ['Causes', 'Effects']
-  },
+  textSliderOptions: {},
 
   // Pop-up questions and links for videos
   PUPOptions: {},

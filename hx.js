@@ -70,7 +70,8 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
       slideScope: [],
       overviewIsOpen: false,
       showBottomNav: true,
-      maxIconsTall: 2
+      maxIconsTall: 2,
+      causeEffect: ['Causes', 'Effects']
     },
     // Default options for pop-up problems
     PUPOptions: {
