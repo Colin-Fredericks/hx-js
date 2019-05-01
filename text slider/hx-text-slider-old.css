@@ -1,0 +1,279 @@
+.hx-dynamic-sliderbox{
+    background-color: #FFF;
+    border: none !important;
+    padding: 10px !important;
+}
+
+.slick-slider {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+/* Need to hide the elements that are off-screen */
+.slick-slide{
+  visibility: hidden;
+}
+
+.slick-slide.slick-active{
+  visibility: visible;
+}
+
+
+/* For small screens */
+.hx-slidelayout {
+}
+
+.hx-leftbox{
+  display: inline-block;
+  vertical-align:top;
+  padding: 4px;
+}
+
+.hx-rightbox{
+  display: inline-block;
+}
+
+.hx-rightbox figure{
+  padding: 2px;
+  margin: 0px 0px 10px 0px;
+}
+
+.hx-text-slider-nav{
+  padding: 5px;
+  background-color: #eee;
+  box-shadow: inset 1px 1px 8px #aaa;
+  border-radius: 3px;
+}
+
+.hx-prevnext-icons{
+  text-align: center;
+  font-weight: 600; /* Semi-bold */
+  display: inline-block;
+  margin: 0px 6px 0px 6px;
+}
+
+.hx-prevnext-icons img{
+  display: block;
+  margin: auto;
+}
+
+img.out-of-scope{
+  opacity: 0.6;
+  filter: gray; /* IE6-9 */
+  -webkit-filter: grayscale(1); /* Google Chrome, Safari 6+ & Opera 15+ */
+  filter: grayscale(1); /* Microsoft Edge and Firefox 35+ */
+}
+
+div.out-of-scope{
+  font-weight: 300; /* Un-bold */
+}
+
+.hx-next{
+  text-align: right;
+}
+
+.hx-next h4{
+  text-align: right;
+}
+
+
+@media only screen and (min-width: 820px) {
+    /* For desktop: */
+
+  .hx-slidelayout {
+    display: flex;
+  }
+
+  .hx-leftbox{
+    flex: 1 1 auto;
+    min-width: 300px;
+    display: inline-block;
+    padding-right: 8px;
+  }
+
+  .hx-rightbox{
+    flex: 0 0 auto;
+    padding: 10px;
+    display: inline-block;
+  }
+
+  .hx-text-slider-nav{
+    display: flex;
+    padding: 5px;
+    background-color: #eee;
+    box-shadow: inset 1px 1px 8px #aaa;
+    border-radius: 3px;
+  }
+
+  .hx-previous{
+    flex: 1 0 50%;
+  }
+
+  .hx-previous-icons{
+  }
+
+  .hx-next{
+    flex: 1 0 50%;
+    text-align: right;
+  }
+
+  .hx-next h4{
+    text-align: right;
+  }
+
+  .hx-next-icons{
+  }
+
+  .hx-prevnext-icons{
+    text-align: center;
+    display: inline-block;
+    margin: 0px 6px 0px 6px;
+  }
+
+}
+
+.crumbbox{
+  background-color: #eee;
+  box-shadow: inset 1px 1px 8px #bbb;
+  border-radius: 3px;
+}
+
+.hx-sliderbox {
+  border: none;
+  padding: 8px 4px 4px 4px;
+}
+
+.hx-slide-icon{
+  float: left;
+  position: relative;
+  z-index: 10;
+}
+
+.hx-slide-title{
+  position: relative;
+  top: 30px;
+  left: 15px;
+}
+
+.backToParentSlide, .goToHomeSlide, .showOverviewMap {
+  border: none;
+  box-shadow: none;
+  color: #999;
+  background-color: transparent;
+  background-image: none;
+  font-size: 16pt;
+  padding: 4px 4px 4px 8px;
+}
+
+.showOverviewMap {
+  float: right;
+  padding: 4px 8px 4px 4px;
+}
+
+.overviewMap {
+  display: none;
+}
+
+.no-close .ui-dialog-titlebar-close {
+  display: none;
+}
+
+.canGoBack {
+  color: black;
+}
+
+.slideBreadcrumbs {
+  color: #999;
+  font-size: 12pt;
+  font-style: italic;
+}
+
+.slideicons a{
+  float:left;
+  margin: 2px 2px 2px 0px;
+}
+
+.slideBreadcrumbs .bclink{
+  color: #389;
+}
+
+.hx-togglenext{
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  padding: 2px 2px 2px 4px;
+}
+
+
+/* Items for auto-generated overview */
+.hxslide-overview-bigbox{
+  display: flex;
+  flex-wrap: nowrap;
+  max-width: 1080px;
+  min-height: 300px
+  max-height: 350px;
+  box-shadow: inset 1px 1px 8px #bbb;
+  padding: 8px 0px 8px 0px;
+  margin: 0px 0px 8px 0px;
+}
+
+.hxslide-overview-container{
+  flex: 1 1 28%;
+
+  display: flex;
+  flex-flow: wrap;
+  align-content: center;
+}
+
+.hxslide-overview-item{
+  display: inline;
+  flex: 1 1 auto;
+
+  min-width: 75px;
+  margin: 2px;
+
+  text-align: center;
+  font-size: 12pt;
+  overflow-wrap: normal;
+  hyphens: auto;
+}
+
+.hxslide-overview-leftbox{
+  justify-content: flex-end;
+}
+
+.hxslide-overview-centerbox{
+  flex: 1 .5 34%;
+  align-content: center;
+  justify-content: center;
+}
+
+.hxslide-overview-rightbox{
+  justify-content: flex-start;
+}
+
+.hxslide-overview-leftbracket, .hxslide-overview-rightbracket{
+  flex: 0 .5 5%;
+  display: flex;
+
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.hxslide-overview-leftbracket img, .hxslide-overview-rightbracket img{
+  height: 100%;
+  max-width: 100%;
+  min-width: 20px;
+}
+
+.hxslide-overview-container img{
+  width: 100%;
+}
+
+.hxslide-overview-keystone{
+  max-width: 800px;
+  min-width: 150px;
+  text-align: center;
+}
