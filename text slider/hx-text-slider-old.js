@@ -269,14 +269,14 @@ var HXTextSlider = function(options) {
       slideHTML += '<div class="hx-text-slider-nav">';
       if (slide.previous) {
         slideHTML += '<div class="hx-previous">';
-        slideHTML += '<h4>Causes</h4>';
+        slideHTML += '<h4>' + options.causeEffect[0] + '</h4>';
         slideHTML += '<div class="hx-previous-icons">';
         slideHTML += prevNextHTML(slide.previous.split(','));
         slideHTML += '</div></div>';
       }
       if (slide.next) {
         slideHTML += '<div class="hx-next">';
-        slideHTML += '<h4>Effects</h4>';
+        slideHTML += '<h4>' + options.causeEffect[1] + '</h4>';
         slideHTML += '<div class="hx-next-icons">';
         slideHTML += prevNextHTML(slide.next.split(','));
         slideHTML += '</div></div>';

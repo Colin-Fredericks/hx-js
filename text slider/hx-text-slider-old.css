@@ -124,6 +124,8 @@ div.out-of-scope{
   }
 
   .hx-next-icons{
+    display: flex;
+    justify-content: space-evenly;
   }
 
   .hx-prevnext-icons{
