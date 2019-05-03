@@ -1,3 +1,18 @@
+// Check for local options object.
+if (typeof hxLocalOptions === 'undefined') {
+  var hxLocalOptions = {};
+}
+
+// Check for local timers for pop-up problems.
+if (typeof HXPUPTimer === 'undefined') {
+  var HXPUPTimer = [];
+}
+
+// Check for local timers for chimes.
+if (typeof HXChimeTimer === 'undefined') {
+  var HXChimeTimer = [];
+}
+
 var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
   'use strict';
 
@@ -1089,21 +1104,6 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
   window.isExternalLink = isExternalLink;
   window.popDataMap = popDataMap;
 };
-
-// Check for local options object.
-if (typeof hxLocalOptions === 'undefined') {
-  var hxLocalOptions = {};
-}
-
-// Check for local timers for pop-up problems.
-if (typeof HXPUPTimer === 'undefined') {
-  var HXPUPTimer = [];
-}
-
-// Check for local timers for chimes.
-if (typeof HXChimeTimer === 'undefined') {
-  var HXChimeTimer = [];
-}
 
 $(document).ready(function() {
   HXGlobalJS(hxLocalOptions, HXPUPTimer, HXChimeTimer);
