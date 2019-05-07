@@ -666,7 +666,7 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
         '<div id="autoTOC" class="hx-autotoc"></div>'
       );
     } else {
-      $('#seq_content .xblock:first-of-type').prepend(
+      $($('#seq_content .vert .xblock')[0]).prepend(
         '<div id="autoTOC" class="hx-autotoc"></div>'
       );
     }
