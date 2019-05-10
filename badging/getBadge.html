@@ -1,8 +1,8 @@
 <script>
   function setCookie(key, value) {
     var expires = new Date();
-    // Log back in in a week.
-    expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000);
+    // Auth tokens from Badgr only last a day.
+    expires.setTime(expires.getTime() + 1 * 24 * 60 * 60 * 1000);
     document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
   }
 
@@ -14,29 +14,31 @@
   let badge_access_token = '';
   let badge_refresh_token = '';
 
-  function getBadgrId(){
-
-      $.ajax({
-        type: 'GET',
-        url: 'https://api.badgr.io/v2/users/self',
-        // dataType: 'json',
-        // contentType: 'application/json',
-        async: true,
-        data: '{}',
-        beforeSend: function(xhr) {
-          // console.log('sending header');
-          xhr.setRequestHeader('Authorization', 'Bearer ' + getCookie('hx_badge_access_token'));
-        },
-        success: function(data) {
-          console.log('data received');
-          setCookie('hx_badge_userId', data.result[0].entityId);
-          console.log('access:', getCookie('hx_badge_userId'));
-        },
-        error: function(data) {
-          console.log('error');
-          console.log(data);
-        }
-      });
+  function getBadgrId() {
+    $.ajax({
+      type: 'GET',
+      url: 'https://api.badgr.io/v2/users/self',
+      // dataType: 'json',
+      // contentType: 'application/json',
+      async: true,
+      data: '{}',
+      beforeSend: function(xhr) {
+        // console.log('sending header');
+        xhr.setRequestHeader(
+          'Authorization',
+          'Bearer ' + getCookie('hx_badge_access_token')
+        );
+      },
+      success: function(data) {
+        console.log('data received');
+        setCookie('hx_badge_userId', data.result[0].entityId);
+        console.log('access:', getCookie('hx_badge_userId'));
+      },
+      error: function(data) {
+        console.log('error');
+        console.log(data);
+      }
+    });
   }
 
   function getBadgrCreds() {
@@ -100,11 +102,10 @@
 </p>
 
 <form onsubmit="return false">
-  <input type="email" id="badge_email" /><label for="badge_email"> E-mail</label
-  ><br />
-  <input type="password" id="badge_password" /><label for="badge_password">
-    Password</label
-  ><br />
+  <input type="email" id="badge_email" />
+  <label for="badge_email"> E-mail </label><br />
+  <input type="password" id="badge_password" />
+  <label for="badge_password"> Password </label><br />
   <input
     type="submit"
     value="Log in"
