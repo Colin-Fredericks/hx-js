@@ -152,7 +152,7 @@ function setUpDataTable(data) {
         k +
         '_filter">Filter for ' +
         k +
-        ' </label><input type="text" id="' +
+        ' </label><input placeholder="Search..." type="text" id="' +
         k +
         '_filter"></td>'
     );
