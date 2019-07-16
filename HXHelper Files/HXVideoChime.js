@@ -2,8 +2,28 @@ var HXVideoChime = function(hxChimeOptions) {
   // Declaring semi-global variables for later use.
   // HXChimeTimer is defined in HTML on the page.
   var video = $('.video');
+  var chimebox = $('.hx-video-chimebox');
 
   logThatThing('Video chimes starting');
+
+  // Let people turn the chimes on and off.
+  let chimetoggle = $('<button class="chimetoggle"></button>');
+
+  chimebox.append(chimetoggle);
+  chimetoggle.wrap('<p>');
+  if (localStorage.hxChimesOff === 'true') {
+    chimetoggle.text('Turn video chimes off');
+  } else {
+    chimetoggle.text('Turn video chimes on');
+  }
+  chimetoggle.on('click tap', function() {
+    localStorage.hxChimesOff = localStorage.hxChimesOff !== 'true';
+    chimetoggle.text(
+      localStorage.hxChimesOff === 'true'
+        ? 'Turn video chimes off'
+        : 'Turn video chimes on'
+    );
+  });
 
   // Mark each video and set of controls with a class and anchor
   // that will let us handle each of them separately.
@@ -56,8 +76,8 @@ var HXVideoChime = function(hxChimeOptions) {
     chimeData.text.forEach(function(e, i) {
       let ch = $('<span>');
       ch.text(timeToHMS(chimeData.timer[i]) + ' - ' + chimeData.text[i]);
-      $($('.hx-video-chimebox')[vidnumber]).append(ch);
-      $($('.hx-video-chimebox')[vidnumber]).append($('<br>'));
+      $(chimebox[vidnumber]).append(ch);
+      $(chimebox[vidnumber]).append($('<br>'));
     });
 
     return chimeData;
@@ -99,7 +119,12 @@ var HXVideoChime = function(hxChimeOptions) {
 
       // console.log(lastTime, chimeTime, time);
       // If the chime time is the median value, play a chime.
-      if (lastTime <= chimeTime && time >= chimeTime && okToPlay) {
+      if (
+        lastTime <= chimeTime &&
+        time >= chimeTime &&
+        okToPlay &&
+        localStorage.hxChimesOff !== 'false'
+      ) {
         playChime(chimeData, lastTime, vidnumber);
       }
     }, 250);
