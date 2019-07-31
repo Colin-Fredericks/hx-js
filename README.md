@@ -49,7 +49,7 @@ Syntax highlighting for a couple different code languages, using [Prism](http://
 How to Implement HXJS in your course
 -----------
 
-First, download [HXJS_Helper.zip](https://github.com/Colin-Fredericks/hx-js/raw/master/HXJS_Helper.zip) unzip it, and upload all of the things therein to your Files & Uploads section. This will let you use...
+First, download [HXHelper Files.zip](https://github.com/Colin-Fredericks/hx-js/blob/master/HXHelper%20Files.zip) unzip it, and upload all of the things therein to your Files & Uploads section. This will let you use...
 
 * [Video Links](https://github.com/Colin-Fredericks/edx-video-augments),
 * [Pop-Up Problems](https://github.com/Colin-Fredericks/edx-embedded-video-problems),
