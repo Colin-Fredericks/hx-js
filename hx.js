@@ -684,6 +684,8 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
     // Listener: clear the memory.
     $('.hx-clearmemory').on('click tap', function() {
       let myNumber = getClassNumber(this.className, press);
+      // If hx-clearmemory has a number after it, clear that one item.
+      // Otherwise, clear everything.
       if (myNumber !== null) {
         setTogMemory(myNumber, undefined);
       } else {
