@@ -134,6 +134,11 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
   logThatThing({ 'HX.js': 'enabled' });
   logThatThing({ 'course log id': courseLogID });
 
+  // Listen for events that rewrite problem HTML.
+  Logger.listen('problem_check', null, () => onProblemRewrite('problem_check'));
+  Logger.listen('problem_show', null, () => onProblemRewrite('problem_show'));
+  Logger.listen('problem_reset', null, () => onProblemRewrite('problem_reset'));
+
   /**************************************/
   // Load outside scripts.
   // Must be in Files & Uploads.
@@ -427,7 +432,8 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
     /**************************************/
     let togglerClass = 'hx-togglebutton';
     let toggledClass = 'hx-toggletarget';
-    prepAccessibleToggles(togglerClass, toggledClass);
+    let toggleRemember = 'hx-toggleremember';
+    prepAccessibleToggles(togglerClass, toggledClass, toggleRemember);
 
     /**************************************/
     // Highlight toggle button.
@@ -550,49 +556,154 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
   /***********************************/
 
   /**************************************/
+  // When an event resets a problem,
+  // reapply certain javascript functions.
+  // Note that code highlighting has its
+  // own reapply process.
+  /**************************************/
+  let reapply_list = [''];
+  function onProblemRewrite(event_type) {
+    console.log(event_type);
+    // Wait a moment for the problem to reload.
+    // Not the best solution, but events fire before DOM changes complete.
+    setTimeout(function() {
+      setVisFromMemory('hx-togglebutton', 'hx-toggletarget');
+    }, 500);
+  }
+
+  /**************************************/
   // Stuff for a visibility toggle button.
   // One class of items toggles another,
   // with numbers setting the matching items.
   // Adds aria attribs for accessibility.
   /**************************************/
-  function prepAccessibleToggles(press, target) {
-    // Attach aria attributes to each button and
-    // to each togglable element.
-    // Also disable other buttons in a set when you press one.
-    $('[class^=' + press + ']').each(function() {
-      let myNumber = getClassNumber(this.className, press);
-      $(this).attr('aria-controls', target + myNumber);
+  function getTogVisibility(location) {
+    location = 'toggle_' + location;
+    let ret = null;
+    try {
+      console.log(localStorage.HXToggleMemory);
+      ret = JSON.parse(localStorage.HXToggleMemory)[location];
+    } catch (error) {
+      console.log('error');
+      console.log(error);
+    }
+    console.log('visibility for toggle ' + location + ' is ' + ret);
+    return ret;
+  }
 
-      if ($('.' + target + myNumber + ':visible').length > 0) {
-        $(this).attr('aria-expanded', 'true');
-        $('.' + target + myNumber).attr('aria-hidden', 'false');
+  function setTogMemory(location, shown) {
+    location = 'toggle_' + location;
+    console.log('set vis of ' + location + ' to ' + shown);
+    try {
+      let hxtm = JSON.parse(localStorage.HXToggleMemory);
+      hxtm[location] = shown;
+      localStorage.HXToggleMemory = JSON.stringify(hxtm);
+    } catch (error) {
+      console.log('error');
+      console.log(error);
+      localStorage.HXToggleMemory = JSON.stringify({ [location]: shown });
+    }
+  }
+
+  function hideThings(press, target, remember, num) {
+    console.log('hiding');
+    $('.' + target + num).hide('slide', { direction: 'up' }, 'fast');
+    $('.' + press + num).attr('aria-expanded', 'false');
+    $('.' + target + num).attr('aria-hidden', 'true');
+    $('.hx-toggleset .' + press + num)
+      .siblings()
+      .attr('disabled', false);
+    if (remember) {
+      setTogMemory(num, false);
+    }
+  }
+
+  function showThings(press, target, remember, num) {
+    console.log('showing');
+    $('.' + target + num).show('slide', { direction: 'up' }, 'fast');
+    $('.' + press + num).attr('aria-expanded', 'true');
+    $('.' + target + num).attr('aria-hidden', 'false');
+    $('.hx-toggleset .' + press + num)
+      .siblings()
+      .attr('disabled', true);
+    if (remember) {
+      setTogMemory(num, true);
+    }
+  }
+
+  // Use toggle memeory to set visibility of toggleable elements.
+  function setVisFromMemory(press, target) {
+    console.log('setting visibility from memory');
+    let prepped = [];
+    $('[class*=' + target + ']').each(function() {
+      let myNumber = getClassNumber(this.className, target);
+      console.log('toggle ' + myNumber + '...');
+      if (prepped.indexOf(myNumber) === -1) {
+        prepped.push(myNumber);
+        console.log('...is not handled yet...');
+        let should_be_visible = getTogVisibility(myNumber);
+        if (should_be_visible !== undefined && should_be_visible !== null) {
+          if (should_be_visible) {
+            console.log('...should be shown. Showing it.');
+            showThings(press, target, false, myNumber);
+          } else {
+            console.log('...should be hidden. Hiding it.');
+            hideThings(press, target, false, myNumber);
+          }
+        }
       } else {
-        $(this).attr('aria-expanded', 'false');
-        $('.' + target + myNumber).attr('aria-hidden', 'true');
+        console.log('...is already handled.');
+      }
+    });
+  }
+
+  // Gets toggleable items ready for use.
+  function prepAccessibleToggles(press, target, remember_class) {
+    // Add listeners and hide what should be hidden.
+    // But don't prep the same toggles twice.
+    let prepped = [];
+
+    $('[class*=' + press + ']').each(function() {
+      let myNumber = getClassNumber(this.className, press);
+      if (prepped.indexOf(myNumber) === -1) {
+        console.log('prepping toggle ' + myNumber);
+        prepped.push(myNumber);
+
+        // Add aria attributes to each toggler and target
+        if ($('.' + target + myNumber + ':visible').length > 0) {
+          $('.' + press + myNumber).attr('aria-expanded', 'true');
+          $('.' + target + myNumber).attr('aria-hidden', 'false');
+        } else {
+          $('.' + press + myNumber).attr('aria-expanded', 'false');
+          $('.' + target + myNumber).attr('aria-hidden', 'true');
+        }
+      }
+    });
+    setVisFromMemory(press, target);
+
+    // Listener: clear the memory.
+    $('.hx-clearmemory').on('click tap', function() {
+      let myNumber = getClassNumber(this.className, press);
+      if (myNumber !== null) {
+        setTogMemory(myNumber, undefined);
+      } else {
+        localStorage.HXToggleMemory = '';
       }
     });
 
-    // Slidetoggle the elements and reverse the aria attribs.
-    $('[class^=' + press + ']').on('click tap', function() {
+    // Listener: toggle elements when clicked
+    // and reverse the aria attributes.
+    $('[class*=' + press + ']').on('click tap', function() {
       let myNumber = getClassNumber(this.className, press);
+      let remember = $(this).hasClass(remember_class);
       let vis = '';
-
-      $('.' + target + myNumber).slideToggle('fast');
 
       if ($(this).attr('aria-expanded') === 'true') {
         vis = 'invisible';
-        $('.' + press + myNumber).attr('aria-expanded', 'false');
-        $('.' + target + myNumber).attr('aria-hidden', 'true');
-        $('.hx-toggleset .' + press + myNumber)
-          .siblings()
-          .attr('disabled', false);
+        hideThings(press, target, remember, myNumber, $(document));
       } else {
         vis = 'visible';
-        $('.' + press + myNumber).attr('aria-expanded', 'true');
-        $('.' + target + myNumber).attr('aria-hidden', 'false');
-        $('.hx-toggleset .' + press + myNumber)
-          .siblings()
-          .attr('disabled', true);
+        showThings(press, target, remember, myNumber, $(document));
         // Scroll to single target if it's offscreen
         if ($('.' + target + myNumber).length === 1) {
           if (!isVisible($('.' + target + myNumber)[0])) {
@@ -970,7 +1081,7 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
         return allClasses[i].slice(importantClass.length);
       }
     }
-    return -1;
+    return null;
   }
 
   // Sets the default options for something if they're not already defined.
