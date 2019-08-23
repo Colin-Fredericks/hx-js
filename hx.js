@@ -30,7 +30,7 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
     collapsedNav: false,
 
     // Click to turn frowny things smiley?
-    makeSmiles: true,
+    makeSmiles: false,
 
     // Auto-open the on-page discussions.
     openPageDiscussion: false,
