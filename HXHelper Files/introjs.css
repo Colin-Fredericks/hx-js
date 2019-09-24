@@ -85,6 +85,10 @@ tr.introjs-showElement > th {
           box-sizing: content-box;
 }
 
+.introjs-helperLayer {
+  padding-right: 10px;
+}
+
 .introjs-helperNumberLayer {
   position: absolute;
   visibility: visible;
