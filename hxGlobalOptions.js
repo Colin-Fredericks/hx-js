@@ -8,7 +8,6 @@
 
 var hxGlobalOptions = {
   hasGlobalOptions: true,
-  makeSmiles: false,
   markExternalLinks: true,
 
   /********************************************/

@@ -10,7 +10,6 @@
     - [Simple Appearance Changes](#simple-appearance-changes)
     - [Pretty boxes](#pretty-boxes)
     - [Sidebar Tables](#sidebar-tables)
-    - [Make You Smile](#make-you-smile)
     - [Visibility Toggle](#visibility-toggle)
     - [Highlighter Toggle](#highlighter-toggle)
     - [Code Syntax Highlighting](#code-syntax-highlighting)
@@ -150,10 +149,6 @@ If you need a really compact table, add `hx-compact-table` to the class.
 ### Automatic external link marker
 
 In hxGlobalOptions, set `markExternalLinks: true,` in order to add FontAwesome external link markers to all links outside of edX. Note that links to other courses within edX will NOT currently get the markers.
-
-### Make You Smile
-
-To make a little face at the bottom of each screen that smiles when you click on it, set `makeSmiles: true` in the hxGlobalSettings file.
 
 ### Visibility Toggle
 
@@ -619,10 +614,6 @@ The object below is the full set of default settings for hx-js. You can override
     // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
     // This should only be used for older versions of OpenEdX before the 2017 navigation overhaul.
     collapsedNav: false,
-
-    // Puts a little "meh" face at the bottom of the page.
-    // Click it to turn it into a smiley face.
-    makeSmiles: true,
 
     // Remove the "Add a Post" button and/or auto-open the on-page discussions.
     removeAddPostButton: false,
