@@ -1,20 +1,16 @@
-// Check for local options object.
-if (typeof hxLocalOptions === 'undefined') {
-  var hxLocalOptions = {};
-}
-
-// Check for local timers for pop-up problems.
-if (typeof HXPUPTimer === 'undefined') {
-  var HXPUPTimer = [];
-}
-
-// Check for local timers for chimes.
-if (typeof HXChimeTimer === 'undefined') {
-  var HXChimeTimer = [];
-}
-
-var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
+var HXGlobalJS = function() {
   'use strict';
+
+  // Checking for some local variables. If they're not defined, make blanks.
+  if (typeof hxLocalOptions === 'undefined') {
+    var hxLocalOptions = {};
+  }
+  if (typeof HXPUPTimer === 'undefined') {
+    var HXPUPTimer = [];
+  }
+  if (typeof HXChimeTimer === 'undefined') {
+    var HXChimeTimer = [];
+  }
 
   /***********************************************/
   // Setting all the default options.
@@ -28,9 +24,6 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
 
     // Remove a lot of the navigation "chrome" - use only if you have just one page per unit.
     collapsedNav: false,
-
-    // Click to turn frowny things smiley?
-    makeSmiles: false,
 
     // Auto-open the on-page discussions.
     openPageDiscussion: false,
@@ -354,33 +347,6 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
       // $('.sequence-bottom').hide();
       $('.sequence > .path').hide();
       $('h3.unit-title').hide();
-    }
-
-    /**************************************/
-    // Make Smiles
-    // Adds a little meh-face at the bottom of the page.
-    // Click on it to make it smiley.
-    // Might eventually store state in LocalStorage.
-    /**************************************/
-    if (hxOptions.makeSmiles) {
-      // var smileLocation = $('.sequence-nav .nav-item.active').attr('data-id');
-      let mehFace = $(
-        '<span class="hx-smileystack hx-meh fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-meh-o fa-stack-2x"></span></span>'
-      );
-      let smileFace = $(
-        '<span class="hx-smileystack hx-smile fa-stack fa-lg"><span class="fa fa-circle fa-stack-2x"></span><span class="fa fa-smile-o fa-stack-2x"></span></span>'
-      );
-      let spacer = $('<span class="hx-smileyspacer"></span>');
-      // Remove any existing elements, because the way edX loads pages calls javascript multiple times
-      $('.hx-smileystack').remove();
-      $('.hx-smileyspacer').remove();
-      $('.sequence-bottom').prepend(spacer);
-      $('.sequence-bottom').append(mehFace);
-      $(mehFace).on('click tap', function() {
-        $(mehFace).remove();
-        $('.sequence-bottom').append(smileFace);
-        logThatThing('Smile!');
-      });
     }
 
     /**************************************/
@@ -1219,5 +1185,5 @@ var HXGlobalJS = function(hxLocalOptions, HXPUPTimer, HXChimeTimer) {
 };
 
 $(document).ready(function() {
-  HXGlobalJS(hxLocalOptions, HXPUPTimer, HXChimeTimer);
+  HXGlobalJS();
 });
