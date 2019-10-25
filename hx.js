@@ -2,13 +2,13 @@ var HXGlobalJS = function() {
   'use strict';
 
   // Checking for some local variables. If they're not defined, make blanks.
-  if (typeof hxLocalOptions === 'undefined') {
+  if (typeof window.hxLocalOptions === 'undefined') {
     var hxLocalOptions = {};
   }
-  if (typeof HXPUPTimer === 'undefined') {
+  if (typeof window.HXPUPTimer === 'undefined') {
     var HXPUPTimer = [];
   }
-  if (typeof HXChimeTimer === 'undefined') {
+  if (typeof window.HXChimeTimer === 'undefined') {
     var HXChimeTimer = [];
   }
 
@@ -971,6 +971,7 @@ var HXGlobalJS = function() {
         url.includes('edx.org') ||
         url.includes('edxapp') ||
         url.includes('edx-cdn.org') ||
+        url.includes('edx-video.net') ||
         url.includes('/courses/') ||
         url.includes('jump_to_id') ||
         url.includes('cloudfront.net') ||
