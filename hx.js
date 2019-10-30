@@ -3,13 +3,13 @@ var HXGlobalJS = function() {
 
   // Checking for some local variables. If they're not defined, make blanks.
   if (typeof window.hxLocalOptions === 'undefined') {
-    var hxLocalOptions = {};
+    window.hxLocalOptions = {};
   }
   if (typeof window.HXPUPTimer === 'undefined') {
-    var HXPUPTimer = [];
+    window.HXPUPTimer = [];
   }
   if (typeof window.HXChimeTimer === 'undefined') {
-    var HXChimeTimer = [];
+    window.HXChimeTimer = [];
   }
 
   /***********************************************/
@@ -198,8 +198,8 @@ var HXGlobalJS = function() {
   // Set hxLocalOptions.dontLoadVideoStuff: true to avoid this,
   // for instance if you have several videos on one page that don't need it.
   var loadVideoStuff = true;
-  if (typeof hxLocalOptions.dontLoadVideoStuff !== undefined) {
-    if (hxLocalOptions.dontLoadVideoStuff === true) {
+  if (typeof window.hxLocalOptions.dontLoadVideoStuff !== undefined) {
+    if (window.hxLocalOptions.dontLoadVideoStuff === true) {
       loadVideoStuff = false;
       console.log('skipping loading video js');
     }
@@ -217,12 +217,12 @@ var HXGlobalJS = function() {
       scriptArray.push('HXVideoLinks.js');
       var HXVL;
       // Only do pop-up problems if the right timer is in place.
-      if (HXPUPTimer.length !== 0) {
+      if (window.HXPUPTimer.length !== 0) {
         scriptArray.push('HXPopUpProblems.js');
         var HXPUP;
       }
       // Only do video chimes if the right timer is in place.
-      if (HXChimeTimer.length !== 0) {
+      if (window.HXChimeTimer.length !== 0) {
         scriptArray.push('HXVideoChime.js');
         var HXVC;
       }
@@ -235,12 +235,16 @@ var HXGlobalJS = function() {
       logThatThing({ 'Loaded scripts': scriptArray });
       if (hxGlobalOptions) {
         hxOptions = setDefaultOptions(
-          hxLocalOptions,
+          window.hxLocalOptions,
           hxGlobalOptions,
           hxDefaultOptions
         );
       } else {
-        hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
+        hxOptions = setDefaultOptions(
+          window.hxLocalOptions,
+          {},
+          hxDefaultOptions
+        );
       }
       keepGoing(hxOptions);
     })
@@ -249,7 +253,11 @@ var HXGlobalJS = function() {
       console.log(settings);
       console.log(exception);
       logThatThing({ script_load_error: settings });
-      hxOptions = setDefaultOptions(hxLocalOptions, {}, hxDefaultOptions);
+      hxOptions = setDefaultOptions(
+        window.hxLocalOptions,
+        {},
+        hxDefaultOptions
+      );
       keepGoing(hxOptions);
     });
 
@@ -276,12 +284,18 @@ var HXGlobalJS = function() {
       HXVL = new HXVideoLinks(hxOptions.VidLinkOptions);
 
       // Only do pop-up problems if there's a timer in place.
-      if (HXPUPTimer.length !== 0) {
-        HXPUP = new HXPopUpProblems(hxDefaultOptions.PUPOptions, HXPUPTimer);
+      if (window.HXPUPTimer.length !== 0) {
+        HXPUP = new HXPopUpProblems(
+          hxDefaultOptions.PUPOptions,
+          window.HXPUPTimer
+        );
       }
       // Only do pop-up problems if there's a timer in place.
-      if (HXChimeTimer.length !== 0) {
-        HXVC = new HXVideoChime(hxDefaultOptions.ChimeOptions, HXChimeTimer);
+      if (window.HXChimeTimer.length !== 0) {
+        HXVC = new HXVideoChime(
+          hxDefaultOptions.ChimeOptions,
+          window.HXChimeTimer
+        );
       }
     }
 
