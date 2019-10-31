@@ -514,6 +514,14 @@ The link will jump you to the appropriate video, cue it up to the right time, an
 
 This will even work with `/jump_to_id/` links! Just add the `#video1` or `#video2` or whatever at the end of URL.
 
+If you want to go to a particular time in a video on the _same_ page, that's simpler. Write this instead:
+
+```html
+<a href="3:24" class="jumptime">Go to 3:24</a>
+```
+
+It'll affect the video _directly above_ your text.
+
 ### Pop-up Assessments
 
 This is a little complicated. First, make a Raw HTML component right above or below your video.

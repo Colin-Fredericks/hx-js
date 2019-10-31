@@ -283,6 +283,23 @@ var HXGlobalJS = function() {
       );
       HXVL = new HXVideoLinks(hxOptions.VidLinkOptions);
 
+      // Check for jump-to-time links and enable them.
+      $('a.jumptime').on('click tap', function(e) {
+        // Suppress the effect of clicking the link.
+        e.preventDefault();
+        // Get the closest video above the link.
+        let v = $(this)
+          .closest('.vert')
+          .prev()
+          .find('.video');
+        console.log(v);
+        let vnum = getClassNumber(v[0].className, 'for-video').slice(1);
+        console.log(vnum);
+        // Move that video to the time indicated in the data attribute.
+        let t = hmsToTime($(this).attr('href'));
+        jumpToTime(vnum, t);
+      });
+
       // Only do pop-up problems if there's a timer in place.
       if (window.HXPUPTimer.length !== 0) {
         HXPUP = new HXPopUpProblems(
@@ -980,6 +997,8 @@ var HXGlobalJS = function() {
   function isExternalLink(url) {
     if (typeof url === 'undefined') {
       return false;
+    } else if (!isNaN(hmsToTime(url))) {
+      return false;
     } else {
       if (
         url.includes('edx.org') ||
@@ -1055,7 +1074,7 @@ var HXGlobalJS = function() {
     return courseInfo;
   }
 
-  // Takes in all the classes, as from a className function.
+  // Takes in all the classes, as from a className attribute.
   // Returns the number attached to the important class.
   function getClassNumber(className, importantClass) {
     let allClasses = className.split(/\s+/);
@@ -1173,6 +1192,20 @@ var HXGlobalJS = function() {
     return timestring;
   }
 
+  // Jump to a particular time in a given video.
+  // Public function.
+  function jumpToTime(vidnumber, seconds) {
+    let thisVideo = $('.video')[vidnumber - 1];
+    let state = $(thisVideo).data('video-player-state');
+    if (typeof state.videoPlayer !== 'undefined') {
+      console.log('jumping video ' + vidnumber + ' to time ' + seconds);
+      thisVideo.scrollIntoView();
+      state.videoPlayer.player.seekTo(seconds);
+    } else {
+      console.log('video ' + vidnumber + ' not ready');
+    }
+  }
+
   // Checks to see if an element is on-screen.
   function isVisible(elm) {
     var rect = elm.getBoundingClientRect();
@@ -1197,6 +1230,7 @@ var HXGlobalJS = function() {
   window.prepAccessibleToggles = prepAccessibleToggles;
   window.isExternalLink = isExternalLink;
   window.popDataMap = popDataMap;
+  window.jumpToTime = jumpToTime;
 };
 
 $(document).ready(function() {

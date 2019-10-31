@@ -109,6 +109,15 @@ var HXVideoLinks = function(hxLinkOptions) {
 
         // Remove the images.
         thisLink.find('img').remove();
+
+        // Add time links before.
+        let timelink = $('<a>');
+        timelink.attr('href', thisLinkBox.attr('data-time'));
+        timelink.addClass('jumptime');
+        timelink.text(timeToHMS(hmsToTime(thisLinkBox.attr('data-time'))));
+        thisLinkBox.prepend(' - ');
+        thisLinkBox.prepend(timelink);
+        console.log('timelink added');
       });
 
     // Finish making the unordered list.
@@ -196,45 +205,30 @@ var HXVideoLinks = function(hxLinkOptions) {
     linkBeingShown[vidnumber] = false;
   }
 
-  // Jump to a particular time in a given video.
-  // Public function.
-  function jumpToTime(vidnumber, seconds) {
-    var thisVideo = $('.video')[vidnumber - 1];
-    var state = $(thisVideo).data('video-player-state');
-    if (typeof state.videoPlayer !== 'undefined') {
-      console.log('jumping video ' + vidnumber + ' to time ' + seconds);
-      thisVideo.scrollIntoView();
-      state.videoPlayer.player.seekTo(seconds);
-    } else {
-      console.log('video ' + vidnumber + ' not ready');
-    }
-  }
-  this.jumpToTime = jumpToTime;
-
   function checkJumpFromOldPage() {
     console.log('check for jump');
     // If we have a jump-to-time link pending for this page,
     // go there and start the video playing.
-    if (localStorage['HXVideoLinkGo'] === 'true') {
-      if (window.location.href.indexOf(localStorage['HXVideoLinkUnit']) != -1) {
+    if (localStorage.HXVideoLinkGo === 'true') {
+      if (window.location.href.indexOf(localStorage.HXVideoLinkUnit) != -1) {
         logThatThing({
           'Jumping to video': {
-            unit: localStorage['HXVideoLinkUnit'],
-            'video number': localStorage['HXVideoLinkNumber'],
-            time: localStorage['HXVideoLinkTime']
+            unit: localStorage.HXVideoLinkUnit,
+            'video number': localStorage.HXVideoLinkNumber,
+            time: localStorage.HXVideoLinkTime
           }
         });
         // Make sure the video is ready before we try to go to the time.
         jumpToTime(
-          localStorage['HXVideoLinkNumber'],
-          localStorage['HXVideoLinkTime']
+          localStorage.HXVideoLinkNumber,
+          localStorage.HXVideoLinkTime
         );
       }
     } else {
       console.log('No video link to jump to.');
     }
 
-    localStorage['HXVideoLinkGo'] = 'false';
+    localStorage.HXVideoLinkGo = 'false';
   }
 
   // Which link SHOULD we be showing right now? Return -1 if none.
