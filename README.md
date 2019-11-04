@@ -520,7 +520,7 @@ If you want to go to a particular time in a video on the _same_ page, that's sim
 <a href="3:24" class="jumptime">Go to 3:24</a>
 ```
 
-It'll affect the video _directly above_ your text.
+It'll affect the _top video on the page_. Optionally, you can add a `data-for-vidnum="N"` attribute to go to the Nth video on the page (the top one is video number 1).
 
 ### Pop-up Assessments
 
