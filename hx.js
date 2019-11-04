@@ -284,17 +284,16 @@ var HXGlobalJS = function() {
       HXVL = new HXVideoLinks(hxOptions.VidLinkOptions);
 
       // Check for jump-to-time links and enable them.
-      $('a.jumptime').on('click tap', function(e) {
+      $('.jumptime').on('click tap', function(e) {
         // Suppress the effect of clicking the link.
         e.preventDefault();
-        // Get the closest video above the link.
-        let v = $(this)
-          .closest('.vert')
-          .prev()
-          .find('.video');
-        console.log(v);
-        let vnum = getClassNumber(v[0].className, 'for-video').slice(1);
-        console.log(vnum);
+        // If there's a data-for-vidnum attribute, select that video.
+        // Otherwise, just use the first one on the page.
+        let vnum = 1;
+        if ($(this).attr('data-for-vidnum') !== undefined) {
+          vnum = $(this).attr('data-for-vidnum');
+        }
+        // let v = $('.video')[vnum - 1];
         // Move that video to the time indicated in the data attribute.
         let t = hmsToTime($(this).attr('href'));
         jumpToTime(vnum, t);
