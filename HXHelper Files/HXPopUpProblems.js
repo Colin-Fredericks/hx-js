@@ -43,13 +43,17 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
 
   // Check to see whether the video is ready before continuing.
   var waitForVid = setInterval(function() {
-    state = video.data('video-player-state'); // Sometimes this fails and that's ok.
+    try {
+      state = video.data('video-player-state'); // Sometimes this fails and that's ok.
 
-    if (typeof state.videoPlayer.player.getPlayerState() !== 'undefined') {
-      clearInterval(waitForVid);
-      setUpData();
-      setUpControls();
-      mainLoop();
+      if (typeof state.videoPlayer.player.getPlayerState() !== 'undefined') {
+        clearInterval(waitForVid);
+        setUpData();
+        setUpControls();
+        mainLoop();
+      }
+    } catch (err) {
+      console.log('waiting for first video to be ready');
     }
   }, 200);
 
