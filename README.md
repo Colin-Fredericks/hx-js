@@ -61,14 +61,14 @@ Also upload the three files from this repo:
 Once you've done that, copy the lines below into a Raw HTML element:
 
 ```html
-<script src="/static/hx.js"></script>
+<script src="/static/hx.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/static/hx.css" />
 ```
 
 Or, if you're using the minified versions from [hx-min.zip](https://github.com/Colin-Fredericks/hx-js/raw/master/hx-min.zip):
 
 ```html
-<script src="/static/hx-min.js"></script>
+<script src="/static/hx-min.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/static/hx-min.css" />
 ```
 
