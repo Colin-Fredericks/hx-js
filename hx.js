@@ -296,31 +296,8 @@ var HXGlobalJS = function() {
       bakframe.css('display', 'none');
       $('body').append(bakframe);
 
-      // Did it load properly?
-      var iframe_window;
-      var frame_timer = 0;
-      let loadChecker = setInterval(function() {
-        iframe_window = $('#hxbackpackframe')[0].contentWindow;
-        if (typeof iframe_window !== 'undefined') {
-          if (typeof iframe_window.hxGetData === 'function') {
-            // Make Get/Set/Clear available to all
-            window.hxSetData = iframe_window.hxSetData;
-            window.hxClearData = iframe_window.hxSetData;
-            window.hxGetData = iframe_window.hxGetData;
-            clearInterval(loadChecker);
-          }
-        } else {
-          frame_timer++;
-          // Stop trying to load after 10 seconds.
-          if (frame_timer > 20) {
-            // Return a specific failure value.
-            window.hxSetData = () => null;
-            window.hxSetData = () => null;
-            window.hxSetData = () => null;
-            clearInterval(loadChecker);
-          }
-        }
-      }, 500);
+      // See later for hearBackpackLoad,
+      // the function that listens for the frame to load.
     }
 
     /**************************************/
@@ -1189,6 +1166,31 @@ var HXGlobalJS = function() {
     alert('+30 Lives');
     logThatThing({ 'easter egg': 'Konami Code' });
   });
+
+  // Learner Backpack utility function!
+  // Did the backpack load properly? Listen for the load event.
+  // Verify origin and publish functions.
+  function hearBackpackLoad(e) {
+    // Only accept from Qualtrics.
+    if (
+      e.origin !== 'https://courses.edx.org' &&
+      e.origin !== 'https://edge.edx.org'
+    ) {
+      return;
+    }
+
+    // Only accept objects with the right form.
+    if (typeof e.data === 'string') {
+      if (e.data === 'ready') {
+        console.log('Backpack ready.');
+        let iframe_window = $('#hxbackpackframe')[0].contentWindow;
+        window.hxSetData = iframe_window.hxSetData;
+        window.hxClearData = iframe_window.hxSetData;
+        window.hxGetData = iframe_window.hxGetData;
+      }
+    }
+  }
+  addEventListener('message', hearBackpackLoad, false);
 
   // Converts hh:mm:ss to a number of seconds for time-based problems.
   // If it's passed a number, it just spits that back out as seconds.
