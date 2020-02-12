@@ -1173,8 +1173,8 @@ var HXGlobalJS = function() {
   function hearBackpackLoad(e) {
     // Only accept from Qualtrics.
     if (
-      e.origin === 'https://courses.edx.org' ||
-      e.origin === 'https://edge.edx.org'
+      e.origin !== 'https://courses.edx.org' &&
+      e.origin !== 'https://edge.edx.org'
     ) {
       return;
     }
@@ -1183,7 +1183,7 @@ var HXGlobalJS = function() {
     if (typeof e.data === 'string') {
       if (e.data === 'ready') {
         console.log('Backpack ready.');
-        iframe_window = $('#hxbackpackframe')[0].contentWindow;
+        let iframe_window = $('#hxbackpackframe')[0].contentWindow;
         window.hxSetData = iframe_window.hxSetData;
         window.hxClearData = iframe_window.hxSetData;
         window.hxGetData = iframe_window.hxGetData;
