@@ -34,6 +34,9 @@ var HXGlobalJS = function() {
     // Marks all external links with an icon.
     markExternalLinks: false,
 
+    // Use learner backpack to store & retrieve data?
+    useBackpack: true,
+
     // Highlighter: Yellow highlights that start turned off and go back to transparent afterward.
     highlightColor: '#ff0',
     highlightBackground: 'rgba(0,0,0,0)',
@@ -268,6 +271,57 @@ var HXGlobalJS = function() {
     // Keep track of what we have open/closed.
     // window.hxToggled = [];
     // window.hxToggleLast = [];
+
+    /**************************************/
+    // The "backpack" stores up to 100k of
+    // learner data on edX's server.
+    // See https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack
+    /**************************************/
+    if ($('#hxbackpackframe').length === 0 && hxOptions.useBackpack) {
+      // Add the backpack iframe and hide it.
+      let backpackURL =
+        'https://courses.edx.org/xblock/block-v1:' +
+        courseInfo.institution +
+        '+' +
+        courseInfo.id +
+        '+' +
+        courseInfo.run +
+        '+type@problem+block@' +
+        'backpack';
+      let bakframe = $('<iframe></iframe>');
+      bakframe.attr('src', backpackURL);
+      bakframe.attr('id', 'hxbackpackframe');
+      bakframe.attr('aria-hidden', 'true');
+      bakframe.attr('tabindex', '-1');
+      bakframe.css('display', 'none');
+      $('body').append(bakframe);
+
+      // Did it load properly?
+      var iframe_window;
+      var frame_timer = 0;
+      let loadChecker = setInterval(function() {
+        iframe_window = $('#hxbackpackframe')[0].contentWindow;
+        if (typeof iframe_window !== 'undefined') {
+          if (typeof iframe_window.hxGetData === 'function') {
+            // Make Get/Set/Clear available to all
+            window.hxSetData = iframe_window.hxSetData;
+            window.hxClearData = iframe_window.hxSetData;
+            window.hxGetData = iframe_window.hxGetData;
+            clearInterval(loadChecker);
+          }
+        } else {
+          frame_timer++;
+          // Stop trying to load after 10 seconds.
+          if (frame_timer > 20) {
+            // Return a specific failure value.
+            window.hxSetData = () => null;
+            window.hxSetData = () => null;
+            window.hxSetData = () => null;
+            clearInterval(loadChecker);
+          }
+        }
+      }, 500);
+    }
 
     /**************************************/
     // If we have videos, instantiate the functions
