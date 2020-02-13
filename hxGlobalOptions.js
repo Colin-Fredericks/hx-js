@@ -9,6 +9,7 @@
 var hxGlobalOptions = {
   hasGlobalOptions: true,
   markExternalLinks: true,
+  useBackpack: true,
 
   /********************************************/
   // Slick Image Slider Options

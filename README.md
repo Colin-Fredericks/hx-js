@@ -23,6 +23,7 @@
     - [Pop-up Assessments](#pop-up-assessments)
     - [Automated Table of Contents for Long Pages](#automated-table-of-contents-for-long-pages)
     - [Forum Tricks](#forum-tricks)
+    - [Backpack](#learner-backpack)
   - [Future Features](#future-features)
     - [Intro.js walkthroughs](#introjs-walkthroughs)
     - [Audio Player](#audio-player)
@@ -598,6 +599,18 @@ Every link that is not to an edx.org site will be marked with [a box-and-arrow i
 ### Forum Tricks
 
 Maybe you want in-page discussions, but you want them open right away so everyone can see all the different threads. Set `openPageDiscussion: true,` in your hxGlobalOptions.js file to automatically open every inline discussion as soon as someone comes to a page.
+
+### Learner Backpack
+
+First, follow the setup instructions for the [Learner Backpack](https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack) javascript problem.
+
+When HX-JS is running you will be able to use the javscript functions:
+
+- hxSetData('whatever', stuff) will store the `stuff` object in the `whatever` variable.
+- hxGetData('whatever') will get the contents of the `whatever` variable.
+- hxClearData('whatever') will empty the `whatever` variable.
+
+This data is stored in the edX server, up to about 100k per student per course.
 
 ## Future Features
 
