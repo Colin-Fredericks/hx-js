@@ -1187,6 +1187,7 @@ var HXGlobalJS = function() {
         window.hxSetData = iframe_window.hxSetData;
         window.hxClearData = iframe_window.hxSetData;
         window.hxGetData = iframe_window.hxGetData;
+        window.hxGetAllData = iframe_window.hxGetAllData;
       }
     }
   }
