@@ -320,6 +320,7 @@ var HXGlobalJS = function() {
     /**************************************/
     // Start the editor and load its css.
     // If we don't have the backpack, we can't save.
+    // Set data-saveslot attrib to select save slot.
     /**************************************/
     if (editors.length) {
       $('head').append(
