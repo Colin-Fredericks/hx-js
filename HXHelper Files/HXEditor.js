@@ -1,8 +1,10 @@
-// This version is designed to be called by hx.js
+// This is designed to be called by hx.js
 // It uses the Summernote editor.
 
 var HXEditor = function(useBackpack, toolbarOptions) {
   var editors = $('.hx-editor');
+
+  logThatThing('HX Editor starting');
 
   // Read the save slot from the data-saveslot attribute.
   var editor_save_slots = Object.keys($('div')).map(function(k, i) {
