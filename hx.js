@@ -102,6 +102,16 @@ var HXGlobalJS = function() {
       speed: 500,
       location: 'bl' // Bottom Left. bl, br, tl, and tr are all ok.
     },
+    // Default options for Summernote toolbar
+    HXEditorOptions: [
+      ['style', ['style']],
+      ['font', ['bold', 'underline', 'clear']],
+      ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['table', ['table']],
+      ['insert', ['link']],
+      ['view', ['fullscreen', 'codeview', 'help']]
+    ],
     // No options for chimes right now.
     ChimeOptions: {}
   };
@@ -194,6 +204,13 @@ var HXGlobalJS = function() {
   if (theMaps.length) {
     logThatThing({ image_map: 'found' });
     scriptArray.push('imageMapResizer.min.js');
+  }
+
+  // Do we load the Summernote editor?
+  var editors = $('.hx-editor');
+  if (editors.length > 0) {
+    logThatThing({ editor: 'found' });
+    scriptArray.push('summernote-lite.min.js');
   }
 
   // Do we load HXVideoLinks for... um... HarvardX video links?
@@ -298,6 +315,24 @@ var HXGlobalJS = function() {
 
       // See later for hearBackpackLoad,
       // the function that listens for the frame to load.
+    }
+
+    /**************************************/
+    // Start the editor and load its css.
+    // If we don't have the backpack, we can't save.
+    /**************************************/
+    if (editors.length) {
+      $('head').append(
+        $(
+          '<link rel="stylesheet" href="' +
+            courseAssetURL +
+            'summernote-lite.min.css" type="text/css" />'
+        )
+      );
+      var HXEdit = new HXEditor(
+        hxOptions.useBackpack,
+        hxOptions.HXEditorOptions
+      );
     }
 
     /**************************************/
