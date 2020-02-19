@@ -105,7 +105,7 @@ var HXGlobalJS = function() {
     // Default options for Summernote toolbar
     HXEditorOptions: [
       ['style', ['style']],
-      ['font', ['bold', 'underline', 'clear']],
+      ['font', ['bold', 'italic', 'underline', 'clear']],
       ['color', ['color']],
       ['para', ['ul', 'ol', 'paragraph']],
       ['table', ['table']],
