@@ -3,6 +3,7 @@
 
 var HXEditor = function(useBackpack, toolbarOptions) {
   var editors = $('.hx-editor');
+  var backpack_ready = false;
 
   logThatThing('HX Editor starting');
 
@@ -69,14 +70,23 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   // Add save/load buttons.
   let savebutton = $('<button>Save</button>');
   savebutton.addClass('savenote');
-  let saveindicator = $('<span/>');
 
   let loadbutton = $('<button>Load</button>');
   loadbutton.addClass('loadnote');
 
-  editors.prepend(saveindicator);
+  let savenotice = $('<span></span>');
+  savenotice.addClass('autosavenotice');
+  savenotice.css('color', 'darkgray');
+
+  editors.prepend(savenotice);
   editors.prepend(savebutton);
   editors.prepend(loadbutton);
+
+  // Save and load disabled until the backpack loads.
+  if (!backpack_ready) {
+    savebutton.attr('disabled', true);
+    loadbutton.attr('disabled', true);
+  }
 
   // Add listeners for save/load buttons.
   // Append the editor's id to their save slot.
@@ -89,7 +99,9 @@ var HXEditor = function(useBackpack, toolbarOptions) {
       hxSetData('summernote_' + getSaveSlot($(this)), markupStr);
       console.log(markupStr);
     }
-    // TODO: Indicate success for saving.
+    // These will automatically re-enable after the backpack loads.
+    $('.loadnote').attr('disabled', true);
+    $('.savenote').attr('disabled', true);
   });
   $('.loadnote').on('click tap', function() {
     $('.summernote').summernote(
@@ -103,9 +115,12 @@ var HXEditor = function(useBackpack, toolbarOptions) {
     var to_save = {};
     editors.each(function(i, e) {
       let markupStr = $('#summernote').summernote('code');
-      to_save['summernote_' + saveslot] = markupStr;
+      to_save['summernote_' + getSaveSlot($(e))] = markupStr;
     });
     hxSetData(to_save);
+    $('.autosavenotice').text(' Auto-saving...');
+    $('.loadnote').attr('disabled', true);
+    $('.savenote').attr('disabled', true);
     console.log('auto-saved');
   }, 60000);
 
@@ -123,4 +138,27 @@ var HXEditor = function(useBackpack, toolbarOptions) {
       return '';
     }
   }
+
+  function hearBackpackLoad(e) {
+    // Only accept from Qualtrics.
+    if (
+      e.origin !== 'https://courses.edx.org' &&
+      e.origin !== 'https://preview.edx.org' &&
+      e.origin !== 'https://edge.edx.org'
+    ) {
+      return;
+    }
+
+    // Only accept objects with the right form.
+    if (typeof e.data === 'string') {
+      if (e.data === 'ready') {
+        console.log('Backpack ready.');
+        backpack_ready = true;
+        $('.loadnote').removeAttr('disabled');
+        $('.savenote').removeAttr('disabled');
+        $('.autosavenotice').empty();
+      }
+    }
+  }
+  addEventListener('message', hearBackpackLoad, false);
 };
