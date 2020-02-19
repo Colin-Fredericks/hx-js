@@ -210,7 +210,9 @@ var HXGlobalJS = function() {
   var editors = $('.hx-editor');
   if (editors.length > 0) {
     logThatThing({ editor: 'found' });
+    scriptArray.push('HXEditor.js');
     scriptArray.push('summernote-lite.min.js');
+    var HXEditor;
   }
 
   // Do we load HXVideoLinks for... um... HarvardX video links?
@@ -330,10 +332,7 @@ var HXGlobalJS = function() {
             'summernote-lite.min.css" type="text/css" />'
         )
       );
-      var HXEdit = new HXEditor(
-        hxOptions.useBackpack,
-        hxOptions.HXEditorOptions
-      );
+      HXEdit = new HXEditor(hxOptions.useBackpack, hxOptions.HXEditorOptions);
     }
 
     /**************************************/
