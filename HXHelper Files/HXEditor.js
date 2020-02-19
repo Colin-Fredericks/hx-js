@@ -41,6 +41,7 @@ var HXEditor = function(useBackpack, toolbarOptions) {
 
     if (typeof $.summernote !== 'undefined') {
       // If it loads...
+      clearInterval(loadLoop);
       // Remove the loading indicator.
       editbox.empty();
       // Insert the div for summernote to hook onto.
@@ -50,7 +51,6 @@ var HXEditor = function(useBackpack, toolbarOptions) {
       summer.summernote({
         toolbar: toolbarOptions
       });
-      clearInterval(loadLoop);
     }
   }, timedelay);
 
@@ -74,7 +74,7 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   let loadbutton = $('<button>Load</button>');
   loadbutton.addClass('loadnote');
 
-  let savenotice = $('<span></span>');
+  let savenotice = $('<span> Loading...</span>');
   savenotice.addClass('autosavenotice');
   savenotice.css('color', 'darkgray');
 
@@ -91,7 +91,7 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   // Add listeners for save/load buttons.
   // Append the editor's id to their save slot.
   $('.savenote').on('click tap', function() {
-    let markupStr = $('.summernote').summernote('code');
+    let markupStr = $('.hx-editor .summernote').summernote('code');
 
     // If we try to save while the backpack is recovering from auto-saving,
     // don't bother. Just show the success indicator.
@@ -104,7 +104,7 @@ var HXEditor = function(useBackpack, toolbarOptions) {
     $('.savenote').attr('disabled', true);
   });
   $('.loadnote').on('click tap', function() {
-    $('.summernote').summernote(
+    $('.hx-editor .summernote').summernote(
       'code',
       hxGetData('summernote_' + getSaveSlot($(this)))
     );
@@ -114,7 +114,7 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   let autoSave = setInterval(function() {
     var to_save = {};
     editors.each(function(i, e) {
-      let markupStr = $('#summernote').summernote('code');
+      let markupStr = $('.hx-editor .summernote').summernote('code');
       to_save['summernote_' + getSaveSlot($(e))] = markupStr;
     });
     hxSetData(to_save);
@@ -140,7 +140,7 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   }
 
   function hearBackpackLoad(e) {
-    // Only accept from Qualtrics.
+    // Only accept from edx sites.
     if (
       e.origin !== 'https://courses.edx.org' &&
       e.origin !== 'https://preview.edx.org' &&
@@ -157,6 +157,7 @@ var HXEditor = function(useBackpack, toolbarOptions) {
         $('.loadnote').removeAttr('disabled');
         $('.savenote').removeAttr('disabled');
         $('.autosavenotice').empty();
+        // TODO: replace blank editors with the saved data.
       }
     }
   }
