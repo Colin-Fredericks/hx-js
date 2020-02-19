@@ -157,7 +157,13 @@ var HXEditor = function(useBackpack, toolbarOptions) {
         $('.loadnote').removeAttr('disabled');
         $('.savenote').removeAttr('disabled');
         $('.autosavenotice').empty();
-        // TODO: replace blank editors with the saved data.
+        // Replace blank editors with the saved data.
+        if ($($('.hx-editor .summernote').summernote('code')).text() == '') {
+          $('.hx-editor .summernote').summernote(
+            'code',
+            hxGetData('summernote_' + getSaveSlot($(this)))
+          );
+        }
       }
     }
   }
