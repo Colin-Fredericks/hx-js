@@ -1206,9 +1206,10 @@ var HXGlobalJS = function() {
   // Did the backpack load properly? Listen for the load event.
   // Verify origin and publish functions.
   function hearBackpackLoad(e) {
-    // Only accept from Qualtrics.
+    // Only accept from edX locales.
     if (
       e.origin !== 'https://courses.edx.org' &&
+      e.origin !== 'https://preview.edx.org' &&
       e.origin !== 'https://edge.edx.org'
     ) {
       return;
