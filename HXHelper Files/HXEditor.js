@@ -94,17 +94,20 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   }
 
   // Add listeners for save/load buttons.
-  // Append the editor's id to their save slot.
   $('.savenote').on('click tap', function() {
-    let markupStr = $('.hx-editor .summernote').summernote('code');
+    let markupStr = $(this)
+      .parent()
+      .find('.summernote')
+      .summernote('code');
 
-    // If we try to save while the backpack is recovering from auto-saving,
-    // don't bother. Just show the success indicator.
     if (true) {
+      // Append the editor's id to their save slot.
       hxSetData('summernote_' + getSaveSlot($(this)), markupStr);
       console.log(markupStr);
     }
-    // These will automatically re-enable after the backpack loads.
+    // Disable save/load buttons.
+    // These will re-enable after the backpack loads.
+    $('.autosavenotice').text(' Saving...');
     $('.loadnote').attr('disabled', true);
     $('.savenote').attr('disabled', true);
   });
