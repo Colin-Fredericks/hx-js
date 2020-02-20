@@ -1,7 +1,7 @@
 // This is designed to be called by hx.js
 // It uses the Summernote editor.
 
-var HXEditor = function(useBackpack, toolbarOptions) {
+var HXEditor = function(use_backpack, toolbar_options) {
   var editors = $('.hx-editor');
   // Clearing out the editor text.
   // Could save this as default starting text instead?
@@ -22,23 +22,23 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   });
 
   // Insert a loading indicator.
-  let editbox = $('<div> Loading...</div>');
+  let edit_box = $('<div> Loading...</div>');
   let spinner = $('<span class="fa fa-spinner fa-pulse"></span>');
-  editbox.prepend(spinner);
-  editors.append(editbox);
+  edit_box.prepend(spinner);
+  editors.append(edit_box);
 
   // Wait for summernote to load.
   // It's in an external javascript file loaded by hx-js.
-  var timercount = 0;
-  var timedelay = 250; // miliseconds
+  var timer_count = 0;
+  var time_delay = 250; // miliseconds
   var loadLoop = setInterval(function() {
-    timercount += timedelay;
+    timer_count += time_delay;
 
     // If it doesn't load after 7 seconds,
     // kill the indicator and inform the learner.
-    if (timercount > 7000) {
-      editbox.empty();
-      editbox.append(
+    if (timer_count > 7000) {
+      edit_box.empty();
+      edit_box.append(
         '<p>Editor did not load. Reload the page if you want to try again.</p>'
       );
       clearInterval(loadLoop);
@@ -48,19 +48,19 @@ var HXEditor = function(useBackpack, toolbarOptions) {
       // If it loads...
       clearInterval(loadLoop);
       // Remove the loading indicator.
-      editbox.remove();
+      edit_box.remove();
       // Insert the div for summernote to hook onto.
       let summer = $('<div class="summernote"></div>');
       editors.append(summer);
       // Activate summernote.
       summer.summernote({
-        toolbar: toolbarOptions
+        toolbar: toolbar_options
       });
     }
-  }, timedelay);
+  }, time_delay);
 
   // If we're not using the backpack, show a warning notice.
-  if (!useBackpack) {
+  if (!use_backpack) {
     let noSaveWarning = $('<div/>');
     noSaveWarning.css({
       'background-color': 'orange',
@@ -73,37 +73,37 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   }
 
   // Add save/load buttons.
-  let savebutton = $('<button>Save</button>');
-  savebutton.addClass('savenote');
+  let save_button = $('<button>Save</button>');
+  save_button.addClass('savenote');
 
-  let loadbutton = $('<button>Load</button>');
-  loadbutton.addClass('loadnote');
+  let load_button = $('<button>Load</button>');
+  load_button.addClass('loadnote');
 
-  let savenotice = $('<span> Loading...</span>');
-  savenotice.addClass('autosavenotice');
-  savenotice.css('color', 'darkgray');
+  let save_notice = $('<span> Loading...</span>');
+  save_notice.addClass('autosavenotice');
+  save_notice.css('color', 'darkgray');
 
-  editors.prepend(savenotice);
-  editors.prepend(savebutton);
-  editors.prepend(loadbutton);
+  editors.prepend(save_notice);
+  editors.prepend(save_button);
+  editors.prepend(load_button);
 
   // Save and load disabled until the backpack loads.
   if (!backpack_ready) {
-    savebutton.attr('disabled', true);
-    loadbutton.attr('disabled', true);
+    save_button.attr('disabled', true);
+    load_button.attr('disabled', true);
   }
 
   // Add listeners for save/load buttons.
   $('.savenote').on('click tap', function() {
-    let markupStr = $(this)
+    let markup_string = $(this)
       .parent()
       .find('.summernote')
       .summernote('code');
 
     if (true) {
       // Append the editor's id to their save slot.
-      hxSetData('summernote_' + getSaveSlot($(this)), markupStr);
-      console.log(markupStr);
+      hxSetData('summernote_' + getSaveSlot($(this)), markup_string);
+      console.log(markup_string);
     }
     // Disable save/load buttons.
     // These will re-enable after the backpack loads.
@@ -125,17 +125,20 @@ var HXEditor = function(useBackpack, toolbarOptions) {
     editors.each(function(i, e) {
       // Don't save things that haven't changed.
       // Using underscore.js to check object equality.
-      let markupStr = $(e)
+      let markup_string = $(e)
         .find('.summernote')
         .summernote('code');
-      if (!_.isEqual(hxGetData('summernote_' + getSaveSlot($(e))), markupStr)) {
-        to_save['summernote_' + getSaveSlot($(e))] = markupStr;
+      if (
+        !_.isEqual(hxGetData('summernote_' + getSaveSlot($(e))), markup_string)
+      ) {
+        to_save['summernote_' + getSaveSlot($(e))] = markup_string;
         has_changed = true;
       }
     });
     if (has_changed) {
       hxSetData(to_save);
       console.log('auto-saved');
+      // Disable save/load buttons until the backpack reloads.
       $('.autosavenotice').text(' Auto-saving...');
       $('.loadnote').attr('disabled', true);
       $('.savenote').attr('disabled', true);
@@ -159,6 +162,9 @@ var HXEditor = function(useBackpack, toolbarOptions) {
     }
   }
 
+  // The backpack is our data storage system on edX.
+  // It posts a message when it loads.
+  // See https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack
   function hearBackpackLoad(e) {
     // Only accept from edx sites.
     if (
