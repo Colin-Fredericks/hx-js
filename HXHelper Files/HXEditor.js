@@ -3,6 +3,11 @@
 
 var HXEditor = function(useBackpack, toolbarOptions) {
   var editors = $('.hx-editor');
+  // Clearing out the editor text.
+  // Could save this as default starting text instead?
+  editors.empty();
+
+  // This will switch when it loads. See hearBackpackLoad() below.
   var backpack_ready = false;
 
   logThatThing('HX Editor starting');
@@ -113,15 +118,25 @@ var HXEditor = function(useBackpack, toolbarOptions) {
   // Set up loop to auto-save once/minute
   let autoSave = setInterval(function() {
     var to_save = {};
+    var has_changed = false;
     editors.each(function(i, e) {
-      let markupStr = $('.hx-editor .summernote').summernote('code');
-      to_save['summernote_' + getSaveSlot($(e))] = markupStr;
+      // Don't save things that haven't changed.
+      // Using underscore.js to check object equality.
+      let markupStr = $(e).summernote('code');
+      if (_.isEqual(hxGetData('summernote_' + getSaveSlot($(e))), markupStr)) {
+        to_save['summernote_' + getSaveSlot($(e))] = markupStr;
+        has_changed = true;
+      }
     });
-    hxSetData(to_save);
+    if (has_changed) {
+      hxSetData(to_save);
+      console.log('auto-saved');
+    } else {
+      console.log('no changes, no need to auto-save');
+    }
     $('.autosavenotice').text(' Auto-saving...');
     $('.loadnote').attr('disabled', true);
     $('.savenote').attr('disabled', true);
-    console.log('auto-saved');
   }, 60000);
 
   // The save slot is the value in data-saveslot attribute, or '' if blank.
