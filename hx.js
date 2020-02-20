@@ -1,6 +1,8 @@
 var HXGlobalJS = function() {
   'use strict';
 
+  $('.xblock-student_view-vertical').attr('data-hxjs-running', true);
+
   // Checking for some local variables. If they're not defined, make blanks.
   if (typeof window.hxLocalOptions === 'undefined') {
     window.hxLocalOptions = {};
@@ -1224,6 +1226,7 @@ var HXGlobalJS = function() {
         window.hxClearData = iframe_window.hxSetData;
         window.hxGetData = iframe_window.hxGetData;
         window.hxGetAllData = iframe_window.hxGetAllData;
+        window.hxBackpackLoaded = iframe_window.hxBackpackLoaded;
       }
     }
   }
@@ -1326,5 +1329,10 @@ var HXGlobalJS = function() {
 };
 
 $(document).ready(function() {
-  HXGlobalJS();
+  if (
+    typeof $('.xblock-student_view-vertical').attr('data-hxjs-running') ===
+    'undefined'
+  ) {
+    HXGlobalJS();
+  }
 });
