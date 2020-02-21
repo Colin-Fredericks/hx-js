@@ -207,7 +207,7 @@ var HXGlobalJS = function() {
   }
 
   // Do we load the Summernote editor?
-  var editors = $('.hx-editor');
+  var editors = $('.hx-editor:visible');
   if (editors.length > 0) {
     logThatThing({ editor: 'found' });
     scriptArray.push('summernote-lite.min.js');
@@ -319,8 +319,7 @@ var HXGlobalJS = function() {
     }
 
     /**************************************/
-    // Start the editor and load its css.
-    // If we don't have the backpack, we can't save.
+    // Load css for the editor and insert a "Loading" note.
     // Set data-saveslot attrib to select save slot.
     /**************************************/
     if (editors.length) {
@@ -331,7 +330,16 @@ var HXGlobalJS = function() {
             'summernote-lite.min.css" type="text/css" />'
         )
       );
-      HXED = new HXEditor(hxOptions.useBackpack, hxOptions.HXEditorOptions);
+      // Insert a loading indicator.
+      let edit_box = $('<div> Loading...</div>');
+      let spinner = $('<span class="fa fa-spinner fa-pulse"></span>');
+      edit_box.prepend(spinner);
+      editors.append(edit_box);
+      // If the backpack is in place, start the editors.
+      // Otherwise, this will get fired once the backpack loads.
+      if (hxBackpackLoaded && typeof HXED === 'undefined') {
+        HXED = new HXEditor(hxOptions.useBackpack, hxOptions.HXEditorOptions);
+      }
     }
 
     /**************************************/
@@ -1222,13 +1230,23 @@ var HXGlobalJS = function() {
       if (typeof data === 'string') {
         if (data === 'ready') {
           console.log('Backpack ready.');
-          console.log('Backpack ready.');
           let iframe_window = $('#hxbackpackframe')[0].contentWindow;
           window.hxSetData = iframe_window.hxSetData;
           window.hxClearData = iframe_window.hxSetData;
           window.hxGetData = iframe_window.hxGetData;
           window.hxGetAllData = iframe_window.hxGetAllData;
           window.hxBackpackLoaded = iframe_window.hxBackpackLoaded;
+          // If we're using editors on this page, load them.
+          if (
+            hxOptions.useBackpack &&
+            editors.length > 0 &&
+            typeof HXED === 'undefined'
+          ) {
+            HXED = new HXEditor(
+              hxOptions.useBackpack,
+              hxOptions.HXEditorOptions
+            );
+          }
         }
       }
     });
@@ -1327,6 +1345,7 @@ var HXGlobalJS = function() {
   window.isExternalLink = isExternalLink;
   window.popDataMap = popDataMap;
   window.jumpToTime = jumpToTime;
+  window.hxBackpackLoaded = $('#hxbackpackframe').length > 0; // Gets set when backpack loads.
 };
 
 $(document).ready(function() {
