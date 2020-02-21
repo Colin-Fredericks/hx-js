@@ -30,32 +30,56 @@ var HXEditor = function(use_backpack, toolbar_options) {
       editors.empty();
       // Turn on all editors on this page.
       activateAllEditors();
+      setupAutoSave();
     }
   }, time_delay);
 
-  // Pass in an editor object.
-  function setupAutoSave(ed) {
-    console.log('setting up auto-save for ' + getSaveSlot($(ed)));
-    // Mark which editors have auto-save already enabled.
-    ed.attr('data-has-autosave', true);
-    // Set up loop to auto-save once/minute
-    let autoSave = setInterval(function() {
+  // Unloads all previous autosave routines and adds new ones appropriately.
+  function setupAutoSave() {
+    console.log('setting up auto-save');
+    // Wipe out all the old autosave functions.
+    if (typeof window.autosavers !== 'undefined') {
+      Object.keys(autosavers).forEach(function(k) {
+        console.log('Removing auto-save for ' + k);
+        clearInterval(autosavers[k]);
+      });
+    }
+    window.autosavers = {};
+
+    // Get all the save slots that are present on this page.
+    let slots = new Set(
+      Object.keys($('.hx-editor')).map(x =>
+        $($('.hx-editor')[x]).attr('data-saveslot')
+      )
+    );
+    // Remove undefined things from the set.
+    slots.delete(undefined);
+    console.log(slots);
+
+    // Make an array of autosave functions for our editors.
+    slots.forEach(function(ss) {
+      console.log('setting up autosave for ' + ss);
+      autosavers[ss] = setInterval(function() {
+        saveData(ss);
+      }, 60000);
+    });
+
+    function saveData(slot) {
+      let ed = $('[data-saveslot="' + slot + '"]');
       var to_save = {};
       var has_changed = false;
       // Don't save things that haven't changed.
       // Using underscore.js to check object equality.
-      let markup_string = $(ed)
-        .find('.summernote')
-        .summernote('code');
-      console.log('to save:');
+      let markup_string = ed.find('.summernote').summernote('code');
+      console.log('Save data for ' + slot);
       console.log(markup_string);
-      if (
-        !_.isEqual(hxGetData('summernote_' + getSaveSlot($(ed))), markup_string)
-      ) {
-        to_save['summernote_' + getSaveSlot($(ed))] = markup_string;
+      if (!_.isEqual(hxGetData('summernote_' + slot), markup_string)) {
+        to_save['summernote_' + slot] = markup_string;
         has_changed = true;
       }
       if (has_changed) {
+        console.log('To save:');
+        console.log(to_save);
         hxSetData(to_save);
         // Disable save/load buttons until the backpack reloads.
         $('.autosavenotice').text(' Auto-saving...');
@@ -64,14 +88,18 @@ var HXEditor = function(use_backpack, toolbar_options) {
       } else {
         console.log('no changes, no need to auto-save');
       }
-    }, 60000);
+    }
   }
 
   // Turns on one particular editor.
   function activateEditor(saveslot) {
     console.log('activating ' + saveslot + ' editor');
     // Get the editor we're interested in.
-    let ed = $('.hx-editor:visible').find('[data-saveslot="' + saveslot + '"]');
+    let ed = $('[data-saveslot="' + saveslot + '"]');
+    if (ed.length === 0) {
+      ed = $('.hx-editor');
+      ed.attr('data-saveslot', '');
+    }
     // Remove the loading indicator.
     ed.empty();
     // Insert the div for summernote to hook onto.
@@ -85,13 +113,12 @@ var HXEditor = function(use_backpack, toolbar_options) {
     addControls(ed);
     // Replace blank editors with the saved data if the backpack is loaded.
     if (hxBackpackLoaded) {
-      if (summer.summernote('code').text() == '') {
-        summer.summernote('code', hxGetData('summernote_' + getSaveSlot($(e))));
+      if ($(ed.find('.summernote').summernote('code')).text() == '') {
+        ed.find('.summernote').summernote(
+          'code',
+          hxGetData('summernote_' + getSaveSlot(ed))
+        );
       }
-    }
-    // Set up auto-save for those that don't have it.
-    if ($(e).attr('data-has-autosave') === 'undefined') {
-      setupAutoSave($(e));
     }
     // If we're not using the backpack, show a warning notice.
     if (!use_backpack) {
