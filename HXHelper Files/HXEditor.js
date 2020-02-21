@@ -9,12 +9,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   logThatThing('HX Editor starting');
 
-  // Insert a loading indicator.
-  let edit_box = $('<div> Loading...</div>');
-  let spinner = $('<span class="fa fa-spinner fa-pulse"></span>');
-  edit_box.prepend(spinner);
-  editors.append(edit_box);
-
   // Wait for summernote to load.
   // It's in an external javascript file loaded by hx-js.
   var timer_count = 0;
@@ -48,34 +42,39 @@ var HXEditor = function(use_backpack, toolbar_options) {
     }
   }, time_delay);
 
-  // Set up loop to auto-save once/minute
-  let autoSave = setInterval(function() {
-    var to_save = {};
-    var has_changed = false;
-    editors.each(function(i, e) {
+  // Pass in an editor object.
+  function setupAutoSave(ed) {
+    console.log('setting up auto-save for ' + getSaveSlot($(ed)));
+    // Mark which editors have auto-save already enabled.
+    ed.attr('data-has-autosave', true);
+    // Set up loop to auto-save once/minute
+    let autoSave = setInterval(function() {
+      var to_save = {};
+      var has_changed = false;
       // Don't save things that haven't changed.
       // Using underscore.js to check object equality.
-      let markup_string = $(e)
+      let markup_string = $(ed)
         .find('.summernote')
         .summernote('code');
+      console.log('to save:');
+      console.log(markup_string);
       if (
-        !_.isEqual(hxGetData('summernote_' + getSaveSlot($(e))), markup_string)
+        !_.isEqual(hxGetData('summernote_' + getSaveSlot($(ed))), markup_string)
       ) {
-        to_save['summernote_' + getSaveSlot($(e))] = markup_string;
+        to_save['summernote_' + getSaveSlot($(ed))] = markup_string;
         has_changed = true;
       }
-    });
-    if (has_changed) {
-      hxSetData(to_save);
-      console.log('auto-saved');
-      // Disable save/load buttons until the backpack reloads.
-      $('.autosavenotice').text(' Auto-saving...');
-      $('.loadnote').attr('disabled', true);
-      $('.savenote').attr('disabled', true);
-    } else {
-      console.log('no changes, no need to auto-save');
-    }
-  }, 60000);
+      if (has_changed) {
+        hxSetData(to_save);
+        // Disable save/load buttons until the backpack reloads.
+        $('.autosavenotice').text(' Auto-saving...');
+        $('.loadnote').attr('disabled', true);
+        $('.savenote').attr('disabled', true);
+      } else {
+        console.log('no changes, no need to auto-save');
+      }
+    }, 60000);
+  }
 
   // Turns on one particular editor.
   function activateEditor(saveslot) {
@@ -112,6 +111,13 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   function addControls(editors) {
+    // Set up auto-save for those that don't have it.
+    editors.each(function(i, e) {
+      if ($(e).attr('data-has-autosave')) {
+        setupAutoSave($(e));
+      }
+    });
+
     // If we're not using the backpack, show a warning notice.
     if (!use_backpack) {
       let noSaveWarning = $('<div/>');
@@ -157,7 +163,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
       // Note the editor's saveslot.
       hxSetData('summernote_' + getSaveSlot($(this).parent()), markup_string);
-      console.log(markup_string);
 
       // Disable save/load buttons.
       // These will re-enable after the backpack loads.
@@ -191,8 +196,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // It posts a message when it loads.
   // See https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack
   $(window)
-    .off('message.hx')
-    .on('message.hx', function(e) {
+    .off('message.hxeditor')
+    .on('message.hxeditor', function(e) {
       var data = e.originalEvent.data;
 
       // Only accept from edx sites.
@@ -207,18 +212,16 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // Only accept objects with the right form.
       if (typeof data === 'string') {
         if (data === 'ready') {
-          console.log('Backpack ready.');
           $('.loadnote').removeAttr('disabled');
           $('.savenote').removeAttr('disabled');
           $('.autosavenotice').empty();
           // Replace blank editors with the saved data.
           $('.hx-editor').each(function(i, el) {
             let editor = $(el).find('.summernote');
+            let saveslot = getSaveSlot($(el));
+            console.log('restoring editor ' + saveslot);
             if ($(editor.summernote('code')).text() == '') {
-              editor.summernote(
-                'code',
-                hxGetData('summernote_' + getSaveSlot($(el)))
-              );
+              editor.summernote('code', hxGetData('summernote_' + saveslot));
             }
           });
         }
