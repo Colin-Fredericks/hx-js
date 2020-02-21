@@ -315,8 +315,7 @@ var HXGlobalJS = function() {
       bakframe.css('display', 'none');
       $('body').append(bakframe);
 
-      // See later for hearBackpackLoad,
-      // the function that listens for the frame to load.
+      // See later for the function that listens for the frame to load.
     }
 
     /**************************************/
@@ -1205,19 +1204,22 @@ var HXGlobalJS = function() {
   // Learner Backpack utility function!
   // Did the backpack load properly? Listen for the load event.
   // Verify origin and publish functions.
-  function hearBackpackLoad(e) {
-    // Only accept from edX locales.
+  $(window).off('message.hx').on('message.hx', function(e) {
+    var data = e.originalEvent.data;
+
+    // Only accept from edx sites.
     if (
-      e.origin !== 'https://courses.edx.org' &&
-      e.origin !== 'https://preview.edx.org' &&
-      e.origin !== 'https://edge.edx.org'
+      e.originalEvent.origin !== 'https://courses.edx.org' &&
+      e.originalEvent.origin !== 'https://preview.edx.org' &&
+      e.originalEvent.origin !== 'https://edge.edx.org'
     ) {
       return;
     }
 
     // Only accept objects with the right form.
-    if (typeof e.data === 'string') {
-      if (e.data === 'ready') {
+    if (typeof data === 'string') {
+      if (data === 'ready') {
+        console.log('Backpack ready.');
         console.log('Backpack ready.');
         let iframe_window = $('#hxbackpackframe')[0].contentWindow;
         window.hxSetData = iframe_window.hxSetData;
@@ -1227,8 +1229,7 @@ var HXGlobalJS = function() {
         window.hxBackpackLoaded = iframe_window.hxBackpackLoaded;
       }
     }
-  }
-  addEventListener('message', hearBackpackLoad, false);
+  });
 
   // Converts hh:mm:ss to a number of seconds for time-based problems.
   // If it's passed a number, it just spits that back out as seconds.
