@@ -200,34 +200,35 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // The backpack is our data storage system on edX.
   // It posts a message when it loads.
   // See https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack
-  function hearBackpackLoad(e) {
+  $(window).off('message.hx').on('message.hx', function(e) {
+    var data = e.originalEvent.data;
+
     // Only accept from edx sites.
     if (
-      e.origin !== 'https://courses.edx.org' &&
-      e.origin !== 'https://preview.edx.org' &&
-      e.origin !== 'https://edge.edx.org'
+      e.originalEvent.origin !== 'https://courses.edx.org' &&
+      e.originalEvent.origin !== 'https://preview.edx.org' &&
+      e.originalEvent.origin !== 'https://edge.edx.org'
     ) {
       return;
     }
 
     // Only accept objects with the right form.
-    if (typeof e.data === 'string') {
-      if (e.data === 'ready') {
+    if (typeof data === 'string') {
+      if (data === 'ready') {
         console.log('Backpack ready.');
         $('.loadnote').removeAttr('disabled');
         $('.savenote').removeAttr('disabled');
         $('.autosavenotice').empty();
         // Replace blank editors with the saved data.
-        $('.hx-editor').each(function(i, e) {
-          let ed = $(e).find('.summernote');
-          if ($(ed.summernote('code')).text() == '') {
-            ed.summernote('code', hxGetData('summernote_' + getSaveSlot($(e))));
+        $('.hx-editor').each(function(i, el) {
+          let editor = $(el).find('.summernote');
+          if ($(editor.summernote('code')).text() == '') {
+            editor.summernote('code', hxGetData('summernote_' + getSaveSlot($(el))));
           }
         });
       }
     }
-  }
-  addEventListener('message', hearBackpackLoad, false);
+  });
 
   // Publishing functions for general use.
   this.getSaveSlot = getSaveSlot;
