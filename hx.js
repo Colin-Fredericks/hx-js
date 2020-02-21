@@ -1,8 +1,6 @@
 var HXGlobalJS = function() {
   'use strict';
 
-  $('.xblock-student_view-vertical').attr('data-hxjs-running', true);
-
   // Checking for some local variables. If they're not defined, make blanks.
   if (typeof window.hxLocalOptions === 'undefined') {
     window.hxLocalOptions = {};
@@ -1329,10 +1327,5 @@ var HXGlobalJS = function() {
 };
 
 $(document).ready(function() {
-  if (
-    typeof $('.xblock-student_view-vertical').attr('data-hxjs-running') ===
-    'undefined'
-  ) {
-    HXGlobalJS();
-  }
+  HXGlobalJS();
 });
