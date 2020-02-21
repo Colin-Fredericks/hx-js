@@ -3,9 +3,6 @@
 
 var HXEditor = function(use_backpack, toolbar_options) {
   var editors = $('.hx-editor:visible');
-  // Clearing out the editor text.
-  // Could save this as default starting text instead?
-  editors.empty();
 
   logThatThing('HX Editor starting');
 
@@ -19,26 +16,20 @@ var HXEditor = function(use_backpack, toolbar_options) {
     // If it doesn't load after 7 seconds,
     // kill the indicator and inform the learner.
     if (timer_count > 7000) {
-      edit_box.empty();
-      edit_box.append(
+      editors.empty();
+      editors.append(
         '<p>Editor did not load. Reload the page if you want to try again.</p>'
       );
       clearInterval(loadLoop);
     }
 
     if (typeof $.summernote !== 'undefined') {
-      // If it loads...
+      // When it loads, stop waiting.
       clearInterval(loadLoop);
+      // Clear the loading messages.
+      editors.empty();
+      // Turn on all editors on this page.
       activateAllEditors();
-      // Replace blank editors with the saved data if the backpack is loaded.
-      if (hxBackpackLoaded) {
-        editors.each(function(i, e) {
-          let ed = $(e).find('.summernote');
-          if ($(ed.summernote('code')).text() == '') {
-            ed.summernote('code', hxGetData('summernote_' + getSaveSlot($(e))));
-          }
-        });
-      }
     }
   }, time_delay);
 
@@ -90,34 +81,18 @@ var HXEditor = function(use_backpack, toolbar_options) {
     summer.summernote({
       toolbar: toolbar_options
     });
+    // Add load/save and possibly other controls
     addControls(ed);
-  }
-
-  // Turns on ALL the editors.
-  function activateAllEditors() {
-    console.log('activating all editors');
-    // Get the editor we're interested in.
-    let eds = $('.hx-editor:visible');
-    // Remove the loading indicator.
-    eds.empty();
-    // Insert the div for summernote to hook onto.
-    let summer = $('<div class="summernote"></div>');
-    eds.append(summer);
-    // Activate summernote.
-    summer.summernote({
-      toolbar: toolbar_options
-    });
-    addControls(eds);
-  }
-
-  function addControls(editors) {
-    // Set up auto-save for those that don't have it.
-    editors.each(function(i, e) {
-      if ($(e).attr('data-has-autosave')) {
-        setupAutoSave($(e));
+    // Replace blank editors with the saved data if the backpack is loaded.
+    if (hxBackpackLoaded) {
+      if (summer.summernote('code').text() == '') {
+        summer.summernote('code', hxGetData('summernote_' + getSaveSlot($(e))));
       }
-    });
-
+    }
+    // Set up auto-save for those that don't have it.
+    if ($(e).attr('data-has-autosave') === 'undefined') {
+      setupAutoSave($(e));
+    }
     // If we're not using the backpack, show a warning notice.
     if (!use_backpack) {
       let noSaveWarning = $('<div/>');
@@ -130,7 +105,17 @@ var HXEditor = function(use_backpack, toolbar_options) {
       );
       editors.prepend(noSaveWarning);
     }
+  }
 
+  // Turns on ALL the editors.
+  function activateAllEditors() {
+    console.log('activating all editors');
+    editors.each(function(i, e) {
+      activateEditor(getSaveSlot($(e)));
+    });
+  }
+
+  function addControls(ed) {
     // Add save/load buttons.
     let save_button = $('<button>Save</button>');
     save_button.addClass('savenote');
@@ -142,9 +127,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
     save_notice.addClass('autosavenotice');
     save_notice.css('color', 'darkgray');
 
-    editors.prepend(save_notice);
-    editors.prepend(save_button);
-    editors.prepend(load_button);
+    ed.prepend(save_notice);
+    ed.prepend(save_button);
+    ed.prepend(load_button);
 
     // Save and load disabled until the backpack loads.
     // It could be already loaded, so don't disable unnecessicarily.
