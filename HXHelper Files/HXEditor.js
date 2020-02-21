@@ -9,15 +9,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   logThatThing('HX Editor starting');
 
-  // Read the save slot from the data-saveslot attribute.
-  var editor_save_slots = Object.keys($('div')).map(function(k, i) {
-    try {
-      return $('div')[k].attributes['data-saveslot'];
-    } catch (err) {
-      return '';
-    }
-  });
-
   // Insert a loading indicator.
   let edit_box = $('<div> Loading...</div>');
   let spinner = $('<span class="fa fa-spinner fa-pulse"></span>');
@@ -183,8 +174,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   // The save slot is the value in data-saveslot attribute, or '' if blank.
-  // Pass in a JQuery object that's inside the editor's parent,
-  // such as the save or load buttons.
+  // Pass in the JQuery object for this editor.
   function getSaveSlot(e) {
     try {
       if (typeof e.attr('data-saveslot') === 'undefined') {
@@ -200,35 +190,40 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // The backpack is our data storage system on edX.
   // It posts a message when it loads.
   // See https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack
-  $(window).off('message.hx').on('message.hx', function(e) {
-    var data = e.originalEvent.data;
+  $(window)
+    .off('message.hx')
+    .on('message.hx', function(e) {
+      var data = e.originalEvent.data;
 
-    // Only accept from edx sites.
-    if (
-      e.originalEvent.origin !== 'https://courses.edx.org' &&
-      e.originalEvent.origin !== 'https://preview.edx.org' &&
-      e.originalEvent.origin !== 'https://edge.edx.org'
-    ) {
-      return;
-    }
-
-    // Only accept objects with the right form.
-    if (typeof data === 'string') {
-      if (data === 'ready') {
-        console.log('Backpack ready.');
-        $('.loadnote').removeAttr('disabled');
-        $('.savenote').removeAttr('disabled');
-        $('.autosavenotice').empty();
-        // Replace blank editors with the saved data.
-        $('.hx-editor').each(function(i, el) {
-          let editor = $(el).find('.summernote');
-          if ($(editor.summernote('code')).text() == '') {
-            editor.summernote('code', hxGetData('summernote_' + getSaveSlot($(el))));
-          }
-        });
+      // Only accept from edx sites.
+      if (
+        e.originalEvent.origin !== 'https://courses.edx.org' &&
+        e.originalEvent.origin !== 'https://preview.edx.org' &&
+        e.originalEvent.origin !== 'https://edge.edx.org'
+      ) {
+        return;
       }
-    }
-  });
+
+      // Only accept objects with the right form.
+      if (typeof data === 'string') {
+        if (data === 'ready') {
+          console.log('Backpack ready.');
+          $('.loadnote').removeAttr('disabled');
+          $('.savenote').removeAttr('disabled');
+          $('.autosavenotice').empty();
+          // Replace blank editors with the saved data.
+          $('.hx-editor').each(function(i, el) {
+            let editor = $(el).find('.summernote');
+            if ($(editor.summernote('code')).text() == '') {
+              editor.summernote(
+                'code',
+                hxGetData('summernote_' + getSaveSlot($(el)))
+              );
+            }
+          });
+        }
+      }
+    });
 
   // Publishing functions for general use.
   this.getSaveSlot = getSaveSlot;
