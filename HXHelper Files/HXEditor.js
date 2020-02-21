@@ -2,7 +2,7 @@
 // It uses the Summernote editor.
 
 var HXEditor = function(use_backpack, toolbar_options) {
-  var editors = $('.hx-editor');
+  var editors = $('.hx-editor:visible');
   // Clearing out the editor text.
   // Could save this as default starting text instead?
   editors.empty();
@@ -45,6 +45,15 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // If it loads...
       clearInterval(loadLoop);
       activateAllEditors();
+      // Replace blank editors with the saved data if the backpack is loaded.
+      if (hxBackpackLoaded) {
+        editors.each(function(i, e) {
+          let ed = $(e).find('.summernote');
+          if ($(ed.summernote('code')).text() == '') {
+            ed.summernote('code', hxGetData('summernote_' + getSaveSlot($(e))));
+          }
+        });
+      }
     }
   }, time_delay);
 
@@ -81,7 +90,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   function activateEditor(saveslot) {
     console.log('activating ' + saveslot + ' editor');
     // Get the editor we're interested in.
-    let ed = $('.hx-editor').find('[data-saveslot="' + saveslot + '"]');
+    let ed = $('.hx-editor:visible').find('[data-saveslot="' + saveslot + '"]');
     // Remove the loading indicator.
     ed.empty();
     // Insert the div for summernote to hook onto.
@@ -98,7 +107,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   function activateAllEditors() {
     console.log('activating all editors');
     // Get the editor we're interested in.
-    let eds = $('.hx-editor');
+    let eds = $('.hx-editor:visible');
     // Remove the loading indicator.
     eds.empty();
     // Insert the div for summernote to hook onto.
@@ -112,14 +121,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   function addControls(editors) {
-    // Replace blank editors with the saved data.
-    editors.each(function(i, e) {
-      let ed = $(e).find('.summernote');
-      if ($(ed.summernote('code')).text() == '') {
-        ed.summernote('code', hxGetData('summernote_' + getSaveSlot($(e))));
-      }
-    });
-
     // If we're not using the backpack, show a warning notice.
     if (!use_backpack) {
       let noSaveWarning = $('<div/>');
@@ -164,7 +165,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
         .summernote('code');
 
       // Note the editor's saveslot.
-      hxSetData('summernote_' + getSaveSlot($(this)), markup_string);
+      hxSetData('summernote_' + getSaveSlot($(this).parent()), markup_string);
       console.log(markup_string);
 
       // Disable save/load buttons.
@@ -176,7 +177,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
     $('.loadnote').on('click tap', function() {
       $('.hx-editor .summernote').summernote(
         'code',
-        hxGetData('summernote_' + getSaveSlot($(this)))
+        hxGetData('summernote_' + getSaveSlot($(this).parent()))
       );
     });
   }
@@ -184,12 +185,12 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // The save slot is the value in data-saveslot attribute, or '' if blank.
   // Pass in a JQuery object that's inside the editor's parent,
   // such as the save or load buttons.
-  function getSaveSlot(t) {
+  function getSaveSlot(e) {
     try {
-      if (typeof t.attr('data-saveslot') === 'undefined') {
+      if (typeof e.attr('data-saveslot') === 'undefined') {
         return '';
       } else {
-        return t.attr('data-saveslot');
+        return e.attr('data-saveslot');
       }
     } catch (err) {
       return '';
