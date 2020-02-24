@@ -243,7 +243,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
 
   // Publishing functions for general use.
-  this.getSaveSlot = getSaveSlot;
-  this.activateEditor = activateEditor;
-  this.activateAllEditors = activateAllEditors;
+  window.HXED = {};
+  window.HXED.getSaveSlot = getSaveSlot;
+  window.HXED.activateEditor = activateEditor;
+  window.HXED.activateAllEditors = activateAllEditors;
 };
