@@ -206,6 +206,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
     }
   }
 
+  function getMarkupFrom(slot) {
+    return $('[data-saveslot="' + slot + '"] .summernote').summernote('code');
+  }
+
   // The backpack is our data storage system on edX.
   // It posts a message when it loads.
   // See https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack
@@ -245,6 +249,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // Publishing functions for general use.
   window.HXED = {};
   window.HXED.getSaveSlot = getSaveSlot;
+  window.HXED.getMarkupFrom = getMarkupFrom;
   window.HXED.activateEditor = activateEditor;
   window.HXED.activateAllEditors = activateAllEditors;
 };
