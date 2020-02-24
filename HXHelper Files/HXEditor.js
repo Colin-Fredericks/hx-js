@@ -37,14 +37,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // Unloads all previous autosave routines and adds new ones appropriately.
   function setupAutoSave() {
     console.log('setting up auto-save');
-    // Wipe out all the old autosave functions.
+    // Wipe out the old autosave function.
     if (typeof window.autosavers !== 'undefined') {
-      Object.keys(autosavers).forEach(function(k) {
-        console.log('Removing auto-save for ' + k);
-        clearInterval(autosavers[k]);
-      });
+      clearInterval(window.autosavers);
     }
-    window.autosavers = {};
 
     // Get all the save slots that are present on this page.
     let slots = new Set(
@@ -56,39 +52,45 @@ var HXEditor = function(use_backpack, toolbar_options) {
     slots.delete(undefined);
     console.log(slots);
 
-    // Make an array of autosave functions for our editors.
-    slots.forEach(function(ss) {
-      console.log('setting up autosave for ' + ss);
-      autosavers[ss] = setInterval(function() {
-        saveData(ss);
-      }, 60000);
-    });
+    // Store data as object. It'll get JSON-ized on save.
+    window.saveData = {};
 
-    function saveData(slot) {
-      let ed = $('[data-saveslot="' + slot + '"]');
-      var to_save = {};
-      var has_changed = false;
-      // Don't save things that haven't changed.
-      // Using underscore.js to check object equality.
-      let markup_string = ed.find('.summernote').summernote('code');
-      console.log('Save data for ' + slot);
-      console.log(markup_string);
-      if (!_.isEqual(hxGetData('summernote_' + slot), markup_string)) {
-        to_save['summernote_' + slot] = markup_string;
-        has_changed = true;
-      }
-      if (has_changed) {
-        console.log('To save:');
-        console.log(to_save);
-        hxSetData(to_save);
-        // Disable save/load buttons until the backpack reloads.
-        $('.autosavenotice').text(' Auto-saving...');
-        $('.loadnote').attr('disabled', true);
-        $('.savenote').attr('disabled', true);
+    // Make an autosave function that gets data from all editors.
+    window.autosavers = setInterval(function() {
+      // If there are no editors visible on the page, kill this loop.
+      if ($('.hx-editor').length < 1) {
+        console.log('No editors detected. Turning off auto-save.');
+        clearInterval(window.autosavers);
       } else {
-        console.log('no changes, no need to auto-save');
+        let has_changed = false;
+        let data_to_save = {};
+
+        // Get the data from all editors.
+        slots.forEach(function(slot) {
+          let ed = $('[data-saveslot="' + slot + '"]');
+          let new_data = ed.find('.summernote').summernote('code');
+
+          // Using underscore.js to check object equality.
+          if (!_.isEqual(hxGetData('summernote_' + slot), new_data)) {
+            data_to_save['summernote_' + slot] = new_data;
+            has_changed = true;
+          }
+        });
+
+        // Only save if something changed.
+        if (has_changed) {
+          console.log('Save data:');
+          console.log(data_to_save);
+          hxSetData(data_to_save);
+          // Disable save/load buttons until the backpack reloads.
+          $('.autosavenotice').text(' Auto-saving...');
+          $('.loadnote').attr('disabled', true);
+          $('.savenote').attr('disabled', true);
+        } else {
+          console.log('No change in data, not saving.');
+        }
       }
-    }
+    }, 60000);
   }
 
   // Turns on one particular editor.
