@@ -24,6 +24,7 @@
     - [Automated Table of Contents for Long Pages](#automated-table-of-contents-for-long-pages)
     - [Forum Tricks](#forum-tricks)
     - [Backpack](#learner-backpack)
+    - [Editor](#rich-text-editor)
   - [Future Features](#future-features)
     - [Intro.js walkthroughs](#introjs-walkthroughs)
     - [Audio Player](#audio-player)
@@ -37,7 +38,13 @@ This project collects a large number of javascript and css tricks that have been
 
 ## Currently Working On...
 
-Syntax highlighting for a couple different code languages, using [Prism](http://prismjs.com/).
+Improvements to the [Editor](#rich-text-editor). Specifically:
+
+- Ability to save in multiple slots
+- Renaming and deleting "files"
+- Download HTML version
+- Notification when you're running out of space
+- Accessibility audit
 
 ### Future Improvements
 
@@ -611,6 +618,22 @@ When HX-JS is running you will be able to use the javscript functions:
 - hxClearData('whatever') will empty the `whatever` variable.
 
 This data is stored in the edX server, up to about 100k per student per course.
+
+### Rich Text Editor
+
+Once you have the Backpack (see above) set up, you can create a rich-text editor for your learners to use!
+
+In a Raw HTML component, insert this code:
+
+```html
+<p class="hx-editor" data-saveslot="journaling">
+  [Editor not loaded yet]
+</p>
+```
+
+HX-JS will automatically find it and turn it into an editor, via [Summernote](https://summernote.org/).
+
+The `data-saveslot` attribute lets you select a different slot for each editor, or reuse them. If you have two editors with the same save slot, learners will see the same thing in each one. What they typed before is stored in the backpack and retrieved when they load a page.
 
 ## Future Features
 
