@@ -654,3 +654,39 @@ span#hx-playpauseword {
 }
 
 /************** End Pop-Up Problems Block *******************/
+
+
+/***************************************/
+/* This block is for HXEditor.
+/***************************************/
+
+.hxed-savenote{}
+
+.hxed-loadmenu{
+  background-image: linear-gradient(#f1f1f1,#d9d1d1);
+  font-weight: bold;
+  height: 2.1em;
+  font-size: .9rem;
+  border: 1px solid #d2c9c9;
+}
+
+.hxed-autosavenotice{
+  color: darkgray;
+}
+
+.hxed-persistentnotice {
+  color: darkred;
+  float: right;
+}
+
+.hxed-deletebutton {
+  color: darkred;
+  float: right;
+  font-size: 1.2em;
+}
+
+.hxeditor-control{
+  margin: 2px;
+}
+
+/************** End Editor Block *******************/

@@ -83,9 +83,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
           console.log(data_to_save);
           hxSetData(data_to_save);
           // Disable save/load buttons until the backpack reloads.
-          $('.autosavenotice').text(' Auto-saving...');
+          $('.hxed-autosavenotice').text(' Auto-saving...');
           $('.loadnote').prop('disabled', true);
-          $('.savenote').prop('disabled', true);
+          $('.hxed-savenote').prop('disabled', true);
         } else {
           console.log('No change in data, not saving.');
         }
@@ -144,31 +144,59 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
   }
 
+  // Add save/load/delete and other controls.
   function addControls(ed) {
-    // Add save/load buttons.
-    let save_button = $('<button>Save</button>');
-    save_button.addClass('savenote hxeditor-control');
+  
+    let load_menu = $('<select></button>');
+    let menu_label = $('<option value="none">Menu</option>');
+    let new_file = $('<option value="new">New File...</option>');
+    let rename_file = $('<option value="rename">Rename File...</option>');
+    let blank_line = $('<option value="blank"></option>');
+    load_menu.attr('id', 'hxed-loadmenu');
+    load_menu.addClass('hxed-loadmenu hxeditor-control');
+    load_menu.append(menu_label);
+    load_menu.append(new_file);
+    load_menu.append(rename_file);
+    load_menu.append(blank_line);
 
-    let load_button = $('<button>Load</button>');
-    load_button.addClass('loadnote hxeditor-control');
+    // Get all the summernote_whatever save slots and show them.
+    let all_data = hxGetAllData();
+    Object.keys(all_data).forEach(function(k){ 
+      k = k.replace('summernote_','');
+      if(k === ''){ k = 'Untitled'; }
+      let slot = $('<option value="summernote_' + k + '">' + k + '</option>');
+      load_menu.append(slot);
+    });
+    
+
+    let save_button = $('<button>Save</button>');
+    save_button.addClass('hxed-savenote hxeditor-control');
 
     let save_notice = $('<span/>');
-    save_notice.addClass('autosavenotice');
-    save_notice.css('color', 'darkgray');
+    save_notice.addClass('hxed-autosavenotice');
 
+    let persistent_notice = $('<span/>');
+    persistent_notice.addClass('hxed-persistentnotice');
+    
+    let delete_button = $('<span/>');
+    delete_button.addClass('fa fa-trash hxed-deletebutton hxeditor-control');
+    delete_button.attr('role', 'button');
+
+    ed.prepend(delete_button);
+    ed.prepend(persistent_notice);
     ed.prepend(save_notice);
     ed.prepend(save_button);
-    ed.prepend(load_button);
+    ed.prepend(load_menu);
 
     // Save and load disabled until the backpack loads.
     // It could be already loaded, so don't disable unnecessicarily.
     if (typeof hxBackpackLoaded === 'undefined') {
-      $('button.hxeditor-control').prop('disabled', true);
+      $('.hxeditor-control').prop('disabled', true);
       save_notice.text(' Loading...');
     }
 
     // Add listeners for save/load buttons.
-    $('.savenote').on('click tap', function() {
+    $('.hxed-savenote').on('click tap', function() {
       let markup_string = $(this)
         .parent()
         .find('.summernote')
@@ -179,8 +207,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
       // Disable save/load buttons.
       // These will re-enable after the backpack loads.
-      $('.autosavenotice').text(' Saving...');
-      $('button.hxeditor-control').prop('disabled', true);
+      $('.hxed-autosavenotice').text(' Saving...');
+      $('.hxeditor-control').prop('disabled', true);
     });
     $('.loadnote').on('click tap', function() {
       $('.hx-editor .summernote').summernote(
@@ -228,8 +256,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // Only accept objects with the right form.
       if (typeof data === 'string') {
         if (data === 'ready') {
-          $('button.hxeditor-control').prop('disabled', false);
-          $('.autosavenotice').empty();
+          $('.hxeditor-control').prop('disabled', false);
+          $('.hxed-autosavenotice').empty();
           // Replace blank editors with the saved data.
           $('.hx-editor').each(function(i, el) {
             let editor = $(el).find('.summernote');
