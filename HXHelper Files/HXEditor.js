@@ -85,7 +85,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
           // Disable save/load buttons until the backpack reloads.
           $('.hxed-autosavenotice').text(' Auto-saving...');
           $('.loadnote').prop('disabled', true);
-          $('.hxed-savenote').prop('disabled', true);
+          $('.hxed-save').prop('disabled', true);
         } else {
           console.log('No change in data, not saving.');
         }
@@ -143,34 +143,60 @@ var HXEditor = function(use_backpack, toolbar_options) {
       activateEditor(getSaveSlot($(e)));
     });
   }
+  
+  // Sometimes we need to rebuild this, so it gets its own function.
+  function buildMenu(ed){
+    let load_menu = $('<select></select>');
+    let starting_value='new';
+  
+    let spacer1 = $('<option value="spacer1"></option>');
+    let spacer2 = $('<option value="spacer2"></option>');
+    let new_file = $('<option value="new">New File...</option>');
+    let rename_file = $('<option value="rename">Rename File...</option>');
+    load_menu.attr('id', 'hxed-loadmenu');
+    load_menu.addClass('hxed-loadmenu hxeditor-control');
+    load_menu.append(spacer1);
+    load_menu.append(new_file);
+    load_menu.append(rename_file);
+    load_menu.append(spacer2);
+
+    // Get all the summernote_whatever save slots and add to menu.
+    let all_data = hxGetAllData();
+    Object.keys(all_data).forEach(function(k){
+      let current_slot = false;
+      k = k.replace('summernote_','');
+      if( getSaveSlot(ed) === k ){
+        current_slot = true;
+      }      
+      if(k === ''){ k = 'Untitled'; }
+      let slot = $('<option value="summernote_' + k + '">' + k + '</option>');
+
+      // Put current slot at top of menu.
+      if(current_slot){ 
+        load_menu.prepend(slot); 
+        starting_value = 'summernote_' + k;
+      }else{
+        slot.addClass('hxed-slotchoice');
+        load_menu.append(slot);
+      }
+    });
+    
+    load_menu.val(starting_value);
+    
+    return load_menu;
+
+  }
 
   // Add save/load/delete and other controls.
   function addControls(ed) {
   
-    let load_menu = $('<select></button>');
-    let menu_label = $('<option value="none">Menu</option>');
-    let new_file = $('<option value="new">New File...</option>');
-    let rename_file = $('<option value="rename">Rename File...</option>');
-    let blank_line = $('<option value="blank"></option>');
-    load_menu.attr('id', 'hxed-loadmenu');
-    load_menu.addClass('hxed-loadmenu hxeditor-control');
-    load_menu.append(menu_label);
-    load_menu.append(new_file);
-    load_menu.append(rename_file);
-    load_menu.append(blank_line);
+    let load_menu = buildMenu(ed);
+  
+    let download_button = $('<button><span class="fa fa-download"></span> Download</button>');
+    download_button.addClass('hxed-download hxeditor-control');
 
-    // Get all the summernote_whatever save slots and show them.
-    let all_data = hxGetAllData();
-    Object.keys(all_data).forEach(function(k){ 
-      k = k.replace('summernote_','');
-      if(k === ''){ k = 'Untitled'; }
-      let slot = $('<option value="summernote_' + k + '">' + k + '</option>');
-      load_menu.append(slot);
-    });
-    
-
-    let save_button = $('<button>Save</button>');
-    save_button.addClass('hxed-savenote hxeditor-control');
+    let save_button = $('<button><span class="fa fa-floppy-o"></span> Save</button>');
+    save_button.addClass('hxed-save hxeditor-control');
 
     let save_notice = $('<span/>');
     save_notice.addClass('hxed-autosavenotice');
@@ -186,6 +212,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
     ed.prepend(persistent_notice);
     ed.prepend(save_notice);
     ed.prepend(save_button);
+    ed.prepend(download_button);
     ed.prepend(load_menu);
 
     // Save and load disabled until the backpack loads.
@@ -196,7 +223,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
     }
 
     // Add listeners for save/load buttons.
-    $('.hxed-savenote').on('click tap', function() {
+    $('.hxed-save').on('click tap', function() {
       let markup_string = $(this)
         .parent()
         .find('.summernote')

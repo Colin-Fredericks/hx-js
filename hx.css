@@ -660,7 +660,9 @@ span#hx-playpauseword {
 /* This block is for HXEditor.
 /***************************************/
 
-.hxed-savenote{}
+.hxed-save{}
+
+.hxed-download{}
 
 .hxed-loadmenu{
   background-image: linear-gradient(#f1f1f1,#d9d1d1);
@@ -668,6 +670,10 @@ span#hx-playpauseword {
   height: 2.1em;
   font-size: .9rem;
   border: 1px solid #d2c9c9;
+}
+
+.hxed-currentslot{
+  color: #0075b4;
 }
 
 .hxed-autosavenotice{
