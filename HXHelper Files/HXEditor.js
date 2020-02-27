@@ -84,8 +84,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
           hxSetData(data_to_save);
           // Disable save/load buttons until the backpack reloads.
           $('.autosavenotice').text(' Auto-saving...');
-          $('.loadnote').attr('disabled', true);
-          $('.savenote').attr('disabled', true);
+          $('.loadnote').prop('disabled', true);
+          $('.savenote').prop('disabled', true);
         } else {
           console.log('No change in data, not saving.');
         }
@@ -147,10 +147,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
   function addControls(ed) {
     // Add save/load buttons.
     let save_button = $('<button>Save</button>');
-    save_button.addClass('savenote');
+    save_button.addClass('savenote hxeditor-control');
 
     let load_button = $('<button>Load</button>');
-    load_button.addClass('loadnote');
+    load_button.addClass('loadnote hxeditor-control');
 
     let save_notice = $('<span/>');
     save_notice.addClass('autosavenotice');
@@ -163,8 +163,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
     // Save and load disabled until the backpack loads.
     // It could be already loaded, so don't disable unnecessicarily.
     if (typeof hxBackpackLoaded === 'undefined') {
-      save_button.attr('disabled', true);
-      load_button.attr('disabled', true);
+      $('button.hxeditor-control').prop('disabled', true);
       save_notice.text(' Loading...');
     }
 
@@ -181,8 +180,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // Disable save/load buttons.
       // These will re-enable after the backpack loads.
       $('.autosavenotice').text(' Saving...');
-      $('.loadnote').attr('disabled', true);
-      $('.savenote').attr('disabled', true);
+      $('button.hxeditor-control').prop('disabled', true);
     });
     $('.loadnote').on('click tap', function() {
       $('.hx-editor .summernote').summernote(
@@ -230,8 +228,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // Only accept objects with the right form.
       if (typeof data === 'string') {
         if (data === 'ready') {
-          $('.loadnote').removeAttr('disabled');
-          $('.savenote').removeAttr('disabled');
+          $('button.hxeditor-control').prop('disabled', false);
           $('.autosavenotice').empty();
           // Replace blank editors with the saved data.
           $('.hx-editor').each(function(i, el) {
