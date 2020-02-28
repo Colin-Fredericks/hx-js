@@ -689,6 +689,9 @@ span#hx-playpauseword {
   color: darkred;
   float: right;
   font-size: 1.2em;
+  background-color: transparent;
+  background-image: none;
+  border: none;
 }
 
 .hxeditor-control{
