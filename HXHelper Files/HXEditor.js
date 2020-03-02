@@ -50,7 +50,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
     );
     // Remove undefined things from the set.
     slots.delete(undefined);
-    console.log(slots);
 
     // Store data as object. It'll get JSON-ized on save.
     window.saveData = {};
@@ -112,7 +111,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       toolbar: toolbar_options
     });
     // Add load/save and possibly other controls
-    addControls(ed);
+    addControls(ed, saveslot);
     // Replace blank editors with the saved data if the backpack is loaded.
     if (hxBackpackLoaded) {
       if ($(ed.find('.summernote').summernote('code')).text() == '') {
@@ -138,7 +137,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   // Turns on ALL the editors.
   function activateAllEditors() {
-    console.log('activating all editors');
     editors.each(function(i, e) {
       activateEditor(getSaveSlot($(e)));
     });
@@ -146,9 +144,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   // Sometimes we need to rebuild this, so it gets its own function.
   // Pass in the jquery object for the editor.
-  function buildMenu(ed) {
+  function buildMenu(ed, data, starting_value) {
     let file_menu = $('<select></select>');
-    let starting_value = 'new';
 
     let spacer1 = $('<option value="special-spacer1"></option>');
     let spacer2 = $('<option value="special-spacer2"></option>');
@@ -163,38 +160,40 @@ var HXEditor = function(use_backpack, toolbar_options) {
     file_menu.append(rename_file);
     file_menu.append(spacer2);
 
+    if (starting_value === '') {
+      starting_value = 'Untitled';
+    }
+
     // Get all the summernote_whatever save slots and add to menu.
-    let all_data = hxGetAllData();
-    Object.keys(all_data).forEach(function(k) {
-      let current_slot = false;
+    Object.keys(data).forEach(function(k) {
+      console.log(k);
+      let is_current_slot = false;
       k = k.replace('summernote_', '');
       if (getSaveSlot(ed) === k) {
-        current_slot = true;
+        is_current_slot = true;
       }
       if (k === '') {
         k = 'Untitled';
       }
       let slot = $('<option value="summernote_' + k + '">' + k + '</option>');
-
-      // Put current slot at top of menu.
-      if (current_slot) {
-        file_menu.prepend(slot);
-        starting_value = 'summernote_' + k;
-      } else {
-        slot.addClass('hxed-slotchoice');
-        file_menu.append(slot);
-      }
+      file_menu.append(slot);
     });
 
-    file_menu.val(starting_value);
+    // Move starting value to top.
+    file_menu
+      .find('option[value="summernote_' + starting_value + '"]')
+      .detach()
+      .prependTo(file_menu);
+
+    file_menu.val('summernote_' + starting_value);
 
     return file_menu;
   }
 
   // Pass in the jquery object for the editor box.
-  function rebuildMenu(editor) {
+  function rebuildMenu(editor, data, starting_value) {
     // Clear and rebuild the menu.
-    let new_menu = buildMenu(editor);
+    let new_menu = buildMenu(editor, data, starting_value);
     editor.find('.hxed-loadmenu').remove();
     editor.prepend(new_menu);
     attachMenuListener(new_menu);
@@ -309,9 +308,28 @@ var HXEditor = function(use_backpack, toolbar_options) {
     document.body.removeChild(element);
   }
 
+  // Which entry in our menu is the topmost actual file?
+  function getTopFile(menu) {
+    let special_entries = [
+      'special-spacer1',
+      'special-spacer2',
+      'special-hx-new',
+      'special-hx-rename'
+    ];
+    $(menu)
+      .find('option')
+      .each(function(i, e) {
+        if (special_entries.indexOf(e.value) > -1) {
+          return e.value;
+        }
+      });
+  }
+
   // Add save/load/delete and other controls.
-  function addControls(ed) {
-    let file_menu = buildMenu(ed);
+  function addControls(ed, slot) {
+    let data = hxGetAllData();
+    console.log(ed, data, slot);
+    let file_menu = buildMenu(ed, data, slot);
 
     let download_button = $(
       '<button><span class="fa fa-download"></span> Download</button>'
@@ -379,25 +397,29 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // ARE YOU SURE???
       let wreck_it = confirm('Are you sure you want to delete this file?');
       if (wreck_it) {
-        // Clear the data and then rebuild the menu.
-        const p = new Promise(function(res, rej) {
-          resolve(hxClearData('summernote_' + getSaveSlot($(this).parent())));
-        });
-        p.then(function(res) {
-          if (res) {
-            // Clear and rebuild the menu.
-            rebuildMenu($(this).parent());
-          }
-        });
-        // Erase the text.
-        $(this)
-          .parent()
-          .find('.summernote')
-          .summernote('code', '<p></p>');
+        // Rebuild the menu without the offending item.
+        let temp_data = hxGetAllData();
+        let slot = getSaveSlot($(this).parent());
         // Blank out the save slot for the editor.
         $(this)
           .parent()
           .attr('sata-saveslot', '');
+        ed.find('.hxed-autosavenotice').empty();
+        // Erase the text.
+        $(this)
+          .parent()
+          .find('.summernote')
+          .summernote('code', '<p><br/></p>');
+
+        // Remove the data from our temp version.
+        delete temp_data['summernote_' + slot];
+
+        // Remove the data from the backpack. This takes about a second.
+        hxClearData('summernote_' + slot);
+
+        // Rebuild the menu from our temp data.
+        console.log($(this).parent(), temp_data, getTopFile($(this)));
+        rebuildMenu($(this).parent(), temp_data, getTopFile($(this)));
       }
     });
   }
