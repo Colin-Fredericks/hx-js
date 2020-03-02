@@ -3,7 +3,7 @@
 
 var HXEditor = function(use_backpack, toolbar_options) {
   var editors = $('.hx-editor:visible');
-  var prefix = prefix; // slot prefix for data storage
+  var prefix = 'summernote_'; // slot prefix for data storage
 
   logThatThing('HX Editor starting');
 
@@ -64,16 +64,18 @@ var HXEditor = function(use_backpack, toolbar_options) {
       } else {
         let has_changed = false;
         let data_to_save = {};
+        let existing_data = hxGetAllData();
 
-        // Get the data from all editors.
+        // Get the data from all visible editors.
         slots.forEach(function(slot) {
           let ed = $('[data-saveslot="' + slot + '"]');
           let new_data = ed.find('.summernote').summernote('code');
-
-          // Using underscore.js to check object equality.
-          if (!_.isEqual(hxGetData(prefix + slot), new_data)) {
-            data_to_save[prefix + slot] = new_data;
-            has_changed = true;
+          if (typeof new_data === 'string') {
+            // Using underscore.js to check object equality.
+            if (!_.isEqual(existing_data[prefix + slot], new_data)) {
+              data_to_save[prefix + slot] = new_data;
+              has_changed = true;
+            }
           }
         });
 
@@ -112,7 +114,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       toolbar: toolbar_options
     });
     // Add load/save and possibly other controls
-    addControls(ed, saveslot);
+    addControls(ed);
     // Replace blank editors with the saved data if the backpack is loaded.
     if (hxBackpackLoaded) {
       if ($(ed.find('.summernote').summernote('code')).text() == '') {
@@ -205,7 +207,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
     $(this)
       .off('focusin.hxeditor')
       .on('focusin.hxeditor', function() {
-        $(this).data('previous-val', $(menu).val());
+        $(this).attr('data-previous-val', $(menu).val());
       });
 
     $(this)
@@ -222,7 +224,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
         // Ignore any blank slots.
         if (slot.startsWith('special-spacer')) {
           // put selector back where it was. Do nothing.
-          $(menu).val($(this).data('previous-val'));
+          $(menu).val($(this).attr('data-previous-val'));
         }
         // Two special cases: new files and renaming existing files.
         else if (slot === 'special-hx-new') {
@@ -235,7 +237,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
             short_slots = all_slots.map(e => e.replace(prefix, ''));
             if (short_slots.indexOf(new_slot) !== -1) {
               // Reject duplicate filename.
-              $(menu).val($(this).data('previous-val'));
+              $(menu).val($(this).attr('data-previous-val'));
               // Give a notice.
               editor
                 .parent()
@@ -326,10 +328,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   // Add save/load/delete and other controls.
-  function addControls(ed, slot) {
+  function addControls(ed) {
     let data = hxGetAllData();
-    console.log(ed, data, slot);
-    let file_menu = buildMenu(ed, data, slot);
+    let file_menu = buildMenu(ed, data, getSaveSlot(ed));
 
     let download_button = $(
       '<button><span class="fa fa-download"></span> Download</button>'
@@ -371,11 +372,12 @@ var HXEditor = function(use_backpack, toolbar_options) {
     // Listener for the download button.
     // Gives learner a document with an HTML fragment.
     download_button.on('click tap', function() {
+      let slot = getSaveSlot($(this).parent());
       let markup_string = $(this)
         .parent()
         .find('.summernote')
         .summernote('code');
-      provideDownload(getSaveSlot($(this).parent()) + '.html', markup_string);
+      provideDownload(slot + '.html', markup_string);
     });
 
     save_button.on('click tap', function() {
@@ -383,9 +385,11 @@ var HXEditor = function(use_backpack, toolbar_options) {
         .parent()
         .find('.summernote')
         .summernote('code');
+      let slot = getSaveSlot($(this).parent());
 
       // Note the editor's saveslot.
-      hxSetData(prefix + getSaveSlot($(this).parent()), markup_string);
+      console.log(prefix + slot, markup_string);
+      hxSetData(prefix + slot, markup_string);
 
       // Disable save/load buttons.
       // These will re-enable after the backpack loads.
@@ -428,10 +432,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // Pass in the JQuery object for this editor.
   function getSaveSlot(e) {
     try {
-      if (typeof e.data('saveslot') === 'undefined') {
+      if (typeof e.attr('data-saveslot') === 'undefined') {
         return '';
       } else {
-        return e.data('saveslot');
+        return e.attr('data-saveslot');
       }
     } catch (err) {
       return '';
