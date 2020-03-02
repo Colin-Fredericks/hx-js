@@ -143,13 +143,13 @@ var HXEditor = function(use_backpack, toolbar_options) {
       activateEditor(getSaveSlot($(e)));
     });
   }
-  
+
   // Sometimes we need to rebuild this, so it gets its own function.
   // Pass in the jquery object for the editor.
-  function buildMenu(ed){
+  function buildMenu(ed) {
     let load_menu = $('<select></select>');
-    let starting_value='new';
-  
+    let starting_value = 'new';
+
     let spacer1 = $('<option value="spacer1"></option>');
     let spacer2 = $('<option value="spacer2"></option>');
     let new_file = $('<option value="new">New File...</option>');
@@ -163,42 +163,53 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Get all the summernote_whatever save slots and add to menu.
     let all_data = hxGetAllData();
-    Object.keys(all_data).forEach(function(k){
+    Object.keys(all_data).forEach(function(k) {
       let current_slot = false;
-      k = k.replace('summernote_','');
-      if( getSaveSlot(ed) === k ){
+      k = k.replace('summernote_', '');
+      if (getSaveSlot(ed) === k) {
         current_slot = true;
-      }      
-      if(k === ''){ k = 'Untitled'; }
+      }
+      if (k === '') {
+        k = 'Untitled';
+      }
       let slot = $('<option value="summernote_' + k + '">' + k + '</option>');
 
       // Put current slot at top of menu.
-      if(current_slot){ 
-        load_menu.prepend(slot); 
+      if (current_slot) {
+        load_menu.prepend(slot);
         starting_value = 'summernote_' + k;
-      }else{
+      } else {
         slot.addClass('hxed-slotchoice');
         load_menu.append(slot);
       }
     });
-    
-    load_menu.val(starting_value);
-    
-    return load_menu;
 
+    load_menu.val(starting_value);
+
+    return load_menu;
   }
-  
+
   // Pass in the query object for the menu.
-  function attachMenuListener(menu){
-    $(this).on('change', function(e){
-      console.log(e);
-    });
+  function attachMenuListener(menu) {
+    $(this)
+      .off('change.hxeditor')
+      .on('change.hxeditor', function(e) {
+        console.log(e.target.value);
+        let editor = $('[data-hxeditor="' + e.target.value + '"]');
+        let editor_key = e.target.value.replace('summernote_', '');
+        // Remove current text.
+
+        // Add new text.
+      });
   }
-  
+
   // Create and activate a link to download the current text.
   function provideDownload(filename, text) {
     let element = document.createElement('a');
-    element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute(
+      'href',
+      'data:text/html;charset=utf-8,' + encodeURIComponent(text)
+    );
     element.setAttribute('download', filename);
 
     element.style.display = 'none';
@@ -211,13 +222,16 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   // Add save/load/delete and other controls.
   function addControls(ed) {
-  
     let load_menu = buildMenu(ed);
-  
-    let download_button = $('<button><span class="fa fa-download"></span> Download</button>');
+
+    let download_button = $(
+      '<button><span class="fa fa-download"></span> Download</button>'
+    );
     download_button.addClass('hxed-download hxeditor-control');
 
-    let save_button = $('<button><span class="fa fa-floppy-o"></span> Save</button>');
+    let save_button = $(
+      '<button><span class="fa fa-floppy-o"></span> Save</button>'
+    );
     save_button.addClass('hxed-save hxeditor-control');
 
     let save_notice = $('<span/>');
@@ -225,7 +239,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     let persistent_notice = $('<span/>');
     persistent_notice.addClass('hxed-persistentnotice');
-    
+
     let delete_button = $('<button/>');
     delete_button.addClass('fa fa-trash hxed-deletebutton hxeditor-control');
     delete_button.attr('role', 'button');
@@ -246,15 +260,15 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Add listeners for all the controls.
     attachMenuListener(load_menu);
-    
-    download_button.on('click tap', function(){
+
+    download_button.on('click tap', function() {
       let markup_string = $(this)
         .parent()
         .find('.summernote')
         .summernote('code');
       provideDownload(getSaveSlot($(this).parent()) + '.html', markup_string);
     });
-    
+
     save_button.on('click tap', function() {
       let markup_string = $(this)
         .parent()
@@ -270,20 +284,27 @@ var HXEditor = function(use_backpack, toolbar_options) {
       $('.hxeditor-control').prop('disabled', true);
     });
 
-    delete_button.on('click tap', function(){
+    delete_button.on('click tap', function() {
       // ARE YOU SURE???
-      let wreck_it = confirm("Are you sure you want to delete this file?");
-      if( wreck_it ) {
+      let wreck_it = confirm('Are you sure you want to delete this file?');
+      if (wreck_it) {
         hxClearData('summernote_' + getSaveSlot($(this).parent()));
-        $(this).parent().find('.summernote').summernote('code', '<p></p>');
+        $(this)
+          .parent()
+          .find('.summernote')
+          .summernote('code', '<p></p>');
         // Clear and rebuild the menu.
         let new_menu = buildMenu($(this).parent());
-        $(this).parent().find('.hxed-loadmenu').remove();
-        $(this).parent().prepend(new_menu);
+        $(this)
+          .parent()
+          .find('.hxed-loadmenu')
+          .remove();
+        $(this)
+          .parent()
+          .prepend(new_menu);
         attachMenuListener(new_menu);
       }
     });
-
   }
 
   // The save slot is the value in data-saveslot attribute, or '' if blank.
