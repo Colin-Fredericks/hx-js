@@ -152,8 +152,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     let spacer1 = $('<option value="spacer1"></option>');
     let spacer2 = $('<option value="spacer2"></option>');
-    let new_file = $('<option value="new">New File...</option>');
-    let rename_file = $('<option value="rename">Rename File...</option>');
+    let new_file = $('<option value="special-hx-new">New File...</option>');
+    let rename_file = $(
+      '<option value="special-hx-rename">Rename File...</option>'
+    );
     load_menu.attr('id', 'hxed-loadmenu');
     load_menu.addClass('hxed-loadmenu hxeditor-control');
     load_menu.append(spacer1);
@@ -189,17 +191,52 @@ var HXEditor = function(use_backpack, toolbar_options) {
     return load_menu;
   }
 
-  // Pass in the query object for the menu.
+  // Pass in the jquery object for the editor box.
+  function rebuildMenu(editor) {
+    // Clear and rebuild the menu.
+    let new_menu = buildMenu(editor);
+    editor.find('.hxed-loadmenu').remove();
+    editor.prepend(new_menu);
+    attachMenuListener(new_menu);
+  }
+
+  // Pass in the jquery object for the menu.
   function attachMenuListener(menu) {
     $(this)
       .off('change.hxeditor')
       .on('change.hxeditor', function(e) {
         console.log(e.target.value);
-        let editor = $('[data-hxeditor="' + e.target.value + '"]');
-        let editor_key = e.target.value.replace('summernote_', '');
-        // Remove current text.
-
-        // Add new text.
+        let slot = e.target.value.replace('summernote_', '');
+        if (slot === 'Untitled') {
+          slot = '';
+        }
+        let editor = $('[data-saveslot="' + slot + '"] .summernote');
+        // Two special cases: new files and renaming existing files.
+        if (slot === 'special-hx-new') {
+          let new_slot = prompt('Name your file:', '');
+          if (new_slot === null || new_slot === '') {
+            console.log('new file cancelled');
+          } else {
+            editor.parent().attr('data-saveslot', new_slot);
+            editor.summernote('code', '<p></p>');
+          }
+        } else if (slot === 'special-hx-rename') {
+          let rename_slot = prompt('Rename to:', slot);
+          if (rename_slot === null || rename_slot === '') {
+            console.log('rename cancelled');
+          } else {
+            // Rename the save slot.
+            editor.parent().attr('data-saveslot', rename_slot);
+            rebuildMenu(editor.parent());
+          }
+        }
+        // Otherwise, we're switching to a different save slot.
+        else {
+          // Replace text.
+          editor.summernote('code', hxGetData(e.target.value));
+          // Change the data attribute on the editor.
+          editor.parent().attr('data-saveslot', slot);
+        }
       });
   }
 
@@ -258,9 +295,11 @@ var HXEditor = function(use_backpack, toolbar_options) {
       save_notice.text(' Loading...');
     }
 
-    // Add listeners for all the controls.
+    // Add listeners for the menu.
     attachMenuListener(load_menu);
 
+    // Listener for the download button.
+    // Gives learner a document with an HTML fragment.
     download_button.on('click tap', function() {
       let markup_string = $(this)
         .parent()
@@ -289,20 +328,17 @@ var HXEditor = function(use_backpack, toolbar_options) {
       let wreck_it = confirm('Are you sure you want to delete this file?');
       if (wreck_it) {
         hxClearData('summernote_' + getSaveSlot($(this).parent()));
+        // Erase the text.
         $(this)
           .parent()
           .find('.summernote')
           .summernote('code', '<p></p>');
+        // Blank out the save slot for the editor.
+        $(this)
+          .parent()
+          .attr('sata-saveslot', '');
         // Clear and rebuild the menu.
-        let new_menu = buildMenu($(this).parent());
-        $(this)
-          .parent()
-          .find('.hxed-loadmenu')
-          .remove();
-        $(this)
-          .parent()
-          .prepend(new_menu);
-        attachMenuListener(new_menu);
+        rebuildMenu($(this).parent());
       }
     });
   }
