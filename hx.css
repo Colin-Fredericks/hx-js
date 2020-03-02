@@ -256,7 +256,7 @@ h4.hx-superbold {
 }
 
 .hx-yellowbox a {
-  font-weight:bold !important; 
+  font-weight: bold !important;
 }
 
 .hx-yellowbox h4 {
@@ -655,29 +655,30 @@ span#hx-playpauseword {
 
 /************** End Pop-Up Problems Block *******************/
 
-
 /***************************************/
 /* This block is for HXEditor.
 /***************************************/
 
-.hxed-save{}
+.hxed-save {
+}
 
-.hxed-download{}
+.hxed-download {
+}
 
-.hxed-loadmenu{
-  background-image: linear-gradient(#f1f1f1,#d9d1d1);
+.hxed-loadmenu {
+  background-image: linear-gradient(#f1f1f1, #d9d1d1);
   font-weight: bold;
   height: 2.1em;
-  font-size: .9rem;
+  font-size: 0.9rem;
   border: 1px solid #d2c9c9;
 }
 
-.hxed-currentslot{
+.hxed-currentslot {
   color: #0075b4;
 }
 
-.hxed-autosavenotice{
-  color: darkgray;
+.hxed-autosavenotice {
+  color: #666;
 }
 
 .hxed-persistentnotice {
@@ -694,7 +695,7 @@ span#hx-playpauseword {
   border: none;
 }
 
-.hxeditor-control{
+.hxeditor-control {
   margin: 2px;
 }
 
