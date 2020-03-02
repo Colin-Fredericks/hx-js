@@ -231,9 +231,35 @@ var HXEditor = function(use_backpack, toolbar_options) {
           if (new_slot === null || new_slot === '') {
             console.log('new file cancelled');
           } else {
-            editor.parent().attr('data-saveslot', new_slot);
-            editor.summernote('code', '<p></p>');
-            rebuildMenu(editor.parent());
+            // Don't allow names that are identical to existing names.
+            let all_slots = Object.keys(hxGetAllData());
+            short_slots = all_slots.map(e => e.replace('summernote_', ''));
+            if (short_slots.indexOf(new_slot) !== -1) {
+              // Reject duplicate filename.
+              $(menu).val($(this).data('previous-val'));
+              // Give a notice.
+              editor
+                .parent()
+                .find('.hxed-autosavenotice')
+                .text('Duplicate filname, cannot create.');
+              setTimeout(function() {
+                editor
+                  .parent()
+                  .find('.hxed-autosavenotice')
+                  .empty();
+              }, 3000);
+            } else {
+              editor.parent().attr('data-saveslot', new_slot);
+              editor.summernote('code', '<p><br/></p>');
+              // Add the menu item.
+              $(menu).prepend(
+                '<option value="' + new_slot + '">' + new_slot + '</option>'
+              );
+              $(menu).val(new_slot);
+              attachMenuListener(menu);
+              // Save.
+              hxSetData('summernote_' + new_slot, '<p><br/></p>');
+            }
           }
         } else if (slot === 'special-hx-rename') {
           let current_slot = getSaveSlot(editor.parent());
@@ -243,7 +269,17 @@ var HXEditor = function(use_backpack, toolbar_options) {
           } else {
             // Rename the save slot.
             editor.parent().attr('data-saveslot', rename_slot);
-            rebuildMenu(editor.parent());
+            // Change the menu item.
+            $('option[value="' + current_slot + '"]').remove();
+            $(menu).prepend(
+              '<option value="' + new_slot + '">' + new_slot + '</option>'
+            );
+            $(menu).val(rename_slot);
+            attachMenuListener(menu);
+            // Remove the old data.
+            hxClearData(current_slot);
+            // Save.
+            hxSetData('summernote_' + rename_slot, getMarkupFrom(rename_slot));
           }
         }
         // Otherwise, we're switching to a different save slot.
@@ -343,7 +379,16 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // ARE YOU SURE???
       let wreck_it = confirm('Are you sure you want to delete this file?');
       if (wreck_it) {
-        hxClearData('summernote_' + getSaveSlot($(this).parent()));
+        // Clear the data and then rebuild the menu.
+        const p = new Promise(function(res, rej) {
+          resolve(hxClearData('summernote_' + getSaveSlot($(this).parent())));
+        });
+        p.then(function(res) {
+          if (res) {
+            // Clear and rebuild the menu.
+            rebuildMenu($(this).parent());
+          }
+        });
         // Erase the text.
         $(this)
           .parent()
@@ -353,8 +398,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
         $(this)
           .parent()
           .attr('sata-saveslot', '');
-        // Clear and rebuild the menu.
-        rebuildMenu($(this).parent());
       }
     });
   }
