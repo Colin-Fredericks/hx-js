@@ -425,11 +425,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
         // Rebuild the menu without the offending item.
         let temp_data = getAllData();
         let slot = getSaveSlot($(this));
-        // Blank out the save slot for the editor.
-        $(this)
-          .parent()
-          .attr('data-saveslot', '');
-        ed.find('.hxed-autosavenotice').empty();
         // Erase the text.
         $(this)
           .parent()
@@ -439,7 +434,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
         // Remove the data from our temp version.
         delete temp_data[slot];
 
-        // Remove the data from the backpack. This takes about a second.
+        // Remove the data from the backpack.
+        // This takes about a second, so don't wait for it.
         clearData(slot);
 
         // Rebuild the menu from our temp data.
