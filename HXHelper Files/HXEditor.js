@@ -7,6 +7,11 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   logThatThing('HX Editor starting');
 
+  //***************************
+  // Utility functions
+  // for handling data.
+  //***************************
+
   // These functions make handling prefixes easier.
   function getData(slot) {
     return hxGetData(prefix + slot);
@@ -37,35 +42,58 @@ var HXEditor = function(use_backpack, toolbar_options) {
     return new_data;
   }
 
-  // Wait for summernote to load.
-  // It's in an external javascript file loaded by hx-js.
-  var timer_count = 0;
-  var time_delay = 250; // miliseconds
-  var loadLoop = setInterval(function() {
-    timer_count += time_delay;
+  //********************************
+  // Utility functions
+  // for working with DOM elements.
+  //********************************
 
-    // If it doesn't load after 7 seconds,
-    // kill the indicator and inform the learner.
-    if (timer_count > 7000) {
-      editors.empty();
-      editors.append(
-        '<p>Editor did not load. Reload the page if you want to try again.</p>'
-      );
-      clearInterval(loadLoop);
+  // The save slot is the value in data-saveslot attribute, or '' if blank.
+  // Pass in the JQuery object for a child of this editor.
+  function getSaveSlot(e) {
+    if (e.is('[data-saveslot]')) {
+      return e.attr('data-saveslot');
+    } else {
+      let editor = e.parents('[data-saveslot]');
+      return editor.attr('data-saveslot');
     }
+  }
 
-    if (typeof $.summernote !== 'undefined') {
-      // When it loads, stop waiting.
-      clearInterval(loadLoop);
-      // Clear the loading messages.
-      editors.empty();
-      // Turn on all editors on this page.
-      activateAllEditors();
-      setupAutoSave();
-    }
-  }, time_delay);
+  function getEditBox(slot) {
+    return $('[data-saveslot="' + slot + '"]');
+  }
 
-  // Unloads all previous autosave routines and adds new ones appropriately.
+  function getMarkupFrom(slot) {
+    return $(getEditBox(slot))
+      .find('.summernote')
+      .summernote('code');
+  }
+
+  // Which entry in our menu is the topmost actual file?
+  function getTopFile(edit_box) {
+    let menu = edit_box.find('.hxed-filemenu');
+    let top_file;
+    let special_entries = [
+      'special-spacer1',
+      'special-spacer2',
+      'special-hx-new',
+      'special-hx-rename'
+    ];
+    $(menu)
+      .find('option')
+      .each(function(i, e) {
+        // The first time we can't find a filename in the list of special entries...
+        if (special_entries.indexOf(e.value) === -1) {
+          top_file = e.value;
+          return false; // Breaks out of each() loop
+        }
+      });
+    return top_file;
+  }
+
+  //********************************
+  // Auto-save. Runs every minute.
+  // One function for all editors on the page.
+  //********************************
   function setupAutoSave() {
     console.log('setting up auto-save');
     // Wipe out the old autosave function.
@@ -125,7 +153,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
     }, 60000);
   }
 
-  // Turns on one particular editor.
+  //********************************
+  // Activate an editor and load stored info.
+  //********************************
   function activateEditor(slot) {
     console.log('activating ' + slot + ' editor');
     // Get the editor we're interested in.
@@ -143,8 +173,15 @@ var HXEditor = function(use_backpack, toolbar_options) {
     summer.summernote({
       toolbar: toolbar_options
     });
-    // Add load/save and possibly other controls
+
+    // Add save/download/delete and file menu.
     addControls(ed);
+    let data = getAllData();
+    let file_menu = buildMenu(ed, data, getSaveSlot(ed));
+    ed.prepend(file_menu);
+    // Add listeners for the menu.
+    attachMenuListener(file_menu);
+
     // Replace blank editors with the saved data if the backpack is loaded.
     if (hxBackpackLoaded) {
       if ($(summer.summernote('code')).text() == '') {
@@ -172,8 +209,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
   }
 
+  //********************************
+  // Build the file menu.
   // Sometimes we need to rebuild this, so it gets its own function.
-  // Pass in the jquery object for the editor.
+  //********************************
   function buildMenu(ed, data, starting_file) {
     let file_menu = $('<select></select>');
 
@@ -226,7 +265,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
     attachMenuListener(new_menu);
   }
 
-  // Pass in the jquery object for the menu.
   function attachMenuListener(menu) {
     // Catch the previous menu item in case we need it.
     $(this)
@@ -290,10 +328,11 @@ var HXEditor = function(use_backpack, toolbar_options) {
             // Rename the save slot.
             edit_box.attr('data-saveslot', rename_slot);
             // Change the menu item.
-            $('option[value="' + current_slot + '"]').remove();
-            $(menu).prepend(
-              '<option value="' + new_slot + '">' + new_slot + '</option>'
-            );
+            let option = $('option[value="' + current_slot + '"]');
+            option.detach().prependTo($(menu));
+            option.val(rename_slot);
+            option.empty();
+            option.text(rename_slot);
             $(menu).val(rename_slot);
             attachMenuListener(menu);
             // Remove the old data.
@@ -312,7 +351,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
       });
   }
 
+  //********************************
   // Create and activate a link to download the current text.
+  // Saves as an HTML fragment.
+  //********************************
   function provideDownload(filename, text) {
     let element = document.createElement('a');
     element.setAttribute(
@@ -329,33 +371,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
     document.body.removeChild(element);
   }
 
-  // Which entry in our menu is the topmost actual file?
-  function getTopFile(edit_box) {
-    let menu = edit_box.find('.hxed-filemenu');
-    let top_file;
-    let special_entries = [
-      'special-spacer1',
-      'special-spacer2',
-      'special-hx-new',
-      'special-hx-rename'
-    ];
-    $(menu)
-      .find('option')
-      .each(function(i, e) {
-        // The first time we can't find a filename in the list of special entries...
-        if (special_entries.indexOf(e.value) === -1) {
-          top_file = e.value;
-          return false; // Breaks out of each() loop
-        }
-      });
-    return top_file;
-  }
-
-  // Add save/load/delete and other controls.
+  //********************************
+  // Save, delete, and download buttons.
+  //********************************
   function addControls(ed) {
-    let data = getAllData();
-    let file_menu = buildMenu(ed, data, getSaveSlot(ed));
-
     let download_button = $(
       '<button><span class="fa fa-download"></span> Download</button>'
     );
@@ -381,7 +400,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
     ed.prepend(save_notice);
     ed.prepend(save_button);
     ed.prepend(download_button);
-    ed.prepend(file_menu);
 
     // Save and load disabled until the backpack loads.
     // It could be already loaded, so don't disable unnecessicarily.
@@ -389,9 +407,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
       $('.hxeditor-control').prop('disabled', true);
       save_notice.text(' Loading...');
     }
-
-    // Add listeners for the menu.
-    attachMenuListener(file_menu);
 
     // Listener for the download button.
     // Gives learner a document with an HTML fragment.
@@ -448,30 +463,11 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
   }
 
-  // The save slot is the value in data-saveslot attribute, or '' if blank.
-  // Pass in the JQuery object for a child of this editor.
-  function getSaveSlot(e) {
-    if (e.is('[data-saveslot]')) {
-      return e.attr('data-saveslot');
-    } else {
-      let editor = e.parents('[data-saveslot]');
-      return editor.attr('data-saveslot');
-    }
-  }
-
-  function getEditBox(slot) {
-    return $('[data-saveslot="' + slot + '"]');
-  }
-
-  function getMarkupFrom(slot) {
-    return $(getEditBox(slot))
-      .find('.summernote')
-      .summernote('code');
-  }
-
+  //********************************
   // The backpack is our data storage system on edX.
   // It posts a message when it loads.
   // See https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack
+  //********************************
   $(window)
     .off('message.hxeditor')
     .on('message.hxeditor', function(e) {
@@ -511,4 +507,35 @@ var HXEditor = function(use_backpack, toolbar_options) {
   window.HXED.getMarkupFrom = getMarkupFrom;
   window.HXED.activateEditor = activateEditor;
   window.HXED.activateAllEditors = activateAllEditors;
+
+  //********************************
+  // START HERE.
+  // This loop waits for summernote to load.
+  // It's in an external javascript file loaded by hx-js.
+  //********************************
+  var timer_count = 0;
+  var time_delay = 250; // miliseconds
+  var loadLoop = setInterval(function() {
+    timer_count += time_delay;
+
+    // If it doesn't load after 7 seconds,
+    // kill the indicator and inform the learner.
+    if (timer_count > 7000) {
+      editors.empty();
+      editors.append(
+        '<p>Editor did not load. Reload the page if you want to try again.</p>'
+      );
+      clearInterval(loadLoop);
+    }
+
+    if (typeof $.summernote !== 'undefined') {
+      // When it loads, stop waiting.
+      clearInterval(loadLoop);
+      // Clear the loading messages.
+      editors.empty();
+      // Turn on all editors on this page.
+      activateAllEditors();
+      setupAutoSave();
+    }
+  }, time_delay);
 };
