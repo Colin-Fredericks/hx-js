@@ -2,8 +2,7 @@
 // It uses the Summernote editor.
 
 var HXEditor = function(use_backpack, toolbar_options) {
-  var editors = $('.hx-editor:visible');
-  var prefix = 'summernote_'; // slot prefix for data storage
+  const prefix = 'summernote_'; // slot prefix for data storage
 
   logThatThing('HX Editor starting');
 
@@ -16,6 +15,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   function getData(slot) {
     return hxGetData(prefix + slot);
   }
+
   function setData(slot, val) {
     if (typeof val === undefined) {
       // It's not a save slot, it's an object.
@@ -29,15 +29,20 @@ var HXEditor = function(use_backpack, toolbar_options) {
       return hxSetData(prefix + slot, val);
     }
   }
+
   function clearData(slot) {
     return hxClearData(prefix + slot);
   }
+
   function getAllData() {
     let new_data = {};
     let old_data = hxGetAllData();
     Object.keys(old_data).forEach(function(k) {
-      // de-prefix all the stored data.
-      new_data[k.replace(prefix, '')] = old_data[k];
+      // Only return data with our namespace prefix.
+      if (k.startsWith(prefix)) {
+        // de-prefix all the stored data.
+        new_data[k.replace(prefix, '')] = old_data[k];
+      }
     });
     return new_data;
   }
@@ -66,6 +71,12 @@ var HXEditor = function(use_backpack, toolbar_options) {
     return $(getEditBox(slot))
       .find('.summernote')
       .summernote('code');
+  }
+
+  function setMarkupIn(slot, markup_string) {
+    $(getEditBox(slot))
+      .find('.summernote')
+      .summernote('code', markup_string);
   }
 
   // Which entry in our menu is the topmost actual file?
@@ -126,8 +137,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
         // Get the data from all visible editors.
         slots.forEach(function(slot) {
-          let ed = getEditBox(slot);
-          let new_data = ed.find('.summernote').summernote('code');
+          let new_data = getMarkupFrom(slot);
           if (typeof new_data === 'string') {
             // Using underscore.js to check object equality.
             if (!_.isEqual(existing_data[slot], new_data)) {
@@ -184,8 +194,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Replace blank editors with the saved data if the backpack is loaded.
     if (hxBackpackLoaded) {
-      if ($(summer.summernote('code')).text() == '') {
-        summer.summernote('code', getData(getSaveSlot(ed)));
+      if ($(getMarkupFrom(slot)).text() == '') {
+        setMarkupIn(slot, getData(slot));
       }
     }
     // If we're not using the backpack, show a warning notice.
@@ -198,13 +208,13 @@ var HXEditor = function(use_backpack, toolbar_options) {
       noSaveWarning.append(
         'Warning: Data storage unavailable. This editor cannot save or load files. Reload the page if you want to try again.'
       );
-      editors.prepend(noSaveWarning);
+      $('.hx-editor:visible').prepend(noSaveWarning);
     }
   }
 
   // Turns on ALL the editors.
   function activateAllEditors() {
-    editors.each(function(i, e) {
+    $('.hx-editor:visible').each(function(i, e) {
       activateEditor(getSaveSlot($(e)));
     });
   }
@@ -281,7 +291,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
           slot = '';
         }
         let edit_box = getEditBox(getSaveSlot($(menu)));
-        let summer = edit_box.find('.summernote');
 
         // Ignore any blank slots.
         if (slot.startsWith('special-spacer')) {
@@ -308,7 +317,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
               }, 3000);
             } else {
               edit_box.attr('data-saveslot', new_slot);
-              summer.summernote('code', '<p><br/></p>');
+              setMarkupIn(new_slot, '<p><br/></p>');
               // Add the menu item.
               $(menu).prepend(
                 '<option value="' + new_slot + '">' + new_slot + '</option>'
@@ -412,19 +421,13 @@ var HXEditor = function(use_backpack, toolbar_options) {
     // Gives learner a document with an HTML fragment.
     download_button.on('click tap', function() {
       let slot = getSaveSlot($(this));
-      let markup_string = $(this)
-        .parent()
-        .find('.summernote')
-        .summernote('code');
+      let markup_string = getMarkupFrom(slot);
       provideDownload(slot + '.html', markup_string);
     });
 
     save_button.on('click tap', function() {
-      let markup_string = $(this)
-        .parent()
-        .find('.summernote')
-        .summernote('code');
       let slot = getSaveSlot($(this));
+      let markup_string = getMarkupFrom(slot);
 
       // Note the editor's saveslot.
       console.log('Saving to ' + slot);
@@ -485,15 +488,21 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // Only accept objects with the right form.
       if (typeof data === 'string') {
         if (data === 'ready') {
+          // When the backpack is ready, re-enable the controls.
           $('.hxeditor-control').prop('disabled', false);
           $('.hxed-autosavenotice').empty();
           // Replace blank editors with the saved data.
           $('.hx-editor').each(function(i, el) {
-            let editor = $(el).find('.summernote');
-            let saveslot = getSaveSlot($(el));
-            console.log('restoring editor ' + saveslot);
-            if ($(editor.summernote('code')).text() == '') {
-              editor.summernote('code', getData(saveslot));
+            let slot = getSaveSlot($(el));
+            let existing_markup = getMarkupFrom(slot);
+            console.log('restoring editor ' + slot);
+            if ($(existing_markup).text() == '') {
+              let new_markup = getData(slot);
+              if (new_markup !== null) {
+                setMarkupIn(slot, new_markup);
+              } else {
+                setMarkupIn(slot, '<p><br/></p>');
+              }
             }
           });
         }
@@ -521,8 +530,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
     // If it doesn't load after 7 seconds,
     // kill the indicator and inform the learner.
     if (timer_count > 7000) {
-      editors.empty();
-      editors.append(
+      $('.hx-editor:visible').empty();
+      $('.hx-editor:visible').append(
         '<p>Editor did not load. Reload the page if you want to try again.</p>'
       );
       clearInterval(loadLoop);
@@ -531,8 +540,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
     if (typeof $.summernote !== 'undefined') {
       // When it loads, stop waiting.
       clearInterval(loadLoop);
-      // Clear the loading messages.
-      editors.empty();
       // Turn on all editors on this page.
       activateAllEditors();
       setupAutoSave();
