@@ -40,11 +40,14 @@ This project collects a large number of javascript and css tricks that have been
 
 Improvements to the [Editor](#rich-text-editor). Specifically:
 
-- Ability to save in multiple slots
-- Renaming and deleting "files"
-- Download HTML version
+- Ability to save in multiple slots ✅
+- Renaming and deleting "files" ✅
+- Download HTML version ✅
+- Prefilled text
+- Automatic new slot from old file (for 2nd drafts)
 - Notification when you're running out of space
 - Accessibility audit
+- Adjustable default height for editor
 
 ### Future Improvements
 
