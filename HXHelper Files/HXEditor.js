@@ -16,6 +16,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // It's not a save slot, it's an object.
       let new_data = {};
       Object.keys(slot).forEach(function(k) {
+        // Prefix all the data before storing it, to avoid collisions.
         new_data[prefix + k] = slot[k];
       });
       return hxSetData(new_data);
@@ -30,6 +31,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
     let new_data = {};
     let old_data = hxGetAllData();
     Object.keys(old_data).forEach(function(k) {
+      // de-prefix all the stored data.
       new_data[k.replace(prefix, '')] = old_data[k];
     });
     return new_data;
@@ -166,8 +168,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // Turns on ALL the editors.
   function activateAllEditors() {
     editors.each(function(i, e) {
-      console.log(e);
-      console.log(getSaveSlot($(e)));
       activateEditor(getSaveSlot($(e)));
     });
   }
@@ -195,7 +195,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Get all the save slots and add to menu.
     Object.keys(data).forEach(function(k) {
-      console.log(k);
       let is_current_slot = false;
       if (getSaveSlot(ed) === k) {
         is_current_slot = true;
@@ -229,7 +228,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   // Pass in the jquery object for the menu.
   function attachMenuListener(menu) {
-    console.log($(menu));
     // Catch the previous menu item in case we need it.
     $(this)
       .off('focusin.hxeditor')
@@ -332,7 +330,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   // Which entry in our menu is the topmost actual file?
-  function getTopFile(menu) {
+  function getTopFile(edit_box) {
+    let menu = edit_box.find('.hxed-filemenu');
+    let top_file;
     let special_entries = [
       'special-spacer1',
       'special-spacer2',
@@ -342,10 +342,13 @@ var HXEditor = function(use_backpack, toolbar_options) {
     $(menu)
       .find('option')
       .each(function(i, e) {
-        if (special_entries.indexOf(e.value) > -1) {
-          return e.value;
+        // The first time we can't find a filename in the list of special entries...
+        if (special_entries.indexOf(e.value) === -1) {
+          top_file = e.value;
+          return false; // Breaks out of each() loop
         }
       });
+    return top_file;
   }
 
   // Add save/load/delete and other controls.
@@ -409,7 +412,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       let slot = getSaveSlot($(this));
 
       // Note the editor's saveslot.
-      console.log(slot, markup_string);
+      console.log('Saving to ' + slot);
       setData(slot, markup_string);
 
       // Disable save/load buttons.
@@ -425,13 +428,11 @@ var HXEditor = function(use_backpack, toolbar_options) {
         // Rebuild the menu without the offending item.
         let temp_data = getAllData();
         let slot = getSaveSlot($(this));
+        let edit_box = getEditBox(slot);
         // Erase the text.
-        $(this)
-          .parent()
-          .find('.summernote')
-          .summernote('code', '<p><br/></p>');
+        edit_box.find('.summernote').summernote('code', '<p><br/></p>');
 
-        // Remove the data from our temp version.
+        // Remove the file from our temp version of the data.
         delete temp_data[slot];
 
         // Remove the data from the backpack.
@@ -439,8 +440,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
         clearData(slot);
 
         // Rebuild the menu from our temp data.
-        console.log($(this).parent(), temp_data, getTopFile($(this)));
-        rebuildMenu($(this).parent(), temp_data, getTopFile($(this)));
+        rebuildMenu(edit_box, temp_data, getTopFile(edit_box));
+
+        // Reassign the save slot for this editor.
+        edit_box.attr('data-saveslot', getTopFile(edit_box));
       }
     });
   }
@@ -448,7 +451,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // The save slot is the value in data-saveslot attribute, or '' if blank.
   // Pass in the JQuery object for a child of this editor.
   function getSaveSlot(e) {
-    console.log(e);
     if (e.is('[data-saveslot]')) {
       return e.attr('data-saveslot');
     } else {
@@ -462,7 +464,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   function getMarkupFrom(slot) {
-    return $(getEditBox(slot)).summernote('code');
+    return $(getEditBox(slot))
+      .find('.summernote')
+      .summernote('code');
   }
 
   // The backpack is our data storage system on edX.
