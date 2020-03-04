@@ -45,9 +45,9 @@ Improvements to the [Editor](#rich-text-editor). Specifically:
 - Download HTML version ✅
 - Prefilled text ✅
 - Automatic new slot from old file (for 2nd drafts) ✅
-- Notification when you're running out of space
+- Adjustable default height for editor ✅
+- Notification when you're running out of space ✅ (sort of)
 - Accessibility audit
-- Adjustable default height for editor
 - Handle empty menus
 
 ### Future Improvements
