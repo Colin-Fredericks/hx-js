@@ -169,22 +169,27 @@ var HXEditor = function(use_backpack, toolbar_options) {
   //********************************
   function activateEditor(slot) {
     console.log('activating ' + slot + ' editor');
+    // Remove the loading indicator
+    $('.hx-loading-indicator').remove();
+
     // Get the editor we're interested in.
     let ed = getEditBox(slot);
-    let starting_markup = blank_editor;
     if (ed.length === 0) {
       ed = $('.hx-editor');
       ed.attr('data-saveslot', '');
     }
-    // Remove the loading indicator
-    $('.hx-loading-indicator').remove();
+
     // Store any existing markup as default content.
-    starting_markup = ed
+    let starting_markup = ed
       .find('.hx-editor-default')
       .html()
       .trim();
+    if (starting_markup === '') {
+      starting_markup = blank_editor;
+    }
     console.log(starting_markup);
     ed.empty();
+
     // Insert the div for summernote to hook onto.
     let summer = $('<div class="summernote"></div>');
     ed.append(summer);
@@ -195,17 +200,24 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Add save/download/delete and file menu.
     addControls(ed);
-    let data = getAllData();
+
     // Make sure the data includes a slot for the current menu.
-    // Default content does not overwrite existing data.
+    // Default content should not overwrite existing data.
+    let data = getAllData();
+    let from_slot = ed.attr('data-from-slot');
     if (data.hasOwnProperty(slot)) {
       starting_markup = data[slot];
     } else {
-      data[slot] = starting_markup;
+      if (typeof from_slot !== undefined && data[from_slot] !== undefined) {
+        starting_markup = data[from_slot];
+      } else {
+        data[slot] = starting_markup;
+      }
     }
+
+    // Add menu and its listeners
     let file_menu = buildMenu(ed, data, getSaveSlot(ed));
     ed.prepend(file_menu);
-    // Add listeners for the menu.
     attachMenuListener(file_menu);
 
     // Replace blank editors with the saved data if the backpack is loaded.
