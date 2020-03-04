@@ -679,6 +679,7 @@ span#hx-playpauseword {
 
 .hxed-autosavenotice {
   color: #666;
+  flex-grow: 1;
 }
 
 .hxed-persistentnotice {
@@ -693,6 +694,11 @@ span#hx-playpauseword {
   background-color: transparent;
   background-image: none;
   border: none;
+}
+
+.hxed-controlbox {
+  display: flex;
+  align-items: baseline;
 }
 
 .hxeditor-control {
