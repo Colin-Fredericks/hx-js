@@ -3,6 +3,7 @@
 
 var HXEditor = function(use_backpack, toolbar_options) {
   const prefix = 'summernote_'; // slot prefix for data storage
+  const blank_editor = '<p><br/></p>';
 
   logThatThing('HX Editor starting');
 
@@ -170,11 +171,19 @@ var HXEditor = function(use_backpack, toolbar_options) {
     console.log('activating ' + slot + ' editor');
     // Get the editor we're interested in.
     let ed = getEditBox(slot);
+    let starting_markup = blank_editor;
     if (ed.length === 0) {
       ed = $('.hx-editor');
       ed.attr('data-saveslot', '');
     }
-    // Remove the loading indicator.
+    // Remove the loading indicator
+    $('.hx-loading-indicator').remove();
+    // Store any existing markup as default content.
+    starting_markup = ed
+      .find('.hx-editor-default')
+      .html()
+      .trim();
+    console.log(starting_markup);
     ed.empty();
     // Insert the div for summernote to hook onto.
     let summer = $('<div class="summernote"></div>');
@@ -187,6 +196,13 @@ var HXEditor = function(use_backpack, toolbar_options) {
     // Add save/download/delete and file menu.
     addControls(ed);
     let data = getAllData();
+    // Make sure the data includes a slot for the current menu.
+    // Default content does not overwrite existing data.
+    if (data.hasOwnProperty(slot)) {
+      starting_markup = data[slot];
+    } else {
+      data[slot] = starting_markup;
+    }
     let file_menu = buildMenu(ed, data, getSaveSlot(ed));
     ed.prepend(file_menu);
     // Add listeners for the menu.
@@ -195,7 +211,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
     // Replace blank editors with the saved data if the backpack is loaded.
     if (hxBackpackLoaded) {
       if ($(getMarkupFrom(slot)).text() == '') {
-        setMarkupIn(slot, getData(slot));
+        setMarkupIn(slot, starting_markup);
       }
     }
     // If we're not using the backpack, show a warning notice.
@@ -317,7 +333,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
               }, 3000);
             } else {
               edit_box.attr('data-saveslot', new_slot);
-              setMarkupIn(new_slot, '<p><br/></p>');
+              setMarkupIn(new_slot, blank_editor);
               // Add the menu item.
               $(menu).prepend(
                 '<option value="' + new_slot + '">' + new_slot + '</option>'
@@ -325,7 +341,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
               $(menu).val(new_slot);
               attachMenuListener(menu);
               // Save.
-              setData(new_slot, '<p><br/></p>');
+              setData(new_slot, blank_editor);
             }
           }
         } else if (slot === 'special-hx-rename') {
@@ -448,7 +464,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
         let slot = getSaveSlot($(this));
         let edit_box = getEditBox(slot);
         // Erase the text.
-        edit_box.find('.summernote').summernote('code', '<p><br/></p>');
+        edit_box.find('.summernote').summernote('code', blank_editor);
 
         // Remove the file from our temp version of the data.
         delete temp_data[slot];
@@ -501,7 +517,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
               if (new_markup !== null) {
                 setMarkupIn(slot, new_markup);
               } else {
-                setMarkupIn(slot, '<p><br/></p>');
+                setMarkupIn(slot, blank_editor);
               }
             }
           });

@@ -331,7 +331,9 @@ var HXGlobalJS = function() {
         )
       );
       // Insert a loading indicator.
-      let edit_box = $('<div> Loading...</div>');
+      let edit_box = $(
+        '<div class="hx-loading-indicator"> Editor loading...</div>'
+      );
       let spinner = $('<span class="fa fa-spinner fa-pulse"></span>');
       edit_box.prepend(spinner);
       editors.append(edit_box);
