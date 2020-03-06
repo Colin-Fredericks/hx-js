@@ -47,8 +47,8 @@ Improvements to the [Editor](#rich-text-editor). Specifically:
 - Automatic new slot from old file (for 2nd drafts) ✅
 - Adjustable default height for editor ✅
 - Notification when you're running out of space ✅ (sort of)
-- Accessibility audit
-- Handle empty menus
+- Handle empty menus ✅
+- Accessibility audit (ongoing)
 
 ### Future Improvements
 
