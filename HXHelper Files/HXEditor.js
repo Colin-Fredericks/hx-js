@@ -83,8 +83,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   // Which entry in our menu is the topmost actual file?
-  function getTopFile(edit_box) {
-    let menu = edit_box.find('.hxed-filemenu');
+  function getTopFile(menu) {
+    console.log(menu);
     let top_file;
     let special_entries = [
       'special-spacer1',
@@ -95,12 +95,14 @@ var HXEditor = function(use_backpack, toolbar_options) {
     $(menu)
       .find('option')
       .each(function(i, e) {
+        console.log(e);
         // The first time we can't find a filename in the list of special entries...
         if (special_entries.indexOf(e.value) === -1) {
           top_file = e.value;
           return false; // Breaks out of each() loop
         }
       });
+    console.log(top_file);
     return top_file;
   }
 
@@ -297,13 +299,14 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Get all the save slots and add to menu.
     Object.keys(data).forEach(function(k) {
-      let is_current_slot = false;
-      if (getSaveSlot(ed) === k) {
-        is_current_slot = true;
-      }
       let slot = $('<option value="' + k + '">' + k + '</option>');
       file_menu.append(slot);
     });
+
+    // If we're not passed a starting file, assign it.
+    if (starting_file === null) {
+      starting_file = getTopFile(file_menu);
+    }
 
     // Move starting file to top.
     file_menu
@@ -317,7 +320,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   // Pass in the jquery object for the editor box.
-  function rebuildMenu(editor, data, starting_file) {
+  function rebuildMenu(editor, data, starting_file = null) {
     // Clear and rebuild the menu.
     let new_menu = buildMenu(editor, data, starting_file);
     editor.find('.hxed-filemenu').remove();
@@ -326,11 +329,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   function attachMenuListener(menu) {
-    console.log('Attaching menu listener to ');
-    console.log(menu);
     // Catch the previous menu item in case we need it.
     menu.off('focusin.hxeditor').on('focusin.hxeditor', function() {
-      console.log('focusin');
       $(this).attr('data-previous-val', $(menu).val());
     });
 
@@ -338,6 +338,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       let slot = e.target.value;
       console.log(slot);
       let edit_box = getEditBox(getSaveSlot($(menu)));
+      let summer = edit_box.find('.summernote');
 
       // Ignore any blank slots.
       if (slot.startsWith('special-spacer')) {
@@ -400,7 +401,11 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // Otherwise, we're switching to a different save slot.
       else {
         // Replace text.
-        summer.summernote('code', getData(slot));
+        let saved_markup = getData(slot);
+        if (typeof saved_markup === 'undefined') {
+          saved_markup = blank_editor;
+        }
+        summer.summernote('code', saved_markup);
         // Change the data attribute on the editor.
         edit_box.attr('data-saveslot', slot);
       }
@@ -505,10 +510,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
         clearData(slot);
 
         // Rebuild the menu from our temp data.
-        rebuildMenu(edit_box, temp_data, getTopFile(edit_box));
+        rebuildMenu(edit_box, temp_data);
 
         // Reassign the save slot for this editor.
-        edit_box.attr('data-saveslot', getTopFile(edit_box));
+        edit_box.attr('data-saveslot', $('.hxed-filemenu').children()[0].value);
       }
     });
   }
