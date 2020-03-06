@@ -2,6 +2,8 @@
 // It uses the Summernote editor.
 
 var HXEditor = function(use_backpack, toolbar_options) {
+  'use strict';
+
   const prefix = 'summernote_'; // slot prefix for data storage
   const blank_editor = '<p><br/></p>';
 
@@ -326,7 +328,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
   function attachMenuListener(menu) {
     console.log('Attaching menu listener to ');
     console.log(menu);
-    console.log($(this));
     // Catch the previous menu item in case we need it.
     menu.off('focusin.hxeditor').on('focusin.hxeditor', function() {
       console.log('focusin');
