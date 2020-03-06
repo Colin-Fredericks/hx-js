@@ -234,17 +234,17 @@ var HXGlobalJS = function() {
   // - and, for the chimes, there needs to be that timer.
   var allVideos = $('.video');
   if (loadVideoStuff) {
-    if (allVideos.length) {
+    if (allVideos.length > 0) {
       logThatThing({ video: 'found' });
       scriptArray.push('HXVideoLinks.js');
       var HXVL;
       // Only do pop-up problems if the right timer is in place.
-      if (window.HXPUPTimer.length !== 0) {
+      if (window.HXPUPTimer.length > 0) {
         scriptArray.push('HXPopUpProblems.js');
         var HXPUP;
       }
       // Only do video chimes if the right timer is in place.
-      if (window.HXChimeTimer.length !== 0) {
+      if (window.HXChimeTimer.length > 0) {
         scriptArray.push('HXVideoChime.js');
         var HXVC;
       }
@@ -348,7 +348,7 @@ var HXGlobalJS = function() {
     // If we have videos, instantiate the functions
     // that handle pop-up links and problems.
     /**************************************/
-    if (allVideos.length && loadVideoStuff) {
+    if (allVideos.length > 0 && loadVideoStuff) {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
