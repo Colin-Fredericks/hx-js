@@ -20,7 +20,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   }
 
   function setData(slot, val) {
-    if (typeof val === undefined) {
+    if (typeof val === 'undefined') {
       // It's not a save slot, it's an object.
       let new_data = {};
       Object.keys(slot).forEach(function(k) {
@@ -84,7 +84,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   // Which entry in our menu is the topmost actual file?
   function getTopFile(menu) {
-    console.log(menu);
     let top_file;
     let special_entries = [
       'special-spacer1',
@@ -95,14 +94,12 @@ var HXEditor = function(use_backpack, toolbar_options) {
     $(menu)
       .find('option')
       .each(function(i, e) {
-        console.log(e);
         // The first time we can't find a filename in the list of special entries...
         if (special_entries.indexOf(e.value) === -1) {
           top_file = e.value;
           return false; // Breaks out of each() loop
         }
       });
-    console.log(top_file);
     return top_file;
   }
 
@@ -158,8 +155,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
           console.log(data_to_save);
           setData(data_to_save);
           // Disable save/load buttons until the backpack reloads.
-          handleFocus($('.hxed-controlbox :focus'));
-          $('.hxed-statmess').text(' Auto-saving...');
+          handleFocus($(':focus').parents('.hx-editor'));
+          $('.hxed-visiblenotice').text(' Auto-saving...');
+          $('.hxed-statusmessage .sr').text('Status: auto-saving...');
           $('.loadnote').prop('disabled', true);
           $('.hxed-save').prop('disabled', true);
         } else {
@@ -200,6 +198,12 @@ var HXEditor = function(use_backpack, toolbar_options) {
     // Activate summernote.
     summer.summernote({
       toolbar: toolbar_options
+    });
+
+    // Save the cursor position every time we unfocus the editor.
+    summer.on('summernote.blur', function() {
+      console.log('saving range');
+      summer.summernote('saveRange');
     });
 
     // Box for controls
@@ -359,11 +363,14 @@ var HXEditor = function(use_backpack, toolbar_options) {
             $(menu).val($(this).attr('data-previous-val'));
             // Give a notice.
             edit_box
-              .find('.hxed-statmess')
+              .find('.hxed-visiblenotice')
+              .text('Duplicate filname, cannot create.');
+            edit_box
+              .find('.hxed-statusmessage .sr')
               .text('Duplicate filname, cannot create.');
             setTimeout(function() {
-              edit_box.find('.hxed-statmess').text();
-              ('ok');
+              edit_box.find('.hxed-visiblenotice').empty();
+              edit_box.find('.hxed-statusmessage .sr').text('Status: ok');
             }, 3000);
           } else {
             edit_box.attr('data-saveslot', new_slot);
@@ -449,17 +456,20 @@ var HXEditor = function(use_backpack, toolbar_options) {
     save_button.addClass('hxed-save hxeditor-control');
 
     let save_notice = $('<span/>');
-    save_notice.addClass('hxed-autosavenotice');
+    save_notice.addClass('hxed-statusmessage');
     save_notice.attr('aria-live', 'polite');
     save_notice.attr('tabindex', '0');
-    save_notice.append('<span class="sr">Status: </span>');
-    save_notice.append('<span class="hxed-statmess">ok</span>');
+    save_notice.append('<span class="sr">Status: ok</span>');
+    save_notice.append(
+      '<span class="hxed-visiblenotice" aria-hidden="true"></span>'
+    );
 
     let persistent_notice = $('<span/>');
     persistent_notice.addClass('hxed-persistentnotice');
     persistent_notice.attr('aria-live', 'polite');
 
     let delete_button = $('<button/>');
+    delete_button.attr('aria-label', 'Delete');
     delete_button.addClass('fa fa-trash hxed-deletebutton hxeditor-control');
     delete_button.attr('role', 'button');
 
@@ -485,10 +495,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
 
     save_button.on('click tap', function() {
-      handleFocus($(this));
-
       let slot = getSaveSlot($(this));
       let markup_string = getMarkupFrom(slot);
+
+      handleFocus(getEditBox(slot));
 
       // Note the editor's saveslot.
       console.log('Saving to ' + slot);
@@ -496,20 +506,21 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
       // Disable save/load buttons.
       // These will re-enable after the backpack loads.
-      $('.hxed-statmess').text(' Saving...');
+      $('.hxed-visiblenotice').text(' Saving...');
+      $('.hxed-statusmessage .sr').text('Status: Saving...');
       $('.hxeditor-control').prop('disabled', true);
     });
 
     delete_button.on('click tap', function() {
-      handleFocus($(this));
+      let slot = getSaveSlot($(this));
+      let edit_box = getEditBox(slot);
 
       // ARE YOU SURE???
       let wreck_it = confirm('Are you sure you want to delete this file?');
       if (wreck_it) {
+        handleFocus(getEditBox(slot));
         // Rebuild the menu without the offending item.
         let temp_data = getAllData();
-        let slot = getSaveSlot($(this));
-        let edit_box = getEditBox(slot);
         // Erase the text.
         edit_box.find('.summernote').summernote('code', blank_editor);
 
@@ -532,16 +543,23 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // When controls are disabled, they lose focus.
   // Handle the focus explicitly by shifting it to the notice box,
   // and shifting it back when the control is reenabled.
-  function handleFocus(element) {
+  function handleFocus(editor) {
+    console.log(editor);
+    let elem = editor.find(':focus');
+    let summer = editor.find('.summernote');
+
     // Transfer focus to the autosave notice.
-    $('.hxed-autosavenotice').focus();
+    $('.hxed-statusmessage').focus();
     // Listen for when the original element is enabled.
     // But only listen once.
     $(document)
       .off('controlsReady')
       .on('controlsReady', function() {
-        // Transfer it back to the element.
-        element.focus();
+        // Transfer focus back to the element.
+        elem.focus();
+        // Put the cursor back.
+        summer.summernote('restoreRange');
+        summer.summernote('saveRange');
       });
   }
 
@@ -569,14 +587,14 @@ var HXEditor = function(use_backpack, toolbar_options) {
         if (data === 'ready') {
           // When the backpack is ready, re-enable the controls.
           $('.hxeditor-control').prop('disabled', false);
-          $('.hxed-statmess').text('ok');
+          $('.hxed-visiblenotice').empty('');
+          $('.hxed-statusmessage .sr').text('Status: ok');
           // The listener for this trigger is in handleFocus()
           $(document).trigger('controlsReady');
           // Replace blank editors with the saved data.
           $('.hx-editor').each(function(i, el) {
             let slot = getSaveSlot($(el));
             let existing_markup = getMarkupFrom(slot);
-            console.log('restoring editor ' + slot);
             if ($(existing_markup).text() == '') {
               let new_markup = getData(slot);
               if (new_markup !== null) {
