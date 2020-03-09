@@ -158,6 +158,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
           console.log(data_to_save);
           setData(data_to_save);
           // Disable save/load buttons until the backpack reloads.
+          handleFocus($('.hxed-controlbox :focus'));
           $('.hxed-statmess').text(' Auto-saving...');
           $('.loadnote').prop('disabled', true);
           $('.hxed-save').prop('disabled', true);
@@ -361,7 +362,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
               .find('.hxed-statmess')
               .text('Duplicate filname, cannot create.');
             setTimeout(function() {
-              edit_box.find('.hxed-statmess').empty();
+              edit_box.find('.hxed-statmess').text();
+              ('ok');
             }, 3000);
           } else {
             edit_box.attr('data-saveslot', new_slot);
@@ -483,6 +485,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
 
     save_button.on('click tap', function() {
+      handleFocus($(this));
+
       let slot = getSaveSlot($(this));
       let markup_string = getMarkupFrom(slot);
 
@@ -497,6 +501,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
 
     delete_button.on('click tap', function() {
+      handleFocus($(this));
+
       // ARE YOU SURE???
       let wreck_it = confirm('Are you sure you want to delete this file?');
       if (wreck_it) {
@@ -523,6 +529,22 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
   }
 
+  // When controls are disabled, they lose focus.
+  // Handle the focus explicitly by shifting it to the notice box,
+  // and shifting it back when the control is reenabled.
+  function handleFocus(element) {
+    // Transfer focus to the autosave notice.
+    $('.hxed-autosavenotice').focus();
+    // Listen for when the original element is enabled.
+    // But only listen once.
+    $(document)
+      .off('controlsReady')
+      .on('controlsReady', function() {
+        // Transfer it back to the element.
+        element.focus();
+      });
+  }
+
   //********************************
   // The backpack is our data storage system on edX.
   // It posts a message when it loads.
@@ -547,7 +569,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
         if (data === 'ready') {
           // When the backpack is ready, re-enable the controls.
           $('.hxeditor-control').prop('disabled', false);
-          $('.hxed-statmess').empty();
+          $('.hxed-statmess').text('ok');
+          // The listener for this trigger is in handleFocus()
+          $(document).trigger('controlsReady');
           // Replace blank editors with the saved data.
           $('.hx-editor').each(function(i, el) {
             let slot = getSaveSlot($(el));
