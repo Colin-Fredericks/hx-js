@@ -677,7 +677,7 @@ span#hx-playpauseword {
   color: #0075b4;
 }
 
-.hxed-autosavenotice {
+.hxed-statusmessage {
   color: #666;
   flex-grow: 1;
 }
@@ -706,9 +706,8 @@ span#hx-playpauseword {
 }
 
 /* Hide the default text in the LMS. */
-.vert .xblock .hx-editor-default{
+.vert .xblock .hx-editor-default {
   display: none;
 }
-
 
 /************** End Editor Block *******************/
