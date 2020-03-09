@@ -158,7 +158,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
           console.log(data_to_save);
           setData(data_to_save);
           // Disable save/load buttons until the backpack reloads.
-          $('.hxed-autosavenotice').text(' Auto-saving...');
+          $('.hxed-statmess').text(' Auto-saving...');
           $('.loadnote').prop('disabled', true);
           $('.hxed-save').prop('disabled', true);
         } else {
@@ -358,10 +358,10 @@ var HXEditor = function(use_backpack, toolbar_options) {
             $(menu).val($(this).attr('data-previous-val'));
             // Give a notice.
             edit_box
-              .find('.hxed-autosavenotice')
+              .find('.hxed-statmess')
               .text('Duplicate filname, cannot create.');
             setTimeout(function() {
-              edit_box.find('.hxed-autosavenotice').empty();
+              edit_box.find('.hxed-statmess').empty();
             }, 3000);
           } else {
             edit_box.attr('data-saveslot', new_slot);
@@ -448,9 +448,14 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     let save_notice = $('<span/>');
     save_notice.addClass('hxed-autosavenotice');
+    save_notice.attr('aria-live', 'polite');
+    save_notice.attr('tabindex', '0');
+    save_notice.append('<span class="sr">Status: </span>');
+    save_notice.append('<span class="hxed-statmess">ok</span>');
 
     let persistent_notice = $('<span/>');
     persistent_notice.addClass('hxed-persistentnotice');
+    persistent_notice.attr('aria-live', 'polite');
 
     let delete_button = $('<button/>');
     delete_button.addClass('fa fa-trash hxed-deletebutton hxeditor-control');
@@ -487,7 +492,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
       // Disable save/load buttons.
       // These will re-enable after the backpack loads.
-      $('.hxed-autosavenotice').text(' Saving...');
+      $('.hxed-statmess').text(' Saving...');
       $('.hxeditor-control').prop('disabled', true);
     });
 
@@ -542,7 +547,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
         if (data === 'ready') {
           // When the backpack is ready, re-enable the controls.
           $('.hxeditor-control').prop('disabled', false);
-          $('.hxed-autosavenotice').empty();
+          $('.hxed-statmess').empty();
           // Replace blank editors with the saved data.
           $('.hx-editor').each(function(i, el) {
             let slot = getSaveSlot($(el));
