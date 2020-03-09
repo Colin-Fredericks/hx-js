@@ -335,8 +335,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
     });
 
     menu.off('change.hxeditor').on('change.hxeditor', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
       let slot = e.target.value;
       console.log(slot);
       let edit_box = getEditBox(getSaveSlot($(menu)));
@@ -411,8 +409,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
         // Change the data attribute on the editor.
         edit_box.attr('data-saveslot', slot);
       }
-      // No matter what we choose, return focus to the menu.
-      $(menu).focus();
     });
   }
 
@@ -457,7 +453,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
     persistent_notice.addClass('hxed-persistentnotice');
 
     let delete_button = $('<button/>');
-    delete_button.html('<span class="sr">Delete</span>');
     delete_button.addClass('fa fa-trash hxed-deletebutton hxeditor-control');
     delete_button.attr('role', 'button');
 
@@ -476,18 +471,13 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Listener for the download button.
     // Gives learner a document with an HTML fragment.
-    download_button.on('click tap', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
+    download_button.on('click tap', function() {
       let slot = getSaveSlot($(this));
       let markup_string = getMarkupFrom(slot);
       provideDownload(slot + '.html', markup_string);
-      download_button.focus();
     });
 
-    save_button.on('click tap', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
+    save_button.on('click tap', function() {
       let slot = getSaveSlot($(this));
       let markup_string = getMarkupFrom(slot);
 
@@ -499,13 +489,9 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // These will re-enable after the backpack loads.
       $('.hxed-autosavenotice').text(' Saving...');
       $('.hxeditor-control').prop('disabled', true);
-
-      save_button.focus();
     });
 
-    delete_button.on('click tap', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
+    delete_button.on('click tap', function() {
       // ARE YOU SURE???
       let wreck_it = confirm('Are you sure you want to delete this file?');
       if (wreck_it) {
@@ -528,8 +514,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
         // Reassign the save slot for this editor.
         edit_box.attr('data-saveslot', $('.hxed-filemenu').children()[0].value);
-
-        edit_box.find('.hxed-filemenu').focus();
       }
     });
   }
