@@ -381,6 +381,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
             attachMenuListener(menu);
             // Save.
             setData(new_slot, blank_editor);
+            // Refresh the auto-saves.
+            setupAutoSave();
           }
         }
       } else if (slot === 'special-hx-rename') {
