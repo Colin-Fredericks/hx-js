@@ -6,6 +6,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
   const prefix = 'summernote_'; // slot prefix for data storage
   const blank_editor = '<p><br/></p>';
+  let had_focus; // Last element that had focus.
 
   logThatThing('HX Editor starting');
 
@@ -151,20 +152,17 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
         // Only save if something changed.
         if (has_changed) {
-          console.log('Save data:');
-          console.log(data_to_save);
           setData(data_to_save);
           // Disable save/load buttons until the backpack reloads.
-          handleFocus($(':focus').parents('.hx-editor'));
+          handleFocus();
           $('.hxed-visiblenotice').text(' Auto-saving...');
           $('.hxed-statusmessage .sr').text('Status: auto-saving...');
-          $('.loadnote').prop('disabled', true);
-          $('.hxed-save').prop('disabled', true);
+          $('.hxeditor-control').prop('disabled', true);
         } else {
           console.log('No change in data, not saving.');
         }
       }
-    }, 60000);
+    }, 10000);
   }
 
   //********************************
@@ -457,7 +455,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     let save_notice = $('<span/>');
     save_notice.addClass('hxed-statusmessage');
-    save_notice.attr('aria-live', 'polite');
     save_notice.attr('tabindex', '0');
     save_notice.append('<span class="sr">Status: ok</span>');
     save_notice.append(
@@ -498,7 +495,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       let slot = getSaveSlot($(this));
       let markup_string = getMarkupFrom(slot);
 
-      handleFocus(getEditBox(slot));
+      handleFocus();
 
       // Note the editor's saveslot.
       console.log('Saving to ' + slot);
@@ -518,7 +515,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // ARE YOU SURE???
       let wreck_it = confirm('Are you sure you want to delete this file?');
       if (wreck_it) {
-        handleFocus(getEditBox(slot));
+        handleFocus();
         // Rebuild the menu without the offending item.
         let temp_data = getAllData();
         // Erase the text.
@@ -538,29 +535,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
         edit_box.attr('data-saveslot', $('.hxed-filemenu').children()[0].value);
       }
     });
-  }
-
-  // When controls are disabled, they lose focus.
-  // Handle the focus explicitly by shifting it to the notice box,
-  // and shifting it back when the control is reenabled.
-  function handleFocus(editor) {
-    console.log(editor);
-    let elem = editor.find(':focus');
-    let summer = editor.find('.summernote');
-
-    // Transfer focus to the autosave notice.
-    $('.hxed-statusmessage').focus();
-    // Listen for when the original element is enabled.
-    // But only listen once.
-    $(document)
-      .off('controlsReady')
-      .on('controlsReady', function() {
-        // Transfer focus back to the element.
-        elem.focus();
-        // Put the cursor back.
-        summer.summernote('restoreRange');
-        summer.summernote('saveRange');
-      });
   }
 
   //********************************
@@ -589,6 +563,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
           $('.hxeditor-control').prop('disabled', false);
           $('.hxed-visiblenotice').empty('');
           $('.hxed-statusmessage .sr').text('Status: ok');
+          $('.summernote').summernote('saveRange');
           // The listener for this trigger is in handleFocus()
           $(document).trigger('controlsReady');
           // Replace blank editors with the saved data.
@@ -646,4 +621,38 @@ var HXEditor = function(use_backpack, toolbar_options) {
       setupAutoSave();
     }
   }, time_delay);
+
+  // When controls are disabled, they lose focus.
+  // Handle the focus explicitly by shifting it to the notice box,
+  // and shifting it back when the control is reenabled.
+  function handleFocus() {
+    had_focus = $(':focus');
+    console.log('handling focus from');
+    console.log(had_focus);
+    if (!had_focus.hasClass('note-editable')) {
+      $('.hxed-statusmessage').focus();
+      console.log("it's not an editor.");
+    } else {
+      console.log("it's an editor.");
+    }
+  }
+
+  // When the controls are ready again, shift focus back to them.
+  $(document).on('controlsReady', function(e) {
+    let editor = had_focus.parents('.hx-editor');
+    let summer = editor.find('.summernote');
+    console.log('editor:');
+    console.log(editor);
+    console.log('refocusing to:');
+    console.log(had_focus);
+    if (!had_focus.hasClass('note-editable')) {
+      had_focus.focus();
+      console.log("it's not an editor.");
+    } else {
+      console.log("it's an editor.");
+      summer.summernote('restoreRange');
+      summer.summernote('saveRange');
+    }
+    // Put the cursor back.
+  });
 };
