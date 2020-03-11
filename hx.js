@@ -849,10 +849,13 @@ var HXGlobalJS = function() {
       $('.edx-notes-wrapper-content:first-of-type').prepend(
         '<div id="autoTOC" class="hx-autotoc"></div>'
       );
-    } else {
-      $($('#seq_content .vert .xblock')[0]).prepend(
+    } else if ($('.vert .xblock').length) {
+      $($('.vert .xblock')[0]).prepend(
         '<div id="autoTOC" class="hx-autotoc"></div>'
       );
+    } else {
+      console.log('Cannot find location to attach TOC.');
+      return;
     }
     // Using text instead of objects to make nesting easier.
     let autoTOC = '<h3>Table of Contents</h3><ul>';
@@ -1223,6 +1226,7 @@ var HXGlobalJS = function() {
       if (
         e.originalEvent.origin !== 'https://courses.edx.org' &&
         e.originalEvent.origin !== 'https://preview.edx.org' &&
+        e.originalEvent.origin !== 'https://learning.edx.org' &&
         e.originalEvent.origin !== 'https://edge.edx.org'
       ) {
         return;
