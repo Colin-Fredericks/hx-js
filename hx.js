@@ -448,9 +448,17 @@ var HXGlobalJS = function() {
     // Set hxLocalOptions.collapsedNav = true to use, or pref. in Global
     /**************************************/
     if (hxOptions.collapsedNav) {
-      $('.sequence-nav').hide();
+      // Hide top nav.
+      $('.sequence-nav, .sequence-navigation').hide();
+
+      // Don't hide bottom nav.
       // $('.sequence-bottom').hide();
+
+      // Hide breadcrumbs
       $('.sequence > .path').hide();
+      $('nav[aria-label="breadcrumb"]');
+
+      // ???
       $('h3.unit-title').hide();
     }
 
