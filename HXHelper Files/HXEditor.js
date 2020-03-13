@@ -628,14 +628,15 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // Handle the focus explicitly by shifting it to the notice box,
   // and shifting it back when the control is reenabled.
   function handleFocus() {
+    console.log('verifying new version');
     had_focus = $(':focus');
     console.log('handling focus from');
     console.log(had_focus);
-    if (!had_focus.hasClass('note-editable')) {
+    if (had_focus.hasClass('note-editable')) {
+      console.log("it's an editor.");
+    } else {
       $('.hxed-statusmessage').focus();
       console.log("it's not an editor.");
-    } else {
-      console.log("it's an editor.");
     }
   }
 
@@ -645,15 +646,15 @@ var HXEditor = function(use_backpack, toolbar_options) {
     let summer = editor.find('.summernote');
     console.log('editor:');
     console.log(editor);
-    console.log('refocusing to:');
-    console.log(had_focus);
-    if (!had_focus.hasClass('note-editable')) {
+    if (had_focus.hasClass('note-editable')) {
+      console.log("it's an editor.");
+      // summer.summernote('restoreRange');
+      // summer.summernote('saveRange');
+    } else {
+      console.log('refocusing to:');
+      console.log(had_focus);
       had_focus.focus();
       console.log("it's not an editor.");
-    } else {
-      console.log("it's an editor.");
-      summer.summernote('restoreRange');
-      summer.summernote('saveRange');
     }
     // Put the cursor back.
   });
