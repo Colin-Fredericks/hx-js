@@ -154,7 +154,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
         if (has_changed) {
           setData(data_to_save);
           // Disable save/load buttons until the backpack reloads.
-          handleFocus();
           $('.hxed-visiblenotice').text(' Auto-saving...');
           $('.hxed-statusmessage .sr').text('Status: auto-saving...');
           $('.hxeditor-control').prop('disabled', true);
@@ -634,6 +633,17 @@ var HXEditor = function(use_backpack, toolbar_options) {
     console.log(had_focus);
     if (had_focus.hasClass('note-editable')) {
       console.log("it's an editor.");
+      had_focus.one(
+        'blur',
+        setTimeout(function() {
+          console.log('unblur - Restore range.');
+          let summer = had_focus.find('summernote');
+          summer.focus();
+          console.log($(':focus'));
+          summer.summernote('restoreRange');
+          summer.summernote('saveRange');
+        }, 50)
+      );
     } else {
       $('.hxed-statusmessage').focus();
       console.log("it's not an editor.");
@@ -647,9 +657,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
     console.log('editor:');
     console.log(editor);
     if (had_focus.hasClass('note-editable')) {
-      console.log("it's an editor.");
-      // summer.summernote('restoreRange');
-      // summer.summernote('saveRange');
+      console.log("It's an editor.");
     } else {
       console.log('refocusing to:');
       console.log(had_focus);
