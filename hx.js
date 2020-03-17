@@ -1219,12 +1219,8 @@ var HXGlobalJS = function() {
     .on('message.hx', function(e) {
       var data = e.originalEvent.data;
 
-      // Only accept from edx sites.
-      if (
-        e.originalEvent.origin !== 'https://courses.edx.org' &&
-        e.originalEvent.origin !== 'https://preview.edx.org' &&
-        e.originalEvent.origin !== 'https://edge.edx.org'
-      ) {
+      // Only accept from same origin. Won't work in Studio.
+      if (e.originalEvent.origin !== location.origin) {
         return;
       }
 

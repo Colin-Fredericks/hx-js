@@ -546,13 +546,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
     .on('message.hxeditor', function(e) {
       var data = e.originalEvent.data;
 
-      // Only accept from edx sites.
-      if (
-        e.originalEvent.origin !== 'https://courses.edx.org' &&
-        e.originalEvent.origin !== 'https://learning.edx.org' &&
-        e.originalEvent.origin !== 'https://preview.edx.org' &&
-        e.originalEvent.origin !== 'https://edge.edx.org'
-      ) {
+      // Only accept from edx sites. Won't work in Studio.
+      if (e.originalEvent.origin !== location.origin) {
         return;
       }
 
@@ -628,9 +623,17 @@ var HXEditor = function(use_backpack, toolbar_options) {
   function handleFocus() {
     had_focus = $(':focus');
 
-    // If the thing that had focus was the editor, don't shift it away.
+    // If the thing that had focus was the editor, don't let it shift away.
     if (had_focus.hasClass('note-editable')) {
-      console.log('Leave focus on editor.');
+      had_focus.parent('.summernote').summernote('saveRange');
+      console.log('Put focus back on editor as soon as it loses it.');
+      had_focus.one('blur', function() {
+        // Yes, it genuinely needs a 0-milisecond setTimeout.
+        setTimeout(function() {
+          had_focus.focus();
+          had_focus.parent('.summernote').summernote('restoreRange');
+        }, 0);
+      });
     } else {
       // If it wasn't the editor, shift focus to the status message.
       // It'll get shifted back after the controls are re-enabled.
