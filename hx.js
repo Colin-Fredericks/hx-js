@@ -1230,7 +1230,7 @@ var HXGlobalJS = function() {
 
       // Only accept objects with the right form.
       if (typeof data === 'string') {
-        if (data === 'ready') {
+        if (data === 'backpack_ready') {
           console.log('Backpack ready.');
           let iframe_window = $('#hxbackpackframe')[0].contentWindow;
           window.hxSetData = iframe_window.hxSetData;

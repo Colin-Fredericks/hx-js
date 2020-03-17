@@ -137,8 +137,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
         // Get the data from all visible editors.
         slots.forEach(function(slot) {
-          console.log('slot:');
-          console.log(slot);
           let new_data = getMarkupFrom(slot);
           if (typeof new_data === 'string') {
             // Using underscore.js to check object equality.
@@ -551,6 +549,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // Only accept from edx sites.
       if (
         e.originalEvent.origin !== 'https://courses.edx.org' &&
+        e.originalEvent.origin !== 'https://learning.edx.org' &&
         e.originalEvent.origin !== 'https://preview.edx.org' &&
         e.originalEvent.origin !== 'https://edge.edx.org'
       ) {
@@ -559,7 +558,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
       // Only accept objects with the right form.
       if (typeof data === 'string') {
-        if (data === 'ready') {
+        if (data === 'backpack_ready') {
           // When the backpack is ready, re-enable the controls.
           $('.hxeditor-control').prop('disabled', false);
           $('.hxed-visiblenotice').empty('');
