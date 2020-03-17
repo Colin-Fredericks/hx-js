@@ -57,7 +57,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   //********************************
 
   // The save slot is the value in data-saveslot attribute, or '' if blank.
-  // Pass in the JQuery object for a child of this editor.
+  // Pass in the JQuery object for the editor or its child.
   function getSaveSlot(e) {
     if (e.is('[data-saveslot]')) {
       return e.attr('data-saveslot');
@@ -111,28 +111,25 @@ var HXEditor = function(use_backpack, toolbar_options) {
   function setupAutoSave() {
     console.log('setting up auto-save');
     // Wipe out the old autosave function.
-    if (typeof window.autosavers !== 'undefined') {
-      clearInterval(window.autosavers);
+    if (typeof window.HXautosavers !== 'undefined') {
+      clearInterval(window.HXautosavers);
     }
 
-    // Get all the save slots that are present on this page.
-    let slots = new Set(
-      Object.keys($('.hx-editor')).map(x =>
-        $($('.hx-editor')[x]).attr('data-saveslot')
-      )
-    );
-    // Remove undefined things from the set.
-    slots.delete(undefined);
-
-    // Store data as object. It'll get JSON-ized on save.
-    window.saveData = {};
-
     // Make an autosave function that gets data from all editors.
-    window.autosavers = setInterval(function() {
+    window.HXautosavers = setInterval(function() {
+      // Get all the save slots that are present on this page.
+      let slots = new Set(
+        Object.keys($('.hx-editor')).map(x =>
+          $($('.hx-editor')[x]).attr('data-saveslot')
+        )
+      );
+      // Remove undefined things from the set.
+      slots.delete(undefined);
+
       // If there are no editors visible on the page, kill this loop.
       if ($('.hx-editor').length < 1) {
         console.log('No editors detected. Turning off auto-save.');
-        clearInterval(window.autosavers);
+        clearInterval(window.HXautosavers);
       } else {
         let has_changed = false;
         let data_to_save = {};
@@ -140,6 +137,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
         // Get the data from all visible editors.
         slots.forEach(function(slot) {
+          console.log('slot:');
+          console.log(slot);
           let new_data = getMarkupFrom(slot);
           if (typeof new_data === 'string') {
             // Using underscore.js to check object equality.
@@ -162,7 +161,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
           console.log('No change in data, not saving.');
         }
       }
-    }, 10000);
+    }, 15000);
   }
 
   //********************************
@@ -637,7 +636,8 @@ var HXEditor = function(use_backpack, toolbar_options) {
       // If it wasn't the editor, shift focus to the status message.
       // It'll get shifted back after the controls are re-enabled.
       $('.hxed-statusmessage').focus();
-      console.log('Shift focus away from disabled button.');
+      console.log('Shift focus away from');
+      console.log(had_focus);
     }
   }
 
