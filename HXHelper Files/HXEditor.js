@@ -159,7 +159,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
           console.log('No change in data, not saving.');
         }
       }
-    }, 15000);
+    }, 60000);
   }
 
   //********************************
