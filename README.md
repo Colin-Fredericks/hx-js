@@ -607,9 +607,11 @@ First, follow the setup instructions for the [Learner Backpack](https://github.c
 
 When HX-JS is running you will be able to use the javscript functions:
 
-- hxSetData('whatever', stuff) will store the `stuff` object in the `whatever` variable.
-- hxGetData('whatever') will get the contents of the `whatever` variable.
-- hxClearData('whatever') will empty the `whatever` variable.
+- `hxSetData('whatever', stuff)` will store the `stuff` object in the `whatever` variable.
+- `hxGetData('whatever')` will get the contents of the `whatever` variable.
+- `hxGetAllData()` will get all stored variables and their contents as a single object.
+- `hxClearData('whatever')` will empty the `whatever` variable.
+- `hxClearAllData('whatever')` will empty the entire backpack.
 
 This data is stored in the edX server, up to about 100k per student per course.
 
