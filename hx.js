@@ -1080,6 +1080,7 @@ var HXGlobalJS = function() {
         url.includes('edx-cdn.org') ||
         url.includes('edx-video.net') ||
         url.includes('/courses/') ||
+        url.includes('/assets/courseware/') ||
         url.includes('jump_to_id') ||
         url.includes('cloudfront.net') ||
         url.includes('mailto') ||
