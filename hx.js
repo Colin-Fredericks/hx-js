@@ -1,4 +1,4 @@
-var HXGlobalJS = function() {
+var HXGlobalJS = function () {
   'use strict';
 
   // Checking for some local variables. If they're not defined, make blanks.
@@ -51,7 +51,7 @@ var HXGlobalJS = function() {
       focusOnChange: true,
       infinite: true,
       slidesToShow: 3,
-      slidesToScroll: 3
+      slidesToScroll: 3,
     },
     // Default options for image slider navigation
     slickNavOptions: {
@@ -59,7 +59,7 @@ var HXGlobalJS = function() {
       variableWidth: true,
       focusOnSelect: true,
       slidesToShow: 3,
-      slidesToScroll: 1
+      slidesToScroll: 1,
     },
     // Default options for single big image slider paired to nav.
     slickBigOptions: {
@@ -70,7 +70,7 @@ var HXGlobalJS = function() {
       focusOnChange: true,
       adaptiveHeight: true,
       slidesToShow: 1,
-      slidesToScroll: 1
+      slidesToScroll: 1,
     },
     // Default options for text slider
     // Also inherits settings from slickOptions
@@ -82,7 +82,7 @@ var HXGlobalJS = function() {
       overviewIsOpen: false,
       showBottomNav: true,
       maxIconsTall: 2,
-      causeEffect: ['Causes', 'Effects']
+      causeEffect: ['Causes', 'Effects'],
     },
     // Default options for pop-up problems
     PUPOptions: {
@@ -91,7 +91,7 @@ var HXGlobalJS = function() {
       effectlength: 200,
       myPosition: 'center',
       atPosition: 'center',
-      ofTarget: window
+      ofTarget: window,
     },
     // Default options for video links
     VidLinkOptions: {
@@ -100,7 +100,7 @@ var HXGlobalJS = function() {
       hide: { direction: 'down' },
       show: { direction: 'down' },
       speed: 500,
-      location: 'bl' // Bottom Left. bl, br, tl, and tr are all ok.
+      location: 'bl', // Bottom Left. bl, br, tl, and tr are all ok.
     },
     // Default options for Summernote toolbar
     HXEditorOptions: [
@@ -110,10 +110,10 @@ var HXGlobalJS = function() {
       ['para', ['ul', 'ol', 'paragraph']],
       ['table', ['table']],
       ['insert', ['link']],
-      ['view', ['fullscreen', 'codeview', 'help']]
+      ['view', ['fullscreen', 'codeview', 'help']],
     ],
     // No options for chimes right now.
-    ChimeOptions: {}
+    ChimeOptions: {},
   };
 
   /***********************************************/
@@ -141,9 +141,9 @@ var HXGlobalJS = function() {
   logThatThing({ 'course log id': courseLogID });
 
   // Listen for events that rewrite problem HTML.
-  Logger.listen('problem_check', null, () => onProblemRewrite('problem_check'));
-  Logger.listen('problem_show', null, () => onProblemRewrite('problem_show'));
-  Logger.listen('problem_reset', null, () => onProblemRewrite('problem_reset'));
+  Logger.listen('problem_check', null, (en, es) => onProblemRewrite(en, es));
+  Logger.listen('problem_show', null, (en, es) => onProblemRewrite(en, es));
+  Logger.listen('problem_reset', null, (en, es) => onProblemRewrite(en, es));
 
   /**************************************/
   // Load outside scripts.
@@ -153,13 +153,13 @@ var HXGlobalJS = function() {
   /**************************************/
 
   // Define the function that gets the outside scripts.
-  $.getMultiScripts = function(arr, path) {
-    var _arr = $.map(arr, function(scr) {
+  $.getMultiScripts = function (arr, path) {
+    var _arr = $.map(arr, function (scr) {
       return $.getScript((path || '') + scr);
     });
 
     _arr.push(
-      $.Deferred(function(deferred) {
+      $.Deferred(function (deferred) {
         $(deferred.resolve);
       })
     );
@@ -253,7 +253,7 @@ var HXGlobalJS = function() {
 
   // This is where we load all the outside scripts we want.
   $.getMultiScripts(scriptArray, courseAssetURL)
-    .done(function() {
+    .done(function () {
       logThatThing({ 'Loaded scripts': scriptArray });
       if (hxGlobalOptions) {
         hxOptions = setDefaultOptions(
@@ -270,7 +270,7 @@ var HXGlobalJS = function() {
       }
       keepGoing(hxOptions);
     })
-    .fail(function(jqxhr, settings, exception) {
+    .fail(function (jqxhr, settings, exception) {
       console.log(jqxhr);
       console.log(settings);
       console.log(exception);
@@ -359,7 +359,7 @@ var HXGlobalJS = function() {
       HXVL = new HXVideoLinks(hxOptions.VidLinkOptions);
 
       // Check for jump-to-time links and enable them.
-      $('.jumptime').on('click tap', function(e) {
+      $('.jumptime').on('click tap', function (e) {
         // Suppress the effect of clicking the link.
         e.preventDefault();
         // If there's a data-for-vidnum attribute, select that video.
@@ -397,7 +397,7 @@ var HXGlobalJS = function() {
 
     // If we have code blocks, highlight them.
     if (codeblocks.length && hxOptions.highlightCode) {
-      highlightCode();
+      insertCodeHighlighter();
     }
 
     /**************************************/
@@ -408,7 +408,7 @@ var HXGlobalJS = function() {
     /**************************************/
 
     let allTimeLinks = $('a.hx-vidtime');
-    allTimeLinks.on('click tap', function() {
+    allTimeLinks.on('click tap', function () {
       let thisTime = hmsToTime($(this).attr('data-time'));
       let href = $(this).attr('href');
       let anchor = href.slice(href.indexOf('#video'));
@@ -435,8 +435,8 @@ var HXGlobalJS = function() {
           'storing video info for jump': {
             unit: unitNumber,
             'video number': vidNumber,
-            time: thisTime
-          }
+            time: thisTime,
+          },
         });
       }
     });
@@ -461,7 +461,7 @@ var HXGlobalJS = function() {
     /**************************************/
     let tintButton = $('#hx-tint');
     if (tintButton.length) {
-      $(tintButton).on('click tap', function() {
+      $(tintButton).on('click tap', function () {
         $('p').animate({ color: 'blue' });
       });
     }
@@ -482,7 +482,7 @@ var HXGlobalJS = function() {
     /**************************************/
     if (hxOptions.markExternalLinks) {
       logThatThing('marking external links');
-      $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function(
+      $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function (
         i,
         linky
       ) {
@@ -513,18 +513,18 @@ var HXGlobalJS = function() {
     // where the # is a number.
     /**************************************/
 
-    $('[class^=hx-highlighter]').on('click tap', function() {
+    $('[class^=hx-highlighter]').on('click tap', function () {
       let myNumber = getClassNumber(this.className, 'hx-highlighter');
 
       if (hxOptions.highlightState) {
         $('.hx-highlight' + myNumber).css({
           'background-color': hxOptions.highlightColor,
-          transition: 'background 0.2s'
+          transition: 'background 0.2s',
         });
       } else {
         $('.hx-highlight' + myNumber).css({
           'background-color': hxOptions.highlightBackground,
-          transition: 'background 0.2s'
+          transition: 'background 0.2s',
         });
       }
 
@@ -532,7 +532,7 @@ var HXGlobalJS = function() {
 
       logThatThing({
         'Highlight button': 'pressed',
-        'Highlight number': myNumber
+        'Highlight number': myNumber,
       });
     });
 
@@ -629,16 +629,27 @@ var HXGlobalJS = function() {
   /**************************************/
   // When an event resets a problem,
   // reapply certain javascript functions.
-  // Note that code highlighting has its
-  // own reapply process.
   /**************************************/
   let reapply_list = [''];
-  function onProblemRewrite(event_type) {
-    console.log(event_type);
+  function onProblemRewrite(event_name, event_source) {
+    console.log(event_name, event_source);
+    let prob_id;
+    if (event_name === 'problem_check') {
+      prob_id = event_source.split('_')[1];
+    } else if (event_name === 'problem_show') {
+      prob_id = event_source.problem.split('@')[2];
+    }
+    let problem = $('[id^="' + prob_id + '"]').parent()[0];
+
     // Wait a moment for the problem to reload.
     // Not the best solution, but events fire before DOM changes complete.
-    setTimeout(function() {
+    setTimeout(function () {
+      // Set the visibility of the toggle buttons.
       setVisFromMemory('hx-togglebutton', 'hx-toggletarget');
+      // Re-highlight all the code.
+      if (codeblocks.length && hxOptions.highlightCode) {
+        Prism.highlightAllUnder(problem);
+      }
     }, 500);
   }
 
@@ -706,7 +717,7 @@ var HXGlobalJS = function() {
   function setVisFromMemory(press, target) {
     console.log('setting visibility from memory');
     let prepped = [];
-    $('[class*=' + target + ']').each(function() {
+    $('[class*=' + target + ']').each(function () {
       let myNumber = getClassNumber(this.className, target);
       console.log('toggle ' + myNumber + '...');
       if (prepped.indexOf(myNumber) === -1) {
@@ -734,7 +745,7 @@ var HXGlobalJS = function() {
     // But don't prep the same toggles twice.
     let prepped = [];
 
-    $('[class*=' + press + ']').each(function() {
+    $('[class*=' + press + ']').each(function () {
       let myNumber = getClassNumber(this.className, press);
       if (prepped.indexOf(myNumber) === -1) {
         console.log('prepping toggle ' + myNumber);
@@ -753,7 +764,7 @@ var HXGlobalJS = function() {
     setVisFromMemory(press, target);
 
     // Listener: clear the memory.
-    $('.hx-clearmemory').on('click tap', function() {
+    $('.hx-clearmemory').on('click tap', function () {
       let myNumber = getClassNumber(this.className, press);
       // If hx-clearmemory has a number after it, clear that one item.
       // Otherwise, clear everything.
@@ -766,7 +777,7 @@ var HXGlobalJS = function() {
 
     // Listener: toggle elements when clicked
     // and reverse the aria attributes.
-    $('[class*=' + press + ']').on('click tap', function() {
+    $('[class*=' + press + ']').on('click tap', function () {
       let myNumber = getClassNumber(this.className, press);
       let remember = $(this).hasClass(remember_class);
       let vis = '';
@@ -788,7 +799,7 @@ var HXGlobalJS = function() {
       logThatThing({
         'Toggle button': 'pressed',
         'Toggled to': vis,
-        'Toggle number': myNumber
+        'Toggle number': myNumber,
       });
     });
   }
@@ -798,7 +809,7 @@ var HXGlobalJS = function() {
   // load the style sheet for them, and
   // make sure they recolor properly later.
   /**************************************/
-  function highlightCode() {
+  function insertCodeHighlighter() {
     $('head').append(
       $(
         '<link rel="stylesheet" href="' +
@@ -806,36 +817,6 @@ var HXGlobalJS = function() {
           'prism.css" type="text/css" />'
       )
     );
-
-    // If a student submits or resets a problem, we'll need to recolor the code.
-    $('.submit, .reset').on('click tap', function() {
-      // Recoloring function. Needs to remove observer temporarily,
-      // or its brain will explode with all the mutations.
-      var rehighlight = function(mutationsList) {
-        for (var mutation of mutationsList) {
-          if (mutation.type == 'childList') {
-            $.when(observer.disconnect()).done(function() {
-              $.when(Prism.highlightAllUnder(target)).done(function() {
-                // Submitting or resetting results in a lot of changes.
-                // Just wait half a second for them to go through.
-                // It'll save us a lot of overhead.
-                setTimeout(function() {
-                  observer.observe(target, config);
-                }, 500);
-              });
-            });
-            break;
-          }
-        }
-      };
-
-      // After learners submit, watch the problem for mutations.
-      // Once the mutations happen, recolor the code in that problem.
-      let target = this.closest('.xblock');
-      let config = { childList: true };
-      let observer = new MutationObserver(rehighlight);
-      observer.observe(target, config);
-    });
   }
 
   /**************************************/
@@ -858,7 +839,7 @@ var HXGlobalJS = function() {
     let autoTOC = '<h3>Table of Contents</h3><ul>';
 
     // Get all the h3 and h4 elements on the page.
-    let allHeaders = $('h3, h4').filter(function() {
+    let allHeaders = $('h3, h4').filter(function () {
       // Remove anything that's hidden away.
       return $(this).is(':visible');
     });
@@ -866,7 +847,7 @@ var HXGlobalJS = function() {
     let TOCList = $('#autoTOC ul');
 
     // For each header, add it to the list and make a link.
-    allHeaders.each(function(i) {
+    allHeaders.each(function (i) {
       // Set the id of the element to link to.
       $(this).attr('id', 'TOCLink' + i);
 
@@ -953,9 +934,7 @@ var HXGlobalJS = function() {
       destinationComponent = $(
         footnoteComponents[footnoteComponents.length - 1]
       ).parent();
-      $(thisTarget)
-        .detach()
-        .appendTo(destinationComponent);
+      $(thisTarget).detach().appendTo(destinationComponent);
 
       // Add links to the footnote markers
       $(thisFootnote)
@@ -984,12 +963,12 @@ var HXGlobalJS = function() {
   /*******************************************/
   function handlePopUpContent() {
     // First, create lists of areas for the purpose of accessibility.
-    $('map').each(function(index) {
+    $('map').each(function (index) {
       // Make a list element from each area's title
       let tempList = [];
       $(this)
         .find('area')
-        .each(function(index) {
+        .each(function (index) {
           tempList.push(
             '<li class="' +
               this.className.split(/\s+/)[0] +
@@ -1019,7 +998,7 @@ var HXGlobalJS = function() {
     let newPops = $('.hx-popup-opener');
 
     // Create the dialogue if we click on the right areas or links.
-    newPops.on('click tap', function() {
+    newPops.on('click tap', function () {
       let myClass = this.className;
       let boxName = myClass.split(/\s+/)[0];
 
@@ -1029,19 +1008,19 @@ var HXGlobalJS = function() {
           title: $(this).attr('title'),
           show: {
             effect: 'fade',
-            duration: 200
+            duration: 200,
           },
           hide: {
             effect: 'fade',
-            duration: 100
+            duration: 100,
           },
           buttons: {
-            Close: function() {
+            Close: function () {
               $(this).dialog('close');
-            }
-          }
+            },
+          },
         },
-        function(boxName) {
+        function (boxName) {
           $('div.' + boxName).css({ display: '' });
           alert(boxName);
         }
@@ -1049,7 +1028,7 @@ var HXGlobalJS = function() {
 
       logThatThing({
         'Pop-up Dialog': 'opened',
-        Dialog: boxName
+        Dialog: boxName,
       });
     });
   }
@@ -1187,13 +1166,13 @@ var HXGlobalJS = function() {
   }
 
   // Konami Code
-  (function($) {
-    $.fn.hxKonami = function(callback, code) {
+  (function ($) {
+    $.fn.hxKonami = function (callback, code) {
       if (code === undefined) code = '38,38,40,40,37,39,37,39,66,65';
 
-      return this.each(function() {
+      return this.each(function () {
         let kkeys = [];
-        $(this).keydown(function(e) {
+        $(this).keydown(function (e) {
           kkeys.push(e.keyCode);
           while (kkeys.length > code.split(',').length) {
             kkeys.shift();
@@ -1207,7 +1186,7 @@ var HXGlobalJS = function() {
     };
   })(jQuery);
 
-  $(window).hxKonami(function() {
+  $(window).hxKonami(function () {
     alert('+30 Lives');
     logThatThing({ 'easter egg': 'Konami Code' });
   });
@@ -1217,7 +1196,7 @@ var HXGlobalJS = function() {
   // Verify origin and publish functions.
   $(window)
     .off('message.hx')
-    .on('message.hx', function(e) {
+    .on('message.hx', function (e) {
       var data = e.originalEvent.data;
 
       // Only accept from same origin. Won't work in Studio.
@@ -1347,6 +1326,6 @@ var HXGlobalJS = function() {
   window.hxBackpackLoaded = $('#hxbackpackframe').length > 0; // Gets set when backpack loads.
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
   HXGlobalJS();
 });
