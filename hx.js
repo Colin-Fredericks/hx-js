@@ -287,9 +287,6 @@ var HXGlobalJS = function () {
   function keepGoing(hxOptions) {
     window.hxOptions = hxOptions;
     console.log('Window hxOptions set');
-    // Keep track of what we have open/closed.
-    // window.hxToggled = [];
-    // window.hxToggleLast = [];
 
     /**************************************/
     // The "backpack" stores up to 100k of
@@ -806,8 +803,7 @@ var HXGlobalJS = function () {
 
   /**************************************/
   // If we have code blocks on the page,
-  // load the style sheet for them, and
-  // make sure they recolor properly later.
+  // load the style sheet for them.
   /**************************************/
   function insertCodeHighlighter() {
     $('head').append(
