@@ -338,6 +338,9 @@ var HXGlobalJS = function () {
       // Otherwise, this will get fired once the backpack loads.
       if (hxBackpackLoaded && typeof HXED === 'undefined') {
         HXED = new HXEditor(hxOptions.useBackpack, hxOptions.HXEditorOptions);
+      }else{
+        console.log('Backpack: ' + hxBackpackLoaded);
+        console.log('HXED: ' + typeof HXED === 'undefined' ? 'undefined' : 'ok');
       }
     }
 

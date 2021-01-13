@@ -179,7 +179,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Store any existing markup as default content.
     let starting_markup = ed
-      .find('.hx-editor-default')
       .html()
       .trim();
     if (starting_markup === '') {
