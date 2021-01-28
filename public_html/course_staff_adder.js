@@ -99,6 +99,11 @@ $(document).ready(function () {
   }
 
   function makeModal() {
+    if ($('#modal-1').length > 0) {
+      console.log('modal already exists');
+      return;
+    }
+
     let d = $('<div>');
     d.attr('id', 'modal-1');
 
