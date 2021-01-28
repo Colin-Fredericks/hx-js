@@ -6,12 +6,9 @@
 $(document).ready(function () {
   console.log('course_staff_adder called');
 
-  // What kind of users are we adding?
-  let user_type = $('#member-lists-selector').val();
+  showInputDialog();
 
-  showInputDialog(user_type);
-
-  function showInputDialog(user_type) {
+  function showInputDialog() {
     // Open dialog with text area and GO button.
     // Let user paste in a list of usernames or e-mail addresses
     // Get those as an array.
@@ -25,7 +22,7 @@ $(document).ready(function () {
         {
           text: 'Go',
           click: function () {
-            addUsers(user_type);
+            addUsers();
             console.log('adding users');
           },
         },
@@ -40,13 +37,16 @@ $(document).ready(function () {
     console.log('testing');
   }
 
-  function addUsers(user_type) {
+  function addUsers() {
     // Get the list of users to add.
     let new_users = $('#new_user_list').val();
     // Separate on newlines and commas.
     let user_list = new_users.split(/[,\n]/g);
+    // Strip whitespace
+    user_list.forEach(function (e, i) {
+      user_list[i] = e.trim();
+    });
     console.log(user_list);
-    // Get the username entry box and the submit button
 
     // Try to add a user every .2 seconds.
     let i = 0;
@@ -54,6 +54,7 @@ $(document).ready(function () {
     let max_time = 2; //seconds
     let added_users = [];
     let lost_users = [];
+    // Get the username entry box and the submit button
     let entry_box = $('.bottom-bar input.add-field:visible');
     let add_button = $('.bottom-bar input.add:visible');
 
@@ -66,6 +67,7 @@ $(document).ready(function () {
         add_button.click();
       }
 
+      // Move on once the username is added.
       if ($('td:contains("' + user + '")').length > 0) {
         added_users[i] = user;
         i++;
@@ -93,7 +95,7 @@ $(document).ready(function () {
     // Tada!
   }
 
-  function makeModal(user_type) {
+  function makeModal() {
     let d = $('<div>');
     d.attr('id', 'modal-1');
 
@@ -105,6 +107,7 @@ $(document).ready(function () {
       'Paste e-mail addresses or usernames below, then hit the "Go" button.'
     );
 
+    let user_type = $('#member-lists-selector option:selected').text();
     let details = $('<p style="font-size: small;"></p>');
     details.text(
       'Separate with commas or newlines. Users will be added as ' +
