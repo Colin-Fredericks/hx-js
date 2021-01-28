@@ -20,6 +20,12 @@ $(document).ready(function () {
       width: '50%',
       buttons: [
         {
+          text: 'Cancel',
+          click: function () {
+            $('#modal-1').dialog(close);
+          },
+        },
+        {
           text: 'Go',
           click: function () {
             addUsers();
@@ -28,6 +34,7 @@ $(document).ready(function () {
         },
       ],
       open: function (event, ui) {
+        $('.ui-dialog-titlebar-close').hide();
         $('.ui-dialog').focus();
         $('.ui-widget-overlay').on('click', function () {
           $('#modal-1').dialog('close');
@@ -67,7 +74,7 @@ $(document).ready(function () {
         add_button.click();
       }
 
-      // Move on once the username is added.
+      // Move on once the username is added or the max time is past.
       if ($('td:contains("' + user + '")').length > 0) {
         added_users[i] = user;
         i++;
@@ -78,6 +85,7 @@ $(document).ready(function () {
         i++;
       }
 
+      // When we're done, let us know if we missed anyone.
       if (i >= user_list.length) {
         clearInterval(ticker);
         console.log(added_users);
@@ -88,11 +96,6 @@ $(document).ready(function () {
       }
       timer += 0.2;
     }, 200);
-
-    // Fill the entry box and click the submit button
-    // Wait until the new user is on the list
-    // Loop
-    // Tada!
   }
 
   function makeModal() {
