@@ -22,7 +22,7 @@ $(document).ready(function () {
         {
           text: 'Cancel',
           click: function () {
-            $('#modal-1').dialog('close');
+            $('#modal-1').dialog('destroy');
           },
         },
         {
