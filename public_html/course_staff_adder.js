@@ -1,6 +1,8 @@
 /****************************
  * Course staff adder for edX
  * Runs via bookmarklet.
+ * Written by Colin Fredericks at HarvardX
+ * MIT licensed
  ****************************/
 
 $(document).ready(function () {
