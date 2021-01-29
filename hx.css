@@ -705,4 +705,8 @@ span#hx-playpauseword {
   margin: 2px;
 }
 
+.note-editable {
+  height: 5em;
+}
+
 /************** End Editor Block *******************/
