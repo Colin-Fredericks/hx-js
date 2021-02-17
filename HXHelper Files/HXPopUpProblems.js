@@ -2,7 +2,7 @@
 // Global variable HXPUPTimer is defined in the HTML.
 // The hmsToTime converter function is defined in hx.js
 
-var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
+var HXPopUpProblems = function (HXpopUpOptions, HXPUPTimer) {
   // Declaring semi-global variables for later use.
   var video = $('.video');
   var state;
@@ -28,13 +28,13 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
 
   // Log play/pause events from the player.
   // Also set the play/pause external control properly.
-  video.on('pause', function() {
+  video.on('pause', function () {
     logThatThing({ video_event: 'pause' });
     $('#hx-playpauseicon').html('&#8227;');
     $('#hx-playpauseword').html('Play');
   });
 
-  video.on('play', function() {
+  video.on('play', function () {
     logThatThing({ video_event: 'play' });
     // Also set the play/pause external control properly.
     $('#hx-playpauseicon').html('||'); // Need a better-looking pause icon.
@@ -42,7 +42,7 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
   });
 
   // Check to see whether the video is ready before continuing.
-  var waitForVid = setInterval(function() {
+  var waitForVid = setInterval(function () {
     try {
       state = video.data('video-player-state'); // Sometimes this fails and that's ok.
 
@@ -61,15 +61,11 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
   function stripMissingQuestions(timer) {
     // Get an array with all the text of all the H3's (trimming whitespace)
     let allH3 = $('h3')
-      .map((x, e) =>
-        $(e)
-          .text()
-          .trim()
-      )
+      .map((x, e) => $(e).text().trim())
       .toArray();
 
     // Remove any items from the timer that aren't in the list of H3's
-    let newTimer = timer.filter(x => allH3.includes(x.title));
+    let newTimer = timer.filter((x) => allH3.includes(x.title));
 
     // Return the new timer.
     return newTimer;
@@ -104,7 +100,7 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
       $('#hx-onoff').html('Problems are Off');
       logThatThing({
         reload_event: 'turn_problems_off',
-        time: time
+        time: time,
       });
     }
 
@@ -126,13 +122,13 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
   function setUpControls() {
     // If they seek to a specific position, set the problem counter appropriately
     // so that earlier problems don't gang up on them.
-    video.on('seek', function(event, ui) {
+    video.on('seek', function (event, ui) {
       clearOlderPopUps(ui);
     });
 
     // Let someone go through the problems again if they want.
     // Also useful for debugging.
-    $('#hx-popUpReset').on('click tap', function() {
+    $('#hx-popUpReset').on('click tap', function () {
       updateProblemCounter(0);
       ISaidGoTo(0);
       logThatThing({ control_event: 'reset counter and set t=0' });
@@ -143,14 +139,14 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
       // because of this.
       if (!skipEmAll) {
         skipEmAll = true;
-        var dontSpamProblemsEarly = setTimeout(function() {
+        var dontSpamProblemsEarly = setTimeout(function () {
           skipEmAll = false;
         }, 2000);
       }
     });
 
     // Go back to one second after the previous problem.
-    $('#hx-backOneProblem').on('click tap', function() {
+    $('#hx-backOneProblem').on('click tap', function () {
       if (problemCounter > 1) {
         var newTime = HXPUPTimer[problemCounter - 2].time + 1;
         ISaidGoTo(newTime);
@@ -163,7 +159,7 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
     });
 
     // Play or pause the video
-    $('#hx-popUpPlayPause').on('click tap', function() {
+    $('#hx-popUpPlayPause').on('click tap', function () {
       if (state.videoPlayer.isPlaying()) {
         state.videoPlayer.pause();
         $('#hx-playpauseicon').html('&#8227;');
@@ -179,7 +175,7 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
 
     // Let someone turn the pop-up questions on and off.
     // Give visual indication by changing the button.
-    $('#hx-problemToggle').on('click tap', function() {
+    $('#hx-problemToggle').on('click tap', function () {
       if (skipEmAll) {
         skipEmAll = false;
         localStorage[state.id + '-skip'] = 'false';
@@ -187,7 +183,7 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
         $('#hx-onoff').html('Problems are On');
         logThatThing({
           control_event: 'turn_problems_on',
-          time: time
+          time: time,
         });
       } else {
         skipEmAll = true;
@@ -196,7 +192,7 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
         $('#hx-onoff').html('Problems are Off');
         logThatThing({
           control_event: 'turn_problems_off',
-          time: time
+          time: time,
         });
       }
     });
@@ -204,7 +200,7 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
 
   // Every 500 ms, check to see whether we're going to add a new problem.
   function mainLoop() {
-    var timeChecker = setInterval(function() {
+    var timeChecker = setInterval(function () {
       try {
         state.videoPlayer.update(); // Forced update of time. Required for Safari.
       } catch (err) {
@@ -255,7 +251,7 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
     logThatThing({
       display_problem: title,
       problem_id: problemID,
-      time: time
+      time: time,
     });
 
     // Pause the video.
@@ -269,30 +265,35 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
       width: HXpopUpOptions.width,
       show: {
         effect: HXpopUpOptions.effect,
-        duration: HXpopUpOptions.effectlength
+        duration: HXpopUpOptions.effectlength,
       },
       position: {
-        my: HXpopUpOptions.myPosition,
-        at: HXpopUpOptions.atPosition,
-        of: HXpopUpOptions.ofTarget
+        my: 'top',
+        at: 'top',
+        of: video,
       },
+      // position: {
+      //   my: HXpopUpOptions.myPosition,
+      //   at: HXpopUpOptions.atPosition,
+      //   of: HXpopUpOptions.ofTarget,
+      // },
       buttons: {
-        Skip: function() {
+        Skip: function () {
           if (includenext) {
             tempDiv.remove();
           } // We added it, we should erase it.
           dialogDestroyed('skip_problem');
           $(this).dialog('destroy'); // Put the problem back when we're done.
         },
-        Done: function() {
+        Done: function () {
           if (includenext) {
             tempDiv.remove();
           } // We added it, we should erase it.
           dialogDestroyed('mark_done');
           $(this).dialog('destroy'); // Put the problem back when we're done.
-        }
+        },
       },
-      open: function() {
+      open: function () {
         // If we're including two divs, append a clone of the first one above.
         if (includenext) {
           tempDiv = problemDiv.clone();
@@ -306,13 +307,13 @@ var HXPopUpProblems = function(HXpopUpOptions, HXPUPTimer) {
         );
         problemsBeingShown++;
       },
-      close: function() {
+      close: function () {
         state.videoPlayer.play();
         if (includenext) {
           tempDiv.remove();
         } // We added it, we should erase it.
         logThatThing({ unusual_event: 'dialog closed unmarked' }); // Should be pretty rare. I took out the 'close' button.
-      }
+      },
     });
   }
 
