@@ -338,9 +338,11 @@ var HXGlobalJS = function () {
       // Otherwise, this will get fired once the backpack loads.
       if (hxBackpackLoaded && typeof HXED === 'undefined') {
         HXED = new HXEditor(hxOptions.useBackpack, hxOptions.HXEditorOptions);
-      }else{
+      } else {
         console.log('Backpack: ' + hxBackpackLoaded);
-        console.log('HXED: ' + typeof HXED === 'undefined' ? 'undefined' : 'ok');
+        console.log(
+          'HXED: ' + typeof HXED === 'undefined' ? 'undefined' : 'ok'
+        );
       }
     }
 
@@ -997,7 +999,7 @@ var HXGlobalJS = function () {
     let newPops = $('.hx-popup-opener');
 
     // Create the dialogue if we click on the right areas or links.
-    newPops.on('click tap', function () {
+    newPops.on('click tap', function (e) {
       let myClass = this.className;
       let boxName = myClass.split(/\s+/)[0];
 
@@ -1005,6 +1007,11 @@ var HXGlobalJS = function () {
         {
           dialogClass: 'hx-popup-dialog',
           title: $(this).attr('title'),
+          position: {
+            my: 'center',
+            at: 'center',
+            of: $(e.target),
+          },
           show: {
             effect: 'fade',
             duration: 200,
