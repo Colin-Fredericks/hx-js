@@ -663,16 +663,16 @@ var HXGlobalJS = function () {
   /**************************************/
   function getTogVisibility(location) {
     location = 'toggle_' + location;
-    let ret = null;
+    let should_show = false;
     try {
       // console.log(localStorage.HXToggleMemory);
-      ret = JSON.parse(localStorage.HXToggleMemory)[location];
+      should_show = JSON.parse(localStorage.HXToggleMemory)[location];
     } catch (error) {
       // console.log('error');
       // console.log(error);
     }
     // console.log('visibility for toggle ' + location + ' is ' + ret);
-    return ret;
+    return should_show;
   }
 
   function setTogMemory(location, shown) {
