@@ -665,13 +665,13 @@ var HXGlobalJS = function () {
     location = 'toggle_' + location;
     let ret = null;
     try {
-      console.log(localStorage.HXToggleMemory);
+      // console.log(localStorage.HXToggleMemory);
       ret = JSON.parse(localStorage.HXToggleMemory)[location];
     } catch (error) {
-      console.log('error');
-      console.log(error);
+      // console.log('error');
+      // console.log(error);
     }
-    console.log('visibility for toggle ' + location + ' is ' + ret);
+    // console.log('visibility for toggle ' + location + ' is ' + ret);
     return ret;
   }
 
@@ -691,7 +691,12 @@ var HXGlobalJS = function () {
 
   function hideThings(press, target, remember, num) {
     console.log('hiding');
-    $('.' + target + num).hide('slide', { direction: 'up' }, 'fast');
+    if ($.ui) {
+      $('.' + target + num).hide('slide', { direction: 'up' }, 'fast');
+    } else {
+      // edX tabs don't load jQuery UI.
+      $('.' + target + num).hide();
+    }
     $('.' + press + num).attr('aria-expanded', 'false');
     $('.' + target + num).attr('aria-hidden', 'true');
     $('.hx-toggleset .' + press + num)
@@ -704,7 +709,12 @@ var HXGlobalJS = function () {
 
   function showThings(press, target, remember, num) {
     console.log('showing');
-    $('.' + target + num).show('slide', { direction: 'up' }, 'fast');
+    if ($.ui) {
+      $('.' + target + num).show('slide', { direction: 'up' }, 'fast');
+    } else {
+      // edX tabs don't load jQuery UI.
+      $('.' + target + num).show();
+    }
     $('.' + press + num).attr('aria-expanded', 'true');
     $('.' + target + num).attr('aria-hidden', 'false');
     $('.hx-toggleset .' + press + num)
@@ -724,7 +734,7 @@ var HXGlobalJS = function () {
       console.log('toggle ' + myNumber + '...');
       if (prepped.indexOf(myNumber) === -1) {
         prepped.push(myNumber);
-        console.log('...is not handled yet...');
+        // console.log('...is not handled yet...');
         let should_be_visible = getTogVisibility(myNumber);
         if (should_be_visible !== undefined && should_be_visible !== null) {
           if (should_be_visible) {
