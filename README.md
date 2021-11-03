@@ -603,7 +603,7 @@ Maybe you want in-page discussions, but you want them open right away so everyon
 
 ### Learner Backpack
 
-First, follow the setup instructions for the [Learner Backpack](https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack) javascript problem.
+First, follow the setup instructions for the [Learner Backpack](https://github.com/HarvardX/js-input-samples/tree/master/learner_backpack) javascript problem.
 
 When HX-JS is running you will be able to use the javscript functions:
 
