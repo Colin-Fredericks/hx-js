@@ -327,6 +327,28 @@ h4.hx-superbold {
   color: #600;
 }
 
+.xmodule_display .hx-blackbox, .hx-blackbox {
+  border-left: 15px solid #0c0;
+  background-color: black;
+  color: #eee !important;
+  padding: 10px 10px 5px 15px;
+  margin: 40px;
+}
+
+.xmodule_display .hx-blackbox h4, .hx-blackbox h4 {
+  font-variant: small-caps;
+  color: #0f0;
+}
+
+.xmodule_display .hx-blackbox h3, .hx-blackbox h3  {
+  font-variant: small-caps;
+  color: #0f0;
+}
+
+.xmodule_display .hx-blackbox p, .hx-blackbox p  {
+  color: #eee !important;
+}
+
 .hx-magentabox {
   border-left: 15px solid #a71852;
   background-color: #eec6d4;
