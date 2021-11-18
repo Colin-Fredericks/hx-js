@@ -227,7 +227,7 @@ h4.hx-superbold {
 /* Can be combined with smallcaps. */
 .hx-underline {
   border-bottom: 1px solid #189;
-  width: 600px;
+  width: 75%;
 }
 
 /************** End fancy-header Block *******************/
