@@ -258,6 +258,23 @@ h4.hx-superbold {
   color: #600;
 }
 
+.hx-pinkbox {
+  border-left: 15px solid #ffc0f8;
+  background-color: #ffe9f6;
+  padding: 10px 10px 5px 15px;
+  margin: 40px;
+}
+
+.hx-pinkbox h4 {
+  font-variant: small-caps;
+  color: #cf5cc2;
+}
+
+.hx-pinkbox h3 {
+  font-variant: small-caps;
+  color: #cf5cc2;
+}
+
 .hx-orangebox {
   border-left: 15px solid #dc5b00;
   background-color: #ffddc5;
@@ -273,6 +290,23 @@ h4.hx-superbold {
 .hx-orangebox h3 {
   font-variant: small-caps;
   color: #752900;
+}
+
+.hx-peachbox {
+  border-left: 15px solid #ffdb9c;
+  background-color: #ffecd5;
+  padding: 10px 10px 5px 15px;
+  margin: 40px;
+}
+
+.hx-peachbox h4 {
+  font-variant: small-caps;
+  color: #b6750f;
+}
+
+.hx-peachbox h3 {
+  font-variant: small-caps;
+  color: #b6750f;
 }
 
 .hx-yellowbox {
