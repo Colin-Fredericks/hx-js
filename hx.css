@@ -236,6 +236,45 @@ h4.hx-superbold {
 /*********************************************/
 /* For boxes of material separated from the regular text. */
 /* Use h4 for headers inside. */
+.hx-yellowbox h3 {
+  font-variant: small-caps;
+  color: #666600;
+}
+
+.hx-redbox {
+  border-left: 15px solid #800;
+  background-color: #fdd;
+  padding: 10px 10px 5px 15px;
+  margin: 40px;
+}
+
+.hx-redbox h4 {
+  font-variant: small-caps;
+  color: #600;
+}
+
+.hx-redbox h3 {
+  font-variant: small-caps;
+  color: #600;
+}
+
+.hx-orangebox {
+  border-left: 15px solid #dc5b00;
+  background-color: #ffddc5;
+  padding: 10px 10px 5px 15px;
+  margin: 40px;
+}
+
+.hx-orangebox h4 {
+  font-variant: small-caps;
+  color: #752900;
+}
+
+.hx-orangebox h3 {
+  font-variant: small-caps;
+  color: #752900;
+}
+
 .hx-yellowbox {
   border-left: 15px solid #fdfd00;
   background-color: #ffffd1;
@@ -252,9 +291,21 @@ h4.hx-superbold {
   color: #666600;
 }
 
-.hx-yellowbox h3 {
+.hx-greenbox {
+  border-left: 15px solid #07a878;
+  background-color: #c2eade;
+  padding: 10px 10px 5px 15px;
+  margin: 40px;
+}
+
+.hx-greenbox h4 {
   font-variant: small-caps;
-  color: #666600;
+  color: #013a29;
+}
+
+.hx-greenbox h3 {
+  font-variant: small-caps;
+  color: #013a29;
 }
 
 .hx-bluebox {
@@ -293,60 +344,21 @@ h4.hx-superbold {
   color: #1e3460;
 }
 
-.hx-greenbox {
-  border-left: 15px solid #07a878;
-  background-color: #c2eade;
+.hx-purplebox {
+  border-left: 15px solid #6c35c0;
+  background-color: #dbcdef;
   padding: 10px 10px 5px 15px;
   margin: 40px;
 }
 
-.hx-greenbox h4 {
+.hx-purplebox h4 {
   font-variant: small-caps;
-  color: #013a29;
+  color: #330974;
 }
 
-.hx-greenbox h3 {
+.hx-purplebox h3 {
   font-variant: small-caps;
-  color: #013a29;
-}
-
-.hx-redbox {
-  border-left: 15px solid #800;
-  background-color: #fdd;
-  padding: 10px 10px 5px 15px;
-  margin: 40px;
-}
-
-.hx-redbox h4 {
-  font-variant: small-caps;
-  color: #600;
-}
-
-.hx-redbox h3 {
-  font-variant: small-caps;
-  color: #600;
-}
-
-.xmodule_display .hx-blackbox, .hx-blackbox {
-  border-left: 15px solid #0c0;
-  background-color: black;
-  color: #eee !important;
-  padding: 10px 10px 5px 15px;
-  margin: 40px;
-}
-
-.xmodule_display .hx-blackbox h4, .hx-blackbox h4 {
-  font-variant: small-caps;
-  color: #0f0;
-}
-
-.xmodule_display .hx-blackbox h3, .hx-blackbox h3  {
-  font-variant: small-caps;
-  color: #0f0;
-}
-
-.xmodule_display .hx-blackbox p, .hx-blackbox p  {
-  color: #eee !important;
+  color: #330974;
 }
 
 .hx-magentabox {
@@ -364,40 +376,6 @@ h4.hx-superbold {
 .hx-magentabox h3 {
   font-variant: small-caps;
   color: #4d001f;
-}
-
-.hx-orangebox {
-  border-left: 15px solid #dc5b00;
-  background-color: #ffddc5;
-  padding: 10px 10px 5px 15px;
-  margin: 40px;
-}
-
-.hx-orangebox h4 {
-  font-variant: small-caps;
-  color: #752900;
-}
-
-.hx-orangebox h3 {
-  font-variant: small-caps;
-  color: #752900;
-}
-
-.hx-purplebox {
-  border-left: 15px solid #6c35c0;
-  background-color: #dbcdef;
-  padding: 10px 10px 5px 15px;
-  margin: 40px;
-}
-
-.hx-purplebox h4 {
-  font-variant: small-caps;
-  color: #330974;
-}
-
-.hx-purplebox h3 {
-  font-variant: small-caps;
-  color: #330974;
 }
 
 .hx-greybox,
@@ -418,6 +396,29 @@ h4.hx-superbold {
 .hx-graybox h3 {
   font-variant: small-caps;
   color: #333;
+}
+
+/* Blackbox needs more specific targeting to override white text. */
+.xmodule_display .hx-blackbox, .hx-blackbox {
+  border-left: 15px solid #0c0;
+  background-color: black;
+  color: #eee !important;
+  padding: 10px 10px 5px 15px;
+  margin: 40px;
+}
+
+.xmodule_display .hx-blackbox h4, .hx-blackbox h4 {
+  font-variant: small-caps;
+  color: #0f0;
+}
+
+.xmodule_display .hx-blackbox h3, .hx-blackbox h3  {
+  font-variant: small-caps;
+  color: #0f0;
+}
+
+.xmodule_display .hx-blackbox p, .hx-blackbox p  {
+  color: #eee !important;
 }
 
 /* For right-hand sidebars. Add colorbox styling. */
