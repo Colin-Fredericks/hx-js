@@ -4,6 +4,8 @@ $(document).ready(function () {
   let empty_time = 0;
   let interval = 250;
   let loop_timeout = 3000; // miliseconds
+  let current_counts = [];
+  let timers = [];
 
   function completeCloudChecker() {
     console.debug('complete time ' + completed_time);
@@ -96,4 +98,3 @@ $(document).ready(function () {
     });
   }
 });
-  

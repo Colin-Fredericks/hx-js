@@ -1,115 +1,106 @@
-$(document).ready(function() {
+console.log("working");
 
-  // Dig through all the word clouds and scrape them so we can show some summary info.
-  function parseClouds(cloud) {
-    console.debug('parseClouds');
+// A list of DOM elements. Keeping track of all the word clouds.
+let word_cloud_list = [];
 
-    let result_box = cloud.find('.total_num_words');
-    let word_list = [];
+// Set mutation observer on the <main> tag.
+const main_tag = document.querySelector('main');
+const config = { childList: true, subtree: true };
+const main_observer = new MutationObserver(mainCallback);
+main_observer.observe(main_tag, config);
+// Close it out after 10 seconds
+let stopObserving = setTimeout(function(){
+  main_observer.disconnect();
+  console.log("Done observing");
+}, 10000);
 
-    // Scraping the text and getting word/percent pairs
-    // Storing percent as an actual number so we can sort on it.
-    cloud
-      .find('.word_cloud > svg > g > g')
-      .each(function() {
-        word_list.push({
-          word: cloud.find('text').text(),
-          percent: Number(cloud.find('title').text().slice(0, -1)),
-        });
+function mainCallback(mutationsList, main_observer) {
+  // Use traditional 'for loops' for IE 11
+  for(const mutation of mutationsList) {
+    if (mutation.type === 'childList') {
+      // console.debug('A child node has been added or removed.');
+      // console.debug(mutation.target);
+      // Check this element against the list of word clouds.
+      let class_list = Array.from(mutation.target.classList);
+      if(class_list.includes('word_cloud')){
+        // The container for word clouds has an id that starts with "word_cloud"
+        if(mutation.target.id.includes('word_cloud')){
+          // If it's a new element, add it and start a word cloud observer on it.
+          if(!word_cloud_list.includes(mutation.target)){
+            word_cloud_list.push(mutation.target);
+            console.debug("new word cloud: ");
+            console.debug(mutation.target);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Look for word clouds to be added
+// '.xblock-student_view-word_cloud'
+// Set a mutation observer on each of those.
+
+// In each word cloud, look for two possible mutations (additions):
+// 'button.save' indicates an incomplete cloud.
+  // Keep those observers running.
+  // When button.save disappears, start an observer for the cloud again.
+  // Look for a completed cloud. (Close out after 5 sec again.)
+
+// '.word_cloud > svg > g > g' indicates a completed cloud.
+  // run parseCloud on it.
+  // Close out those observers after 5 seconds.
+
+// For a completed cloud:
+function parseCloud(cloud) {
+  console.debug('parseCloud');
+  console.debug(cloud);
+  let result_box = $(cloud).find('.total_num_words');
+  let word_list = [];
+
+  // Scraping the text and getting word/percent pairs
+  // Might want to sort this eventually, but right now it's pre-sorted.
+  $(cloud)
+    .find('.word_cloud > svg > g > g')
+    .each(function () {
+      word_list.push({
+        word: $(this).find('text').text(),
+        percent: Number($(this).find('title').text().slice(0, -1)),
       });
+    });
 
-    // Just in case it's not given to us pre-sorted.
-    word_list.sort((a, b) => b.percent - a.percent);
+  word_list.sort((a, b) => b.percent - a.percent);
 
-    console.debug(word_list);
+  console.debug(word_list);
 
-    // Don't run on empty word clouds.
-    if (word_list.length === 0) {
-      return false;
-    }
-
-    // Put a summary into the box.
-    result_box.empty();
-    result_box.append('<h4>Top Words</h4>');
-
-    let num_top_items = 5;
-    let top_list = $('<ul class="top_words"></ul>');
-    for (let i = 0; i < num_top_items; i++) {
-      top_list.append(
-        '<li>' + word_list[i].word + ': ' + word_list[i].percent + '%</li>'
-      );
-    }
-    result_box.append(top_list);
-
-    // Add a collapsible bit with the rest of the info.
-    let details_tag = $('<details></details>');
-    let summary_tag = $('<summary>Show full word list</summary>');
-    let rest_of_list = $('<ul></ul>');
-    for (let i = num_top_items; i < word_list.length; i++) {
-      rest_of_list.append(
-        '<li>' + word_list[i].word + ': ' + word_list[i].percent + '%</li>'
-      );
-    }
-    details_tag.append(summary_tag);
-    details_tag.append(rest_of_list);
-    result_box.append(details_tag);
+  // Don't run on empty word clouds.
+  if (word_list.length === 0) {
+    return false;
   }
 
-  function completeCloudChecker(cloud) {
-    console.debug('timer for complete word clouds ' + completed_time);
-    // This is an actual word within the cloud.
-    // If we can select that, it's present to be scraped.
+  // Put a summary into the box.
+  result_box.empty();
+  result_box.append('<h4>Top Words</h4>');
 
-    // TODO: Right now this waits for *one* cloud to be completed and assumes
-    // that the rest are there. That's no good. We should probably run
-    // separate processes on each one.
-    if (cloud.find('.word_cloud > svg > g > g').length > 0) {
-      parseClouds();
-      clearInterval(waitForCompletedClouds);
-    }
-    if (completed_time > loop_timeout) {
-      clearInterval(waitForCompletedClouds);
-    }
-    completed_time += interval;
+  let num_top_items = 5;
+  let top_list = $('<ul class="top_words"></ul>');
+  for (let i = 0; i < num_top_items; i++) {
+    top_list.append(
+      '<li>' + word_list[i].word + ': ' + word_list[i].percent + '%</li>'
+    );
   }
+  result_box.append(top_list);
 
-  function emptyCloudChecker(cloud) {
-    console.debug('timer for empty word clouds ' + empty_time);
-    if (cloud.find('button.save').length > 0) {
-      completed_time = 0;
-      empty_time = 0;
-      // TODO: Right now this waits for *one* save button to be visible assumes
-      // that the rest are there. That's no good. We should probably run
-      // separate processes on each cloud.
-      $('.xblock-student_view-word_cloud button.save').on('click', function() {
-        console.debug('word cloud submitted');
-        completed_time = 0;
-        // The rendered cloud might not appear immediately - we need to wait.
-        waitForCompletedClouds = setInterval(completeCloudChecker, interval);
-      });
-      clearInterval(waitForEmptyClouds);
-    }
-    if (empty_time > loop_timeout) {
-      clearInterval(waitForEmptyClouds);
-    }
-    empty_time += interval;
+  // Add a collapsible bit with the rest of the info.
+  let details_tag = $('<details></details>');
+  let summary_tag = $('<summary>Show full word list</summary>');
+  let rest_of_list = $('<ul></ul>');
+  for (let i = num_top_items; i < word_list.length; i++) {
+    rest_of_list.append(
+      '<li>' + word_list[i].word + ': ' + word_list[i].percent + '%</li>'
+    );
   }
-
-  // Loop through all the word clouds.
-  $('.xblock-student_view-word_cloud').each(function() {
-    console.debug(this);
-
-    // Only do stuff once the word clouds actually appear.
-    let completed_time = 0;
-    let empty_time = 0;
-    let interval = 250;
-    let loop_timeout = 3000; // miliseconds
-
-    // Wait until the word cloud is actually displayed before we try to scrape it.
-    let waitForCompletedClouds = setInterval(completeCloudChecker, interval, $(this));
-    // If the word cloud hasn't been submitted yet, we need to wait for the
-    // "save" button to show up before we can add a listener to it.
-    let waitForEmptyClouds = setInterval(emptyCloudChecker, interval, $(this));
-  });
-
-});
+  details_tag.append(summary_tag);
+  details_tag.append(rest_of_list);
+  result_box.append(details_tag);
+}
