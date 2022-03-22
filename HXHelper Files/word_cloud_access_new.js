@@ -6,6 +6,23 @@ var hxWordCloudHandler = (function(){
   let word_cloud_list = [];
   let word_cloud_observers = [];
 
+  // Check for the components we want.
+  // If they already exist, running a MutationObserver won't help.
+  if($('.word_cloud').length === 0){
+
+  }else{
+    $('.word_cloud').each(function(){
+      // For completed clouds:
+      $(this).find('svg > g > g').each(function(){
+        parseCloud(this);
+      });
+      // For clouds that haven't been submitted yet:
+      $(this).find('button.save').each(function(){
+
+      });
+    });
+  }
+
   // Set mutation observer on the <main> tag.
   const main_tag = document.querySelector('main');
   const config = { childList: true, subtree: true };
@@ -14,7 +31,7 @@ var hxWordCloudHandler = (function(){
   // Close it out after 10 seconds
   let stopObserving = setTimeout(function(){
     main_observer.disconnect();
-    console.log("Done observing");
+    console.log("Done observing main");
   }, 10000);
 
   function mainCallback(mutationsList, main_observer) {
