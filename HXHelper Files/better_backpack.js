@@ -35,8 +35,6 @@ TROUBLESHOOTING:
 -
 *************************************/
 
-
-
 /***********************/
 /* On Backpack Load    */
 /***********************/
@@ -48,7 +46,7 @@ let hx_better_backpack_first_load = true;
 // When the backpack is ready, do certain things.
 $(window)
   .off('message.bkpk')
-  .on('message.bkpk', function(e) {
+  .on('message.bkpk', function (e) {
     if (
       e.originalEvent.origin === location.origin &&
       e.originalEvent.data === 'backpack_ready' &&
@@ -66,7 +64,7 @@ $(window)
 function whenBackpackReady(function_list) {
   // And we still can't trust that it's ready because race conditions, so...
   let timer = 0;
-  let wait_for_backpack = setInterval(function() {
+  let wait_for_backpack = setInterval(function () {
     console.debug('tick: ' + timer);
     timer += 0.25; //seconds
     if (timer > 5) {
@@ -89,62 +87,70 @@ function whenBackpackReady(function_list) {
   }, 250);
 }
 
-
 function setListeners() {
-
   // Fill the autofill items first.
-  let elements_to_autofill = $("[data-backpack-autofill]");
-  let forms_to_fill = $("[data-backpack-autofill-form]");
-  fillElementData(elements_to_fill, "all");
+  let elements_to_autofill = $('[data-backpack-autofill]');
+  let forms_to_fill = $('[data-backpack-autofill-form]');
+  fillElementData(elements_to_fill, 'all');
   fillFormData(form_to_fill);
 
-  let elements_to_store = $("[data-backpack-entry]");
-  let save_buttons = $("[data-backpack-save-button]");
-  let save_all_buttons = $("[data-backpack-save-all-button]");
-  save_buttons.on('click', storeElementData(elements_to_store, "one"));
-  save_all_buttons.on('click', storeElementData(elements_to_store, "all"));
+  let elements_to_store = $('[data-backpack-entry]');
+  let save_buttons = $('[data-backpack-save-button]');
+  let save_all_buttons = $('[data-backpack-save-all-button]');
+  save_buttons.on('click', storeElementData(elements_to_store, 'one'));
+  save_all_buttons.on('click', storeElementData(elements_to_store, 'all'));
 
-  let fill_buttons = $("[data-backpack-fill]");
-  let fill_all_buttons = $("[data-backpack-fill-all]");
-  fill_buttons.on('click', fillElementData(elements_to_autofill, "one"));
-  fill_all_buttons.on('click', fillElementData(elements_to_autofill, "all"));
+  let fill_buttons = $('[data-backpack-fill]');
+  let fill_all_buttons = $('[data-backpack-fill-all]');
+  fill_buttons.on('click', fillElementData(elements_to_autofill, 'one'));
+  fill_all_buttons.on('click', fillElementData(elements_to_autofill, 'all'));
 
-  let clear_buttons = $("[data-backpack-clear]");
-  let clear_all_buttons = $("[data-backpack-clear-all]");
-  clear_buttons.on('click', clearData("one"));
-  clear_all_buttons.on('click', clearData("all"));
+  let clear_buttons = $('[data-backpack-clear]');
+  let clear_all_buttons = $('[data-backpack-clear-all]');
+  clear_buttons.on('click', clearData('one'));
+  clear_all_buttons.on('click', clearData('all'));
 
-  let save_form_button = $("[data-backpack-save-form]");
-  let fill_form_button = $("[data-backpack-fill-form]");
+  let save_form_button = $('[data-backpack-save-form]');
+  let fill_form_button = $('[data-backpack-fill-form]');
   save_form_button.on('click', saveFormData());
   fill_form_button.on('click', fillFormData(forms_to_fill));
-
 }
 
-
-
-// TODO: Sanitize the inputs.
+// Takes data from the selected elements and stores it in the backpack.
+// edX sanitizes the data on their end via URI encoding.
 function storeElementData(elements, quantity) {
-
-  if (quantity === "all"){
+  if (quantity === 'all') {
     // Get all the elements with data-backpack-entry set regardless of variable.
-    let all_entries = $("[data-backpack-entry]");
+    let all_entries = $('[data-backpack-entry]');
     // Store all of their info in the backpack.
     // Copy from updateBackpack() below.
     // Values for form elements, text for other HTML elements
-
-  }else if (quantity === "one"){
+  } else if (quantity === 'one') {
     // Get the variable name from the element that called this.
     // Store just the info from entries of that variable.
-
-  }
-  else{
-    console.debug("bad quantity specified in storeElementData()");
+  } else {
+    console.debug('bad quantity specified for storeElementData()');
   }
 }
 
+// Gets data from the backpack and puts it into the selected elements.
 function fillElementData(elements, quantity) {
   // crib from fillDataBoxes() below.
+
+  // Get all the data for this student.
+  let student_data = hxGetAllData();
+  console.debug(student_data);
+  if (quantity === 'all') {
+    elements.each(function (i, e, student_data) {
+      let varname = e.attrib(data - backpack - entry);
+      insertData(e, student_data[varname]);
+    });
+  } else if (quantity === 'one') {
+    // Get the variable name from the element that called this.
+    // Fill just the elements whose data-backpack-entry matches the variable.
+  } else {
+    console.debug('bad quantity specified for fillElementData()');
+  }
 }
 
 function clearElementData(elements, quantity) {}
@@ -153,8 +159,19 @@ function fillFormData(form) {}
 
 function saveFormData() {}
 
-
-
+// Logic for deciding how to fill different tag types.
+function insertData(element, data) {
+  if (element.tagName === 'INPUT') {
+    // Don't fill input boxes if they already have stuff in them.
+    console.log(element.value);
+    if (element.value === '') {
+      element.value = data;
+    }
+  } else {
+    // Here it's ok to overwrite whatever's there.
+    element.innerHTML = data;
+  }
+}
 
 /***********************/
 /* Leftover functions from earlier version, to be retooled.
@@ -165,7 +182,7 @@ function saveFormData() {}
 function fillDataBoxes(css_class) {
   console.debug('filling data boxes:');
 
-  document.querySelectorAll('.' + css_class).forEach(function(e, index) {
+  document.querySelectorAll('.' + css_class).forEach(function (e, index) {
     if (e.tagName === 'INPUT') {
       // Don't fill input boxes if they already have stuff in them.
       console.log(e.value);
