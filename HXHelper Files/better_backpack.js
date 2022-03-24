@@ -91,29 +91,29 @@ function setListeners() {
   // Fill the autofill items first.
   let elements_to_autofill = $('[data-backpack-autofill]');
   let forms_to_fill = $('[data-backpack-autofill-form]');
-  fillElementData(elements_to_fill, 'all');
-  fillFormData(form_to_fill);
+  fillElementData(None, elements_to_fill, 'all');
+  fillFormData(None, forms_to_fill);
 
   let elements_to_store = $('[data-backpack-entry]');
   let save_buttons = $('[data-backpack-save-button]');
   let save_all_buttons = $('[data-backpack-save-all-button]');
-  save_buttons.on('click', storeElementData(elements_to_store, 'one'));
-  save_all_buttons.on('click', storeElementData(elements_to_store, 'all'));
+  save_buttons.on('click', function(){ storeElementData(this, elements_to_store, 'one'); });
+  save_all_buttons.on('click', function(){ storeElementData(this, elements_to_store, 'all'); });
 
   let fill_buttons = $('[data-backpack-fill]');
   let fill_all_buttons = $('[data-backpack-fill-all]');
-  fill_buttons.on('click', fillElementData(elements_to_autofill, 'one'));
-  fill_all_buttons.on('click', fillElementData(elements_to_autofill, 'all'));
+  fill_buttons.on('click', function(){ fillElementData(this, elements_to_autofill, 'one'); });
+  fill_all_buttons.on('click', function(){ fillElementData(this, elements_to_autofill, 'all'); });
 
   let clear_buttons = $('[data-backpack-clear]');
   let clear_all_buttons = $('[data-backpack-clear-all]');
-  clear_buttons.on('click', clearData('one'));
-  clear_all_buttons.on('click', clearData('all'));
+  clear_buttons.on('click', function(){ clearData(this, 'one'); });
+  clear_all_buttons.on('click', function(){ clearData(this, 'all'); });
 
   let save_form_button = $('[data-backpack-save-form]');
   let fill_form_button = $('[data-backpack-fill-form]');
-  save_form_button.on('click', saveFormData());
-  fill_form_button.on('click', fillFormData(forms_to_fill));
+  save_form_button.on('click', function(){ saveFormData(this); });
+  fill_form_button.on('click', function(){ fillFormData(this, forms_to_fill); });
 }
 
 // Takes data from the selected elements and stores it in the backpack.
@@ -135,7 +135,6 @@ function storeElementData(elements, quantity) {
 
 // Gets data from the backpack and puts it into the selected elements.
 function fillElementData(elements, quantity) {
-  // crib from fillDataBoxes() below.
 
   // Get all the data for this student.
   let student_data = hxGetAllData();
@@ -176,27 +175,6 @@ function insertData(element, data) {
 /***********************/
 /* Leftover functions from earlier version, to be retooled.
 /***********************/
-
-// css_class is a string, which is also the data key.
-// TODO: Add ability to take in a list of classes.
-function fillDataBoxes(css_class) {
-  console.debug('filling data boxes:');
-
-  document.querySelectorAll('.' + css_class).forEach(function (e, index) {
-    if (e.tagName === 'INPUT') {
-      // Don't fill input boxes if they already have stuff in them.
-      console.log(e.value);
-      if (e.value === '') {
-        e.value = hxGetData(css_class);
-        console.debug(css_class);
-      }
-    } else {
-      // Here it's ok to overwrite whatever's there.
-      e.innerHTML = hxGetData(css_class);
-      console.debug(css_class);
-    }
-  });
-}
 
 // Pulls all scores from appropriately ID'd input boxes and puts them in the backpack.
 function updateBackpack() {
