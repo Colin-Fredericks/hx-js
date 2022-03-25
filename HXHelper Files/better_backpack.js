@@ -75,10 +75,7 @@ function whenBackpackReady(function_list) {
     }
     if (hxBackpackLoaded) {
       clearInterval(wait_for_backpack);
-
-      console.debug('calling function list');
       setListeners();
-
       console.debug('Done loading');
       $('[data-backpack-success]').show();
       $('[data-backpack-loading]').hide();
@@ -91,8 +88,8 @@ function setListeners() {
   // Fill the autofill items first.
   let elements_to_autofill = $('[data-backpack-autofill]');
   let forms_to_fill = $('[data-backpack-autofill-form]');
-  fillElementData(None, elements_to_fill, 'all');
-  fillFormData(None, forms_to_fill);
+  fillElementData(null, elements_to_autofill, 'all');
+  fillFormData(null, forms_to_fill);
 
   let elements_to_store = $('[data-backpack-entry]');
   let save_buttons = $('[data-backpack-save-button]');
@@ -142,9 +139,9 @@ function storeElementData(origin, elements, quantity) {
       data_object[current_variables[i]] = current_values[i];
     }
   } else if (quantity === 'one') {
-    let single_variable = origin.attributes['data-backpack-entry'];
-    let datum = $('[data-backpack-entry="' + single_variable + '"]');
-    data_object[single_variable] = datum;
+    let varname = origin.attributes['data-backpack-entry'];
+    let datum = $('[data-backpack-entry="' + varname + '"]');
+    data_object[varname] = datum;
     // Get the variable name from the element that called this.
     // Store just the info from entries of that variable.
   } else {
@@ -169,23 +166,32 @@ function fillElementData(origin, elements, quantity) {
   let student_data = hxGetAllData();
   console.debug(student_data);
   if (quantity === 'all') {
+    // Fill all data elements with their data.
     elements.each(function (i, e, student_data) {
-      let varname = e.attrib(data - backpack - entry);
+      let varname = e.attrib("data-backpack-entry");
       insertData(e, student_data[varname]);
     });
   } else if (quantity === 'one') {
     // Get the variable name from the element that called this.
+    let varname = origin.attributes['data-backpack-entry'];
     // Fill just the elements whose data-backpack-entry matches the variable.
+    insertData(orgin, student_data[varname]);
   } else {
     console.debug('bad quantity specified for fillElementData()');
   }
 }
 
-function clearElementData(origin, elements, quantity) {}
+function clearElementData(origin, elements, quantity) {
+  console.debug('clearElementData not implemented yet.');
+}
 
-function fillFormData(origin, form) {}
+function fillFormData(origin, form) {
+  console.debug('fillFormData not implemented yet.');
+}
 
-function saveFormData(origin) {}
+function saveFormData(origin) {
+  console.debug('saveFormData not implemented yet.');
+}
 
 // Logic for deciding how to fill different tag types.
 function insertData(origin, element, data) {
@@ -198,37 +204,5 @@ function insertData(origin, element, data) {
   } else {
     // Here it's ok to overwrite whatever's there.
     element.innerHTML = data;
-  }
-}
-
-/***********************/
-/* Leftover functions from earlier version, to be retooled.
-/***********************/
-
-// Pulls all scores from appropriately ID'd input boxes and puts them in the backpack.
-function updateBackpack() {
-  console.debug('Adding scores to backpack');
-
-  found_scores = {};
-
-  // Get the values for all the scores we want.
-  for (let i = 0; i < valid_scores.length; i++) {
-    input_box = document.querySelectorAll('input#' + valid_scores[i]);
-    // But only if there's actually a value in the input box.
-    if (input_box.length > 0) {
-      if (input_box[0].value !== '') {
-        found_scores[valid_scores[i]] = input_box[0].value;
-      }
-    }
-  }
-
-  // Set scores and hide/show messages appropriately.
-  if (hxBackpackLoaded) {
-    hxSetData(found_scores);
-    $('[data-backpack-success]').show();
-    $('[data-backpack-error]').hide();
-  } else {
-    $('[data-backpack-error]').show();
-    console.log('no backpack found');
   }
 }
