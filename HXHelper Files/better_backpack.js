@@ -116,25 +116,54 @@ function setListeners() {
   fill_form_button.on('click', function(){ fillFormData(this, forms_to_fill); });
 }
 
+/********************************************************
+/ Storage and display functions
+/ The "origin" variable is the "this" from the event trigger.
+*********************************************************/
+
 // Takes data from the selected elements and stores it in the backpack.
 // edX sanitizes the data on their end via URI encoding.
-function storeElementData(elements, quantity) {
+function storeElementData(origin, elements, quantity) {
+  let data_object = {};
+
   if (quantity === 'all') {
-    // Get all the elements with data-backpack-entry set regardless of variable.
-    let all_entries = $('[data-backpack-entry]');
-    // Store all of their info in the backpack.
-    // Copy from updateBackpack() below.
+    // Get all the elements that have data-backpack-entry set, regardless of variable.
+    let all_entries = Array.from(elements);
+    let current_variables = all_entries.map(x => x.attributes['data-backpack-entry']);
     // Values for form elements, text for other HTML elements
+    let current_values = all_entries.map(function(x){
+      if(x.tagName === "INPUT"){
+        return x.value;
+      }else{
+        return x.innerHTML;
+      }
+    });
+    for(let i = 0; i < current_values.length; i++){
+      data_object[current_variables[i]] = current_values[i];
+    }
   } else if (quantity === 'one') {
+    let single_variable = origin.attributes['data-backpack-entry'];
+    let datum = $('[data-backpack-entry="' + single_variable + '"]');
+    data_object[single_variable] = datum;
     // Get the variable name from the element that called this.
     // Store just the info from entries of that variable.
   } else {
     console.debug('bad quantity specified for storeElementData()');
   }
+
+  // Store all of their info in the backpack.
+  if (hxBackpackLoaded) {
+    hxSetData(data_object);
+    $('[data-backpack-success]').show();
+    $('[data-backpack-error]').hide();
+  } else {
+    $('[data-backpack-error]').show();
+    console.debug('no backpack found');
+  }
 }
 
 // Gets data from the backpack and puts it into the selected elements.
-function fillElementData(elements, quantity) {
+function fillElementData(origin, elements, quantity) {
 
   // Get all the data for this student.
   let student_data = hxGetAllData();
@@ -152,14 +181,14 @@ function fillElementData(elements, quantity) {
   }
 }
 
-function clearElementData(elements, quantity) {}
+function clearElementData(origin, elements, quantity) {}
 
-function fillFormData(form) {}
+function fillFormData(origin, form) {}
 
-function saveFormData() {}
+function saveFormData(origin) {}
 
 // Logic for deciding how to fill different tag types.
-function insertData(element, data) {
+function insertData(origin, element, data) {
   if (element.tagName === 'INPUT') {
     // Don't fill input boxes if they already have stuff in them.
     console.log(element.value);
