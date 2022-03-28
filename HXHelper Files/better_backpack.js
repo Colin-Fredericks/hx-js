@@ -168,14 +168,15 @@ function fillElementData(origin, elements, quantity) {
   if (quantity === 'all') {
     // Fill all data elements with their data.
     elements.each(function (i, e, student_data) {
-      let varname = e.attrib("data-backpack-entry");
-      insertData(e, student_data[varname]);
+      console.debug(e);
+      let varname = e.attributes["data-backpack-entry"];
+      insertData(origin, e, student_data, varname);        
     });
   } else if (quantity === 'one') {
     // Get the variable name from the element that called this.
     let varname = origin.attributes['data-backpack-entry'];
     // Fill just the elements whose data-backpack-entry matches the variable.
-    insertData(orgin, student_data[varname]);
+    insertData(orgin, origin, student_data, varname);
   } else {
     console.debug('bad quantity specified for fillElementData()');
   }
@@ -194,15 +195,18 @@ function saveFormData(origin) {
 }
 
 // Logic for deciding how to fill different tag types.
-function insertData(origin, element, data) {
-  if (element.tagName === 'INPUT') {
-    // Don't fill input boxes if they already have stuff in them.
-    console.log(element.value);
-    if (element.value === '') {
-      element.value = data;
+function insertData(origin, element, student_data, varname) {
+  if(typeof varname !== "undefined"){
+    data = student_data[varname];
+    if (element.tagName === 'INPUT') {
+      // Don't fill input boxes if they already have stuff in them.
+      console.log(element.value);
+      if (element.value === '') {
+        element.value = data;
+      }
+    } else {
+      // Here it's ok to overwrite whatever's there.
+      element.innerHTML = data;
     }
-  } else {
-    // Here it's ok to overwrite whatever's there.
-    element.innerHTML = data;
   }
 }
