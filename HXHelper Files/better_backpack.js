@@ -54,12 +54,8 @@ $(window)
       e.originalEvent.data === 'backpack_ready' &&
       hx_better_backpack_first_load
     ) {
-      try {
-        first_load = false;
-        whenBackpackReady();
-      } catch (ReferenceError) {
-        // Just ignore it. This is only here so we don't 
-      }
+      first_load = false;
+      whenBackpackReady();
     }
   });
 
@@ -96,48 +92,67 @@ function setListeners() {
   let elements_to_store = $('[data-backpack-entry]');
   let save_buttons = $('[data-backpack-save-button]');
   let save_all_buttons = $('[data-backpack-save-all-button]');
-  save_buttons.on('click', function(){ storeElementData(this, elements_to_store, 'one'); });
-  save_all_buttons.on('click', function(){ storeElementData(this, elements_to_store, 'all'); });
+  save_buttons.on('click', function () {
+    storeElementData(this, elements_to_store, 'one');
+  });
+  save_all_buttons.on('click', function () {
+    storeElementData(this, elements_to_store, 'all');
+  });
 
   let fill_buttons = $('[data-backpack-fill]');
   let fill_all_buttons = $('[data-backpack-fill-all]');
-  fill_buttons.on('click', function(){ fillElementData(this, elements_to_autofill, 'one'); });
-  fill_all_buttons.on('click', function(){ fillElementData(this, elements_to_autofill, 'all'); });
+  fill_buttons.on('click', function () {
+    fillElementData(this, elements_to_autofill, 'one');
+  });
+  fill_all_buttons.on('click', function () {
+    fillElementData(this, elements_to_autofill, 'all');
+  });
 
   let clear_buttons = $('[data-backpack-clear]');
   let clear_all_buttons = $('[data-backpack-clear-all]');
-  clear_buttons.on('click', function(){ clearData(this, 'one'); });
-  clear_all_buttons.on('click', function(){ clearData(this, 'all'); });
+  clear_buttons.on('click', function () {
+    clearData(this, 'one');
+  });
+  clear_all_buttons.on('click', function () {
+    clearData(this, 'all');
+  });
 
   let save_form_button = $('[data-backpack-save-form]');
   let fill_form_button = $('[data-backpack-fill-form]');
-  save_form_button.on('click', function(){ saveFormData(this); });
-  fill_form_button.on('click', function(){ fillFormData(this, forms_to_fill); });
+  save_form_button.on('click', function () {
+    saveFormData(this);
+  });
+  fill_form_button.on('click', function () {
+    fillFormData(this, forms_to_fill);
+  });
 }
 
-/********************************************************
-/ Storage and display functions
-/ The "origin" variable is the "this" from the event trigger.
-*********************************************************/
+/********************************************************/
+// Storage and display functions
+// The "origin" variable is the "this" from the event trigger.
+/*********************************************************/
 
 // Takes data from the selected elements and stores it in the backpack.
 // edX sanitizes the data on their end via URI encoding.
 function storeElementData(origin, elements, quantity) {
+  // The thing wer're going to store.
   let data_object = {};
 
   if (quantity === 'all') {
     // Get all the elements that have data-backpack-entry set, regardless of variable.
     let all_entries = Array.from(elements);
-    let current_variables = all_entries.map(x => x.attributes['data-backpack-entry']);
+    let current_variables = all_entries.map(
+      (x) => x.attributes['data-backpack-entry']
+    );
     // Values for form elements, text for other HTML elements
-    let current_values = all_entries.map(function(x){
-      if(x.tagName === "INPUT"){
+    let current_values = all_entries.map(function (x) {
+      if (x.tagName === 'INPUT') {
         return x.value;
-      }else{
+      } else {
         return x.innerHTML;
       }
     });
-    for(let i = 0; i < current_values.length; i++){
+    for (let i = 0; i < current_values.length; i++) {
       data_object[current_variables[i]] = current_values[i];
     }
   } else if (quantity === 'one') {
@@ -163,7 +178,6 @@ function storeElementData(origin, elements, quantity) {
 
 // Gets data from the backpack and puts it into the selected elements.
 function fillElementData(origin, elements, quantity) {
-
   // Get all the data for this student.
   let student_data = hxGetAllData();
   console.debug(student_data);
@@ -171,7 +185,7 @@ function fillElementData(origin, elements, quantity) {
     // Fill all data elements with their data.
     elements.each(function (i, e, student_data) {
       console.debug(e);
-      let varname = e.attributes["data-backpack-entry"];
+      let varname = e.attributes['data-backpack-entry'];
       insertData(origin, e, student_data, varname);
     });
   } else if (quantity === 'one') {
@@ -198,7 +212,7 @@ function saveFormData(origin) {
 
 // Logic for deciding how to fill different tag types.
 function insertData(origin, element, student_data, varname) {
-  if(typeof varname !== "undefined"){
+  if (typeof varname !== 'undefined' && typeof student_data !== 'undefined') {
     data = student_data[varname];
     if (element.tagName === 'INPUT') {
       // Don't fill input boxes if they already have stuff in them.
