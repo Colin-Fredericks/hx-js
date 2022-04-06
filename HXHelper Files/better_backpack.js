@@ -10,18 +10,12 @@ This script acts on elements with the following data attributes:
 data-backpack-entry="varname" - flags text in this element for storage.
 data-backpack-save-button="varname" - save the "entry" data for this variable when clicked.
 data-backpack-autofill="varname" - auto-fill textarea, text input box, or text element on load.
-data-backpack-fill="varname" - fills "get" items when clicked.
+data-backpack-fill="varname" - fills "autofill" items when clicked.
 data-backpack-clear="varname" - removes the value from the backpack.
 
 There are also "-all" variants for save, fill, and clear, like
 data-backpack-save-all-button, that act on all elements on the page regardless
 of their variable names.
-
-data-backpack-save-form="varname" - saves all the data from this form, serialized.
-data-backpack-autofill-form="varname" - like "autofill" above.
-data-backpack-fill-form="varname" - like "fill" above.
-
-These do not have "all" variants. They work on the form they're in.
 
 data-backpack-loading="true" - you can put a "loading" message in this element.
 data-backpack-error="true" - you can put a "failed to load" message in this element.
@@ -31,8 +25,16 @@ You should hide the error and success elements with display:none. They'll be sho
 
 TROUBLESHOOTING:
 - Most common issue: Did the student agree to the honor code?
-- If there are multiple elements on a page with the same variable name, it'll only store the last one.
--
+- If there are multiple elements on a page with the same variable name, it'll only store the first one.
+
+The following items are intended for later expansion:
+---------------
+data-backpack-save-form="varname" - saves all the data from this form, serialized.
+data-backpack-autofill-form="varname" - like "autofill" above.
+data-backpack-fill-form="varname" - like "fill" above.
+
+These do not have "all" variants. They work on the form they're in.
+
 *************************************/
 
 /***********************/
@@ -56,12 +58,12 @@ $(window)
         first_load = false;
         whenBackpackReady();
       } catch (ReferenceError) {
-        // just ignore it - if function_list isn't defined, we don't want to run it anyway.
+        // Just ignore it. This is only here so we don't 
       }
     }
   });
 
-function whenBackpackReady(function_list) {
+function whenBackpackReady() {
   // And we still can't trust that it's ready because race conditions, so...
   let timer = 0;
   let wait_for_backpack = setInterval(function () {
@@ -170,7 +172,7 @@ function fillElementData(origin, elements, quantity) {
     elements.each(function (i, e, student_data) {
       console.debug(e);
       let varname = e.attributes["data-backpack-entry"];
-      insertData(origin, e, student_data, varname);        
+      insertData(origin, e, student_data, varname);
     });
   } else if (quantity === 'one') {
     // Get the variable name from the element that called this.
