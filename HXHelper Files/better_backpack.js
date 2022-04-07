@@ -41,8 +41,6 @@ These do not have "all" variants. They work on the form they're in.
 /* On Backpack Load    */
 /***********************/
 
-// Only run the "when backpack ready" scripts on page load.
-// Otherwise every hxSetData call creates an infinite loop.
 let hx_better_backpack_first_load = true;
 
 // When the backpack is ready, do certain things.
@@ -135,15 +133,19 @@ function setListeners() {
 // Takes data from the selected elements and stores it in the backpack.
 // edX sanitizes the data on their end via URI encoding.
 function storeElementData(origin, elements, quantity) {
+  console.debug(elements);
   // The thing wer're going to store.
   let data_object = {};
 
+  // Get all the variables on the page or just one?
   if (quantity === 'all') {
-    // Get all the elements that have data-backpack-entry set, regardless of variable.
+    // Get everything with data-backpack-entry set, regardless of variable.
     let all_entries = Array.from(elements);
+    console.debug(all_entries);
     let current_variables = all_entries.map(
       (x) => x.attributes['data-backpack-entry']
     );
+    console.debug(current_variables);
     // Values for form elements, text for other HTML elements
     let current_values = all_entries.map(function (x) {
       if (x.tagName === 'INPUT') {
@@ -152,12 +154,16 @@ function storeElementData(origin, elements, quantity) {
         return x.innerHTML;
       }
     });
+    console.debug(current_values);
     for (let i = 0; i < current_values.length; i++) {
       data_object[current_variables[i]] = current_values[i];
     }
   } else if (quantity === 'one') {
-    let varname = origin.attributes['data-backpack-entry'];
+    console.debug('origin: ' + origin);
+    let varname = origin.attr('data-backpack-entry');
+    console.debug(varname);
     let datum = $('[data-backpack-entry="' + varname + '"]');
+    console.debug(datum);
     data_object[varname] = datum;
     // Get the variable name from the element that called this.
     // Store just the info from entries of that variable.
