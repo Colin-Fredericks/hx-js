@@ -7,20 +7,20 @@
 /*************************************
 This script acts on elements with the following data attributes:
 
-data-backpack-entry="varname" - flags text in this element for storage.
-data-backpack-save-button="varname" - save the "entry" data for this variable when clicked.
-data-backpack-autofill="varname" - auto-fill textarea, text input box, or text element on load.
-data-backpack-fill="varname" - fills "autofill" items when clicked.
-data-backpack-clear="varname" - removes the value from the backpack.
+data-bkpk-input-for="varname" - flags text in this element for storage.
+data-bkpk-save-button="varname" - save the "input-for" data for this variable when clicked.
+data-bkpk-fill-with="varname" - fill this element with data on load.
+data-bkpk-fill-button="varname" - fills "fill-with" items when clicked.
+data-bkpk-clear="varname" - removes the value from the backpack.
 
 There are also "-all" variants for save, fill, and clear, like
-data-backpack-save-all-button, that act on all elements on the page regardless
+data-bkpk-save-all-button, that act on all elements on the page regardless
 of their variable names.
 
-data-backpack-loading="true" - you can put a "loading" message in this element.
-data-backpack-error="true" - you can put a "failed to load" message in this element.
-data-backpack-success="true" - you can put an "it loaded" message in this element.
-data-wait-for-backpack="true" - put this on disabled elements. They will enable when it loads.
+data-bkpk-loading="true" - you can put a "loading" message in this element.
+data-bkpk-error="true" - you can put a "failed to load" message in this element.
+data-bkpk-success="true" - you can put an "it loaded" message in this element.
+data-wait-for-bkpk="true" - put this on disabled elements. They will enable when it loads.
 You should hide the error and success elements with display:none. They'll be shown later.
 
 TROUBLESHOOTING:
@@ -29,9 +29,9 @@ TROUBLESHOOTING:
 
 The following items are intended for later expansion:
 ---------------
-data-backpack-save-form="varname" - saves all the data from this form, serialized.
-data-backpack-autofill-form="varname" - like "autofill" above.
-data-backpack-fill-form="varname" - like "fill" above.
+data-bkpk-save-form="varname" - saves all the data from this form, serialized.
+data-bkpk-fill-with-form="varname" - like "autofill" above.
+data-bkpk-fill-form-button="varname" - like "fill" above.
 
 These do not have "all" variants. They work on the form they're in.
 
@@ -66,30 +66,30 @@ function whenBackpackReady() {
     if (timer > 5) {
       clearInterval(wait_for_backpack);
       console.debug("Backpack didn't load in 5 seconds.");
-      $('[data-backpack-error]').show();
-      $('[data-backpack-loading]').hide();
+      $('[data-bkpk-error]').show();
+      $('[data-bkpk-loading]').hide();
     }
     if (hxBackpackLoaded) {
       clearInterval(wait_for_backpack);
       setListeners();
       console.debug('Done loading');
-      $('[data-backpack-success]').show();
-      $('[data-backpack-loading]').hide();
-      $('[data-backpack-success]').prop('disabled', false);
+      $('[data-bkpk-success]').show();
+      $('[data-bkpk-loading]').hide();
+      $('[data-bkpk-success]').prop('disabled', false);
     }
   }, 250);
 }
 
 function setListeners() {
   // Fill the autofill items first.
-  let elements_to_autofill = $('[data-backpack-autofill]');
-  let forms_to_fill = $('[data-backpack-autofill-form]');
+  let elements_to_autofill = $('[data-bkpk-fill-with]');
+  let forms_to_fill = $('[data-bkpk-fill-with-form]');
   fillElementData(null, elements_to_autofill, 'all');
   fillFormData(null, forms_to_fill);
 
-  let elements_to_store = $('[data-backpack-entry]');
-  let save_buttons = $('[data-backpack-save-button]');
-  let save_all_buttons = $('[data-backpack-save-all-button]');
+  let elements_to_store = $('[data-bkpk-input-for]');
+  let save_buttons = $('[data-bkpk-save-button]');
+  let save_all_buttons = $('[data-bkpk-save-all-button]');
   save_buttons.on('click', function () {
     storeElementData(this, elements_to_store, 'one');
   });
@@ -97,8 +97,8 @@ function setListeners() {
     storeElementData(this, elements_to_store, 'all');
   });
 
-  let fill_buttons = $('[data-backpack-fill]');
-  let fill_all_buttons = $('[data-backpack-fill-all]');
+  let fill_buttons = $('[data-bkpk-fill-button]');
+  let fill_all_buttons = $('[data-bkpk-fill-all-button]');
   fill_buttons.on('click', function () {
     fillElementData(this, elements_to_autofill, 'one');
   });
@@ -106,8 +106,8 @@ function setListeners() {
     fillElementData(this, elements_to_autofill, 'all');
   });
 
-  let clear_buttons = $('[data-backpack-clear]');
-  let clear_all_buttons = $('[data-backpack-clear-all]');
+  let clear_buttons = $('[data-bkpk-clear]');
+  let clear_all_buttons = $('[data-bkpk-clear-all]');
   clear_buttons.on('click', function () {
     clearData(this, 'one');
   });
@@ -115,8 +115,8 @@ function setListeners() {
     clearData(this, 'all');
   });
 
-  let save_form_button = $('[data-backpack-save-form]');
-  let fill_form_button = $('[data-backpack-fill-form]');
+  let save_form_button = $('[data-bkpk-save-form]');
+  let fill_form_button = $('[data-bkpk-fill-form-button]');
   save_form_button.on('click', function () {
     saveFormData(this);
   });
@@ -139,11 +139,11 @@ function storeElementData(origin, elements, quantity) {
 
   // Get all the variables on the page or just one?
   if (quantity === 'all') {
-    // Get everything with data-backpack-entry set, regardless of variable.
+    // Get everything with data-bkpk-input-for set, regardless of variable.
     let all_entries = Array.from(elements);
     console.debug(all_entries);
     let current_variables = all_entries.map(
-      (x) => x.attributes['data-backpack-entry']
+      (x) => x.attributes['data-bkpk-input-for']
     );
     console.debug(current_variables);
     // Values for form elements, text for other HTML elements
@@ -160,9 +160,9 @@ function storeElementData(origin, elements, quantity) {
     }
   } else if (quantity === 'one') {
     console.debug(origin);
-    let varname = origin.attributes['data-backpack-save-button'].value;
+    let varname = origin.attributes['data-bkpk-save-button'].value;
     console.debug(varname);
-    let datum = $('[data-backpack-entry="' + varname + '"]').val();
+    let datum = $('[data-bkpk-input-for="' + varname + '"]').val();
     console.debug(datum);
     data_object[varname] = datum;
     // Get the variable name from the element that called this.
@@ -174,10 +174,10 @@ function storeElementData(origin, elements, quantity) {
   // Store all of their info in the backpack.
   if (hxBackpackLoaded) {
     hxSetData(data_object);
-    $('[data-backpack-success]').show();
-    $('[data-backpack-error]').hide();
+    $('[data-bkpk-success]').show();
+    $('[data-bkpk-error]').hide();
   } else {
-    $('[data-backpack-error]').show();
+    $('[data-bkpk-error]').show();
     console.debug('no backpack found');
   }
 }
@@ -191,13 +191,13 @@ function fillElementData(origin, elements, quantity) {
     // Fill all data elements with their data.
     elements.each(function (i, e, student_data) {
       console.debug(e);
-      let varname = e.attributes['data-backpack-entry'];
+      let varname = e.attributes['data-bkpk-fill-with'].value;
       insertData(origin, e, student_data, varname);
     });
   } else if (quantity === 'one') {
     // Get the variable name from the element that called this.
-    let varname = origin.attributes['data-backpack-entry'];
-    // Fill just the elements whose data-backpack-entry matches the variable.
+    let varname = origin.attributes['data-bkpk-fill-button'];
+    // Fill just the elements whose data-bkpk-input-for matches the variable.
     insertData(orgin, origin, student_data, varname);
   } else {
     console.debug('bad quantity specified for fillElementData()');
