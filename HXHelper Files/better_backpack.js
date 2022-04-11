@@ -159,10 +159,10 @@ function storeElementData(origin, elements, quantity) {
       data_object[current_variables[i]] = current_values[i];
     }
   } else if (quantity === 'one') {
-    console.debug('origin: ' + origin);
-    let varname = origin.attr('data-backpack-entry');
+    console.debug(origin);
+    let varname = origin.attributes['data-backpack-save-button'].value;
     console.debug(varname);
-    let datum = $('[data-backpack-entry="' + varname + '"]');
+    let datum = $('[data-backpack-entry="' + varname + '"]').val();
     console.debug(datum);
     data_object[varname] = datum;
     // Get the variable name from the element that called this.
