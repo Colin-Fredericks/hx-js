@@ -182,23 +182,37 @@ function storeElementData(origin, elements, quantity) {
   }
 }
 
+function checkForOverwrite(e){
+  if (e) {
+    if (e.attributes['data-bkpk-overwrite'] === 'true') {
+      return true;
+    }
+  }
+  return false;
+}
+
+// TODO: Rewrite the fillElementData function into two:
+//       one that fills all elements who share a single variable,
+//       and one that fills any elements that have any variable.
+
 // Gets data from the backpack and puts it into the selected elements.
 function fillElementData(origin, elements, quantity) {
   // Get all the data for this student.
   let student_data = hxGetAllData();
+  console.debug(elements);
   console.debug(student_data);
   if (quantity === 'all') {
     // Fill all data elements with their data.
-    elements.each(function (i, e, student_data) {
-      console.debug(e);
+    elements.each(function (i, e) {
       let varname = e.attributes['data-bkpk-fill-with'].value;
-      insertData(origin, e, student_data, varname);
+      let overwrite = checkForOverwrite(e);
+      insertData(origin, e, student_data, varname, overwrite);
     });
   } else if (quantity === 'one') {
     // Get the variable name from the element that called this.
     let varname = origin.attributes['data-bkpk-fill-button'];
     // Fill just the elements whose data-bkpk-input-for matches the variable.
-    insertData(orgin, origin, student_data, varname);
+    insertData(orgin, elements, student_data, varname, overwrite);
   } else {
     console.debug('bad quantity specified for fillElementData()');
   }
@@ -217,13 +231,14 @@ function saveFormData(origin) {
 }
 
 // Logic for deciding how to fill different tag types.
-function insertData(origin, element, student_data, varname) {
+function insertData(origin, element, student_data, varname, overwrite) {
   if (typeof varname !== 'undefined' && typeof student_data !== 'undefined') {
     data = student_data[varname];
     if (element.tagName === 'INPUT') {
-      // Don't fill input boxes if they already have stuff in them.
+      // Don't fill input boxes if they already have stuff in them,
+      // unless there's a specific overwrite flag set.
       console.log(element.value);
-      if (element.value === '') {
+      if (element.value === '' || overwrite) {
         element.value = data;
       }
     } else {
