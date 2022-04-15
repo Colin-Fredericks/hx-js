@@ -81,11 +81,6 @@ function whenBackpackReady() {
 }
 
 function setListeners() {
-  // Fill the autofill items first.
-  let elements_to_autofill = $('[data-bkpk-fill-with]');
-  let forms_to_fill = $('[data-bkpk-fill-with-form]');
-  fillElementData(null, elements_to_autofill, 'all');
-  fillFormData(null, forms_to_fill);
 
   let elements_to_store = $('[data-bkpk-input-for]');
   let save_buttons = $('[data-bkpk-save-button]');
@@ -97,13 +92,15 @@ function setListeners() {
     storeElementData(this, elements_to_store, 'all');
   });
 
+  let elements_to_fill = $('[data-bkpk-fill-with]');
   let fill_buttons = $('[data-bkpk-fill-button]');
   let fill_all_buttons = $('[data-bkpk-fill-all-button]');
   fill_buttons.on('click', function () {
-    fillElementData(this, elements_to_autofill, 'one');
+    fillElements(this, elements_to_fill);
   });
   fill_all_buttons.on('click', function () {
-    fillElementData(this, elements_to_autofill, 'all');
+    let overwrite = checkForOverwrite(origin);
+    fillAllElements(overwrite);
   });
 
   let clear_buttons = $('[data-bkpk-clear]');
@@ -115,6 +112,7 @@ function setListeners() {
     clearData(this, 'all');
   });
 
+  let forms_to_fill = $('[data-bkpk-fill-with-form]');
   let save_form_button = $('[data-bkpk-save-form]');
   let fill_form_button = $('[data-bkpk-fill-form-button]');
   save_form_button.on('click', function () {
@@ -123,6 +121,12 @@ function setListeners() {
   fill_form_button.on('click', function () {
     fillFormData(this, forms_to_fill);
   });
+
+  // When the backpack loads, fill all the data-bkpk-fill elements,
+  // and overwrite what's currently in there.
+  fillAllElements(true);
+  fillFormData(null, forms_to_fill);
+
 }
 
 /********************************************************/
@@ -182,7 +186,7 @@ function storeElementData(origin, elements, quantity) {
   }
 }
 
-function checkForOverwrite(e){
+function checkForOverwrite(e) {
   if (e) {
     if (e.attributes['data-bkpk-overwrite'] === 'true') {
       return true;
@@ -191,31 +195,26 @@ function checkForOverwrite(e){
   return false;
 }
 
-// TODO: Rewrite the fillElementData function into two:
-//       one that fills all elements who share a single variable,
-//       and one that fills any elements that have any variable.
-
-// Gets data from the backpack and puts it into the selected elements.
-function fillElementData(origin, elements, quantity) {
-  // Get all the data for this student.
-  let student_data = hxGetAllData();
-  console.debug(elements);
-  console.debug(student_data);
-  if (quantity === 'all') {
-    // Fill all data elements with their data.
-    elements.each(function (i, e) {
-      let varname = e.attributes['data-bkpk-fill-with'].value;
-      let overwrite = checkForOverwrite(e);
-      insertData(origin, e, student_data, varname, overwrite);
+function fillAllElements(overwrite) {
+  let elements;
+  let all_student_data = hxGetAllData();
+  let k = Object.keys(all_student_data);
+  k.forEach(function (varname, i) {
+    elements = $('[data-bkpk-fill-button="' + varname + '"]');
+    elements.each(function (j, x) {
+      insertData(x, all_student_data[varname], overwrite);
     });
-  } else if (quantity === 'one') {
-    // Get the variable name from the element that called this.
-    let varname = origin.attributes['data-bkpk-fill-button'];
-    // Fill just the elements whose data-bkpk-input-for matches the variable.
-    insertData(orgin, elements, student_data, varname, overwrite);
-  } else {
-    console.debug('bad quantity specified for fillElementData()');
-  }
+  });
+}
+
+function fillElements(origin, quantity) {
+  let varname = origin.attributes['data-bkpk-fill-button'];
+  let overwrite = checkForOverwrite(origin);
+  let student_data = hxGetData(varname);
+  let elements = $('[data-bkpk-fill-button="' + varname + '"]');
+  elements.each(function (i, e) {
+    insertData(e, quantity, overwrite);
+  });
 }
 
 function clearElementData(origin, elements, quantity) {
@@ -231,19 +230,22 @@ function saveFormData(origin) {
 }
 
 // Logic for deciding how to fill different tag types.
-function insertData(origin, element, student_data, varname, overwrite) {
-  if (typeof varname !== 'undefined' && typeof student_data !== 'undefined') {
-    data = student_data[varname];
-    if (element.tagName === 'INPUT') {
-      // Don't fill input boxes if they already have stuff in them,
-      // unless there's a specific overwrite flag set.
-      console.log(element.value);
-      if (element.value === '' || overwrite) {
-        element.value = data;
+function insertData(element, data, overwrite) {
+  if (element) {
+    if (data) {
+      if (element.tagName === 'INPUT') {
+        // Don't fill input boxes if they already have stuff in them,
+        // unless there's a specific overwrite flag set.
+        console.debug(element.value);
+        if (element.value === '' || overwrite) {
+          element.value = data;
+        }
+      } else {
+        // Here it's ok to overwrite whatever's there.
+        element.innerHTML = data;
       }
-    } else {
-      // Here it's ok to overwrite whatever's there.
-      element.innerHTML = data;
     }
+    console.debug('no data to add');
   }
+  console.debug('no element specified');
 }
