@@ -52,7 +52,6 @@ $(window)
       e.originalEvent.data === 'backpack_ready' &&
       hx_better_backpack_first_load
     ) {
-      first_load = false;
       whenBackpackReady();
     }
   });
@@ -71,11 +70,16 @@ function whenBackpackReady() {
     }
     if (hxBackpackLoaded) {
       clearInterval(wait_for_backpack);
-      setListeners();
       console.debug('Done loading');
+      if(hx_better_backpack_first_load){
+        hx_better_backpack_first_load = false;
+        setListeners();
+      }
       $('[data-bkpk-success]').show();
       $('[data-bkpk-loading]').hide();
       $('[data-bkpk-success]').prop('disabled', false);
+
+      // TODO: Add a timeout to say "backpack hasn't loaded"
     }
   }, 250);
 }
@@ -96,7 +100,7 @@ function setListeners() {
   let fill_buttons = $('[data-bkpk-fill-button]');
   let fill_all_buttons = $('[data-bkpk-fill-all-button]');
   fill_buttons.on('click', function () {
-    fillElements(this, elements_to_fill);
+    fillElements(this);
   });
   fill_all_buttons.on('click', function () {
     let overwrite = checkForOverwrite(origin);
@@ -188,32 +192,34 @@ function storeElementData(origin, elements, quantity) {
 
 function checkForOverwrite(e) {
   if (e) {
-    if (e.attributes['data-bkpk-overwrite'] === 'true') {
+    if (e.attributes['data-bkpk-overwrite'].value === 'true') {
       return true;
     }
   }
   return false;
 }
 
+// Fill all elements for all variables.
 function fillAllElements(overwrite) {
   let elements;
   let all_student_data = hxGetAllData();
   let k = Object.keys(all_student_data);
   k.forEach(function (varname, i) {
-    elements = $('[data-bkpk-fill-button="' + varname + '"]');
+    elements = $('[data-bkpk-fill-with="' + varname + '"]');
     elements.each(function (j, x) {
       insertData(x, all_student_data[varname], overwrite);
     });
   });
 }
 
-function fillElements(origin, quantity) {
-  let varname = origin.attributes['data-bkpk-fill-button'];
+// Fill all the elements for one particular variable.
+function fillElements(origin) {
+  let varname = origin.attributes['data-bkpk-fill-button'].value;
   let overwrite = checkForOverwrite(origin);
-  let student_data = hxGetData(varname);
-  let elements = $('[data-bkpk-fill-button="' + varname + '"]');
+  let student_datum = hxGetData(varname);
+  let elements = $('[data-bkpk-fill-with="' + varname + '"]');
   elements.each(function (i, e) {
-    insertData(e, quantity, overwrite);
+    insertData(e, student_datum, overwrite);
   });
 }
 
@@ -229,6 +235,9 @@ function saveFormData(origin) {
   console.debug('saveFormData not implemented yet.');
 }
 
+
+// TODO: Build tagName check into checkForOverwrite function instead of here.
+
 // Logic for deciding how to fill different tag types.
 function insertData(element, data, overwrite) {
   if (element) {
@@ -236,7 +245,6 @@ function insertData(element, data, overwrite) {
       if (element.tagName === 'INPUT') {
         // Don't fill input boxes if they already have stuff in them,
         // unless there's a specific overwrite flag set.
-        console.debug(element.value);
         if (element.value === '' || overwrite) {
           element.value = data;
         }
@@ -245,7 +253,11 @@ function insertData(element, data, overwrite) {
         element.innerHTML = data;
       }
     }
-    console.debug('no data to add');
+    else{
+      console.debug('no data to add');
+    }
   }
-  console.debug('no element specified');
+  else{
+    console.debug('no element specified');
+  }
 }
