@@ -27,14 +27,6 @@ TROUBLESHOOTING:
 - Most common issue: Did the student agree to the honor code?
 - If there are multiple elements on a page with the same variable name, it'll only store the first one.
 
-The following items are intended for later expansion:
----------------
-data-bkpk-save-form="varname" - saves all the data from this form, serialized.
-data-bkpk-fill-with-form="varname" - like "autofill" above.
-data-bkpk-fill-form-button="varname" - like "fill" above.
-
-These do not have "all" variants. They work on the form they're in.
-
 *************************************/
 
 /***********************/
@@ -116,20 +108,9 @@ function setListeners() {
     clearData(this, 'all');
   });
 
-  let forms_to_fill = $('[data-bkpk-fill-with-form]');
-  let save_form_button = $('[data-bkpk-save-form]');
-  let fill_form_button = $('[data-bkpk-fill-form-button]');
-  save_form_button.on('click', function () {
-    saveFormData(this);
-  });
-  fill_form_button.on('click', function () {
-    fillFormData(this, forms_to_fill);
-  });
-
   // When the backpack loads, fill all the data-bkpk-fill elements,
   // and overwrite what's currently in there.
   fillAllElements(true);
-  fillFormData(null, forms_to_fill);
 
 }
 
@@ -225,14 +206,6 @@ function fillElements(origin) {
 
 function clearElementData(origin, elements, quantity) {
   console.debug('clearElementData not implemented yet.');
-}
-
-function fillFormData(origin, form) {
-  console.debug('fillFormData not implemented yet.');
-}
-
-function saveFormData(origin) {
-  console.debug('saveFormData not implemented yet.');
 }
 
 
