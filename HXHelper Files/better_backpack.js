@@ -17,6 +17,8 @@ There are also "-all" variants for save, fill, and clear, like
 data-bkpk-save-all-button, that act on all elements on the page regardless
 of their variable names.
 
+The following are for messaging:
+
 data-bkpk-loading="true" - you can put a "loading" message in this element.
 data-bkpk-error="true" - you can put a "failed to load" message in this element.
 data-bkpk-success="true" - you can put an "it loaded" message in this element.
@@ -78,14 +80,14 @@ function whenBackpackReady() {
 
 function setListeners() {
 
-  let elements_to_store = $('[data-bkpk-input-for]');
+  let input_elements = $('[data-bkpk-input-for]');
   let save_buttons = $('[data-bkpk-save-button]');
   let save_all_buttons = $('[data-bkpk-save-all-button]');
   save_buttons.on('click', function () {
-    storeElementData(this, elements_to_store, 'one');
+    storeElementData(this, input_elements, 'one');
   });
   save_all_buttons.on('click', function () {
-    storeElementData(this, elements_to_store, 'all');
+    storeElementData(this, input_elements, 'all');
   });
 
   let elements_to_fill = $('[data-bkpk-fill-with]');
@@ -102,10 +104,10 @@ function setListeners() {
   let clear_buttons = $('[data-bkpk-clear]');
   let clear_all_buttons = $('[data-bkpk-clear-all]');
   clear_buttons.on('click', function () {
-    clearData(this, 'one');
+    clearData(this);
   });
   clear_all_buttons.on('click', function () {
-    clearData(this, 'all');
+    clearAllData(this);
   });
 
   // When the backpack loads, fill all the data-bkpk-fill elements,
@@ -171,6 +173,7 @@ function storeElementData(origin, elements, quantity) {
   }
 }
 
+// Should we be overwriting the existing data in our elements?
 function checkForOverwrite(e) {
   if (e) {
     if (e.attributes['data-bkpk-overwrite'].value === 'true') {
@@ -204,7 +207,14 @@ function fillElements(origin) {
   });
 }
 
-function clearElementData(origin, elements, quantity) {
+// Clears the data for one particular variable.
+function clearData(origin) {
+  console.debug('clearElementData not implemented yet.');
+}
+
+// Clears data for all variables that are present on this page.
+// DOES NOT CLEAR THE ENTIRE BACKPACK.
+function clearAllData(origin) {
   console.debug('clearElementData not implemented yet.');
 }
 
