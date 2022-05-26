@@ -38,17 +38,7 @@ This project collects a large number of javascript and css tricks that have been
 
 ## Currently Working On...
 
-Improvements to the [Editor](#rich-text-editor). Specifically:
-
-- Ability to save in multiple slots ✅
-- Renaming and deleting "files" ✅
-- Download HTML version ✅
-- Prefilled text ✅
-- Automatic new slot from old file (for 2nd drafts) ✅
-- Adjustable default height for editor ✅
-- Notification when you're running out of space ✅ (sort of)
-- Handle empty menus ✅
-- Accessibility audit (ongoing)
+Nothing in specific.
 
 ### Future Improvements
 
@@ -613,13 +603,15 @@ Maybe you want in-page discussions, but you want them open right away so everyon
 
 ### Learner Backpack
 
-First, follow the setup instructions for the [Learner Backpack](https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack) javascript problem.
+First, follow the setup instructions for the [Learner Backpack](https://github.com/HarvardX/js-input-samples/tree/master/learner_backpack) javascript problem.
 
 When HX-JS is running you will be able to use the javscript functions:
 
-- hxSetData('whatever', stuff) will store the `stuff` object in the `whatever` variable.
-- hxGetData('whatever') will get the contents of the `whatever` variable.
-- hxClearData('whatever') will empty the `whatever` variable.
+- `hxSetData('whatever', stuff)` will store the `stuff` object in the `whatever` variable.
+- `hxGetData('whatever')` will get the contents of the `whatever` variable.
+- `hxGetAllData()` will get all stored variables and their contents as a single object.
+- `hxClearData('whatever')` will empty the `whatever` variable.
+- `hxClearAllData('whatever')` will empty the entire backpack.
 
 This data is stored in the edX server, up to about 100k per student per course.
 
@@ -630,14 +622,22 @@ Once you have the Backpack (see above) set up, you can create a rich-text editor
 In a Raw HTML component, insert this code:
 
 ```html
-<p class="hx-editor" data-saveslot="journaling">
-  [Editor not loaded yet]
-</p>
+<div class="hx-editor" data-saveslot="journaling"></div>
 ```
 
 HX-JS will automatically find it and turn it into an editor, via [Summernote](https://summernote.org/).
 
-The `data-saveslot` attribute lets you select a different slot for each editor, or reuse them. If you have two editors with the same save slot, learners will see the same thing in each one. What they typed before is stored in the backpack and retrieved when they load a page.
+The `data-saveslot` attribute lets you select a different slot for each editor, or reuse them within the course. If you have two editors with the same save slot, learners will see the same thing in each one. What they typed before is stored in the backpack and retrieved when they load a page.
+
+Instructors can provide pre-filled text by just putting some HTML inside that div. If you want it taller, just add a bunch of `<p>&nbsp;</p>` in there. You can also set it to pull from a previous editor, like so:
+
+```html
+<div class="hx-editor" data-saveslot="Second_Draft" data-from-slot="First_Draft"></div>
+```
+
+Learners can save, load, rename, and delete multiple "files", and can download an HTML version. The editor auto-saves every 60 seconds. If they're running long, they get a message that they're running out of characters (but it won't actually stop them from saving) (but it *will* just throw out changes to their data when it gets too big).
+
+The accessibility for this is pretty damn good, really.
 
 ## Future Features
 

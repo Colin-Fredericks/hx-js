@@ -57,7 +57,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
   //********************************
 
   // The save slot is the value in data-saveslot attribute, or '' if blank.
-  // Pass in the JQuery object for a child of this editor.
+  // Pass in the JQuery object for the editor or its child.
   function getSaveSlot(e) {
     if (e.is('[data-saveslot]')) {
       return e.attr('data-saveslot');
@@ -111,28 +111,25 @@ var HXEditor = function(use_backpack, toolbar_options) {
   function setupAutoSave() {
     console.log('setting up auto-save');
     // Wipe out the old autosave function.
-    if (typeof window.autosavers !== 'undefined') {
-      clearInterval(window.autosavers);
+    if (typeof window.HXautosavers !== 'undefined') {
+      clearInterval(window.HXautosavers);
     }
 
-    // Get all the save slots that are present on this page.
-    let slots = new Set(
-      Object.keys($('.hx-editor')).map(x =>
-        $($('.hx-editor')[x]).attr('data-saveslot')
-      )
-    );
-    // Remove undefined things from the set.
-    slots.delete(undefined);
-
-    // Store data as object. It'll get JSON-ized on save.
-    window.saveData = {};
-
     // Make an autosave function that gets data from all editors.
-    window.autosavers = setInterval(function() {
+    window.HXautosavers = setInterval(function() {
+      // Get all the save slots that are present on this page.
+      let slots = new Set(
+        Object.keys($('.hx-editor')).map(x =>
+          $($('.hx-editor')[x]).attr('data-saveslot')
+        )
+      );
+      // Remove undefined things from the set.
+      slots.delete(undefined);
+
       // If there are no editors visible on the page, kill this loop.
       if ($('.hx-editor').length < 1) {
         console.log('No editors detected. Turning off auto-save.');
-        clearInterval(window.autosavers);
+        clearInterval(window.HXautosavers);
       } else {
         let has_changed = false;
         let data_to_save = {};
@@ -162,7 +159,7 @@ var HXEditor = function(use_backpack, toolbar_options) {
           console.log('No change in data, not saving.');
         }
       }
-    }, 10000);
+    }, 60000);
   }
 
   //********************************
@@ -182,7 +179,6 @@ var HXEditor = function(use_backpack, toolbar_options) {
 
     // Store any existing markup as default content.
     let starting_markup = ed
-      .find('.hx-editor-default')
       .html()
       .trim();
     if (starting_markup === '') {
@@ -549,24 +545,20 @@ var HXEditor = function(use_backpack, toolbar_options) {
     .on('message.hxeditor', function(e) {
       var data = e.originalEvent.data;
 
-      // Only accept from edx sites.
-      if (
-        e.originalEvent.origin !== 'https://courses.edx.org' &&
-        e.originalEvent.origin !== 'https://preview.edx.org' &&
-        e.originalEvent.origin !== 'https://edge.edx.org'
-      ) {
+      // Only accept from edx sites. Won't work in Studio.
+      if (e.originalEvent.origin !== location.origin) {
         return;
       }
 
       // Only accept objects with the right form.
       if (typeof data === 'string') {
-        if (data === 'ready') {
+        if (data === 'backpack_ready') {
           // When the backpack is ready, re-enable the controls.
           $('.hxeditor-control').prop('disabled', false);
           $('.hxed-visiblenotice').empty('');
           $('.hxed-statusmessage .sr').text('Status: ok');
           $('.summernote').summernote('saveRange');
-          // The listener for this trigger is in handleFocus()
+          // The listener for this trigger is set on $(document)
           $(document).trigger('controlsReady');
           // Replace blank editors with the saved data.
           $('.hx-editor').each(function(i, el) {
@@ -628,34 +620,36 @@ var HXEditor = function(use_backpack, toolbar_options) {
   // Handle the focus explicitly by shifting it to the notice box,
   // and shifting it back when the control is reenabled.
   function handleFocus() {
-    console.log('verifying new version');
     had_focus = $(':focus');
-    console.log('handling focus from');
-    console.log(had_focus);
+
+    // If the thing that had focus was the editor, don't let it shift away.
     if (had_focus.hasClass('note-editable')) {
-      console.log("it's an editor.");
+      had_focus.parent('.summernote').summernote('saveRange');
+      console.log('Put focus back on editor as soon as it loses it.');
+      had_focus.one('blur', function() {
+        // Yes, it genuinely needs a 0-milisecond setTimeout.
+        setTimeout(function() {
+          had_focus.focus();
+          had_focus.parent('.summernote').summernote('restoreRange');
+        }, 0);
+      });
     } else {
+      // If it wasn't the editor, shift focus to the status message.
+      // It'll get shifted back after the controls are re-enabled.
       $('.hxed-statusmessage').focus();
-      console.log("it's not an editor.");
+      console.log('Shift focus away from');
+      console.log(had_focus);
     }
   }
 
-  // When the controls are ready again, shift focus back to them.
+  // When the controls are ready again, shift focus back to them if necessary.
   $(document).on('controlsReady', function(e) {
-    let editor = had_focus.parents('.hx-editor');
-    let summer = editor.find('.summernote');
-    console.log('editor:');
-    console.log(editor);
     if (had_focus.hasClass('note-editable')) {
-      console.log("it's an editor.");
-      // summer.summernote('restoreRange');
-      // summer.summernote('saveRange');
+      console.log('Editor had focus, no need to act.');
     } else {
-      console.log('refocusing to:');
+      console.log('Refocusing to:');
       console.log(had_focus);
       had_focus.focus();
-      console.log("it's not an editor.");
     }
-    // Put the cursor back.
   });
 };
