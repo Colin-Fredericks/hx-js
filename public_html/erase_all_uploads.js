@@ -47,7 +47,7 @@ $(document).ready(function () {
   }
 
   function destroyEverything() {
-    // Try to delete a file every 2.5 seconds.
+    // Try to delete a file every 2 seconds.
 
     let timer = setInterval(function () {
       let delete_buttons = $("button[data-identifier='asset-delete-button']");
@@ -66,12 +66,12 @@ $(document).ready(function () {
             confirm_button[0].click();
             console.log('confirmed deletion');
           }
-        }, 500);
+        }, 1000);
       } else {
         clearInterval(timer);
         $('#modal-1').dialog('destroy');
       }
-    }, 2500);
+    }, 2000);
   }
 
   function makeModal() {
