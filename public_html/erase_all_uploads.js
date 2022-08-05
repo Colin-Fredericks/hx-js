@@ -51,6 +51,7 @@ $(document).ready(function () {
 
     let timer = setInterval(function () {
       let delete_buttons = $("button[data-identifier='asset-delete-button']");
+      console.log(delete_buttons);
       if (delete_buttons.length > 0) {
         delete_buttons[0].click();
         console.log('deleted a file');
@@ -60,6 +61,7 @@ $(document).ready(function () {
             "button[data-identifier='asset-confirm-delete-button']:visible"
           );
           if (confirm_button.length > 0) {
+            console.log(confirm_button);
             clearInterval(inner_timer);
             confirm_button[0].click();
             console.log('confirmed deletion');
