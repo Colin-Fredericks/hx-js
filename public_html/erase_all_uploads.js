@@ -53,7 +53,7 @@ $(document).ready(function () {
       let delete_buttons = $("button[data-identifier='asset-delete-button']");
       if (delete_buttons.length > 0) {
         delete_buttons[0].click();
-        // look for a visible confirmation dialog every half-second.
+        // look for a visible confirmation dialog every 200 ms.
         let inner_timer = setInterval(function () {
           let confirm_button = $(
             "button[data-identifier='asset-confirm-delete-button']:visible"
@@ -62,7 +62,7 @@ $(document).ready(function () {
             clearInterval(inner_timer);
             confirm_button[0].click();
           }
-        }, 500);
+        }, 200);
       } else {
         clearInterval(timer);
         $('#modal-1').dialog('destroy');
@@ -75,6 +75,8 @@ $(document).ready(function () {
       console.log('modal already exists');
       return;
     }
+
+    let duration = Number($('.result-count-wrapper span')[7].innerText) * 2;
 
     let d = $('<div>');
     d.attr('id', 'modal-1');
@@ -92,7 +94,8 @@ $(document).ready(function () {
     details.text(
       'Maybe you want to take a backup of the course first so you can save the SRT files? ' +
         'Maybe you want to search for a specific file type first and run this again to just delete those? ' +
-        'There\'s no "undo" button here, FYI, and the dialog is going to flash a lot.'
+        'There\'s no "undo" button here, FYI, and the dialog is going to flash a lot ' +
+        'for the next ' + duration + ' seconds.'
     );
 
     content.append(explanation);
