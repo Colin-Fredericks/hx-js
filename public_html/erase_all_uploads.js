@@ -62,9 +62,10 @@ $(document).ready(function () {
             clearInterval(inner_timer);
             confirm_button[0].click();
           }
-        }, 200);
+        }, 500);
       } else {
         clearInterval(timer);
+        $('#modal-1').dialog('destroy');
       }
     }, 500);
   }
@@ -91,7 +92,7 @@ $(document).ready(function () {
     details.text(
       'Maybe you want to take a backup of the course first so you can save the SRT files? ' +
         'Maybe you want to search for a specific file type first and run this again to just delete those? ' +
-        'No "undo" button here FYI.'
+        'There\'s no "undo" button here, FYI, and the dialog is going to flash a lot.'
     );
 
     content.append(explanation);
