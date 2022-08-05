@@ -14,8 +14,6 @@ $(document).ready(function () {
     // Do they really want to delete every single thing in Files & Uploads?
 
     makeModal();
-    $('#modal-1').parent().css("background", "white");
-    $('#modal-1').parent().css("border", "2px solid black");
     $('#modal-1').dialog({
       title: 'Double-Checking Your Intent',
       modal: true,
@@ -43,7 +41,9 @@ $(document).ready(function () {
         });
       },
     });
-    console.log('testing');
+    $('#modal-1').parent().css("background", "white");
+    $('#modal-1').parent().css("border", "2px solid black");
+    console.log('dialog displayed');
   }
 
   function destroyEverything() {
