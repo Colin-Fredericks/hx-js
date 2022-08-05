@@ -47,13 +47,13 @@ $(document).ready(function () {
   }
 
   function destroyEverything() {
-    // Try to delete a file every .5 seconds.
+    // Try to delete a file every second.
 
     let timer = setInterval(function () {
       let delete_buttons = $("button[data-identifier='asset-delete-button']");
       if (delete_buttons.length > 0) {
         delete_buttons[0].click();
-        // look for a visible confirmation dialog every .2 seconds
+        // look for a visible confirmation dialog every half second.
         let inner_timer = setInterval(function () {
           let confirm_button = $(
             "button[data-identifier='asset-confirm-delete-button']:visible"
@@ -67,7 +67,7 @@ $(document).ready(function () {
         clearInterval(timer);
         $('#modal-1').dialog('destroy');
       }
-    }, 500);
+    }, 1000);
   }
 
   function makeModal() {
