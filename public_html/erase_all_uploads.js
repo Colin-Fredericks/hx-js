@@ -66,12 +66,12 @@ $(document).ready(function () {
             confirm_button[0].click();
             console.log('confirmed deletion');
           }
-        }, 1000);
+        }, 200);
       } else {
         clearInterval(timer);
         $('#modal-1').dialog('destroy');
       }
-    }, 2000);
+    }, 1000);
   }
 
   function makeModal() {
