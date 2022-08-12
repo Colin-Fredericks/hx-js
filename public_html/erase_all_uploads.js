@@ -53,7 +53,7 @@ $(document).ready(function () {
     console.log(filename);
     console.log(n)
     if (filename.includes(text)) {
-      getNextFileWithout(text, n + 1);
+      return getNextFileWithout(text, n + 1);
     }
     return n;
   }
