@@ -41,9 +41,19 @@ $(document).ready(function () {
         });
       },
     });
-    $('#modal-1').parent().css("background", "white");
-    $('#modal-1').parent().css("border", "2px solid black");
+    $('#modal-1').parent().css('background', 'white');
+    $('#modal-1').parent().css('border', '2px solid black');
     console.log('dialog displayed');
+  }
+
+  function getNextFileWithout(text, n = 0) {
+    let filename = $("button[data-identifier='asset-delete-button']")
+      .parents('tr')
+      .find('span[data-identifier="asset-file-name"]');
+    if (filename.text().includes(text)) {
+      getNextFile(text, n + 1);
+    }
+    return n;
   }
 
   function destroyEverything() {
@@ -52,8 +62,10 @@ $(document).ready(function () {
     let timer = setInterval(function () {
       let delete_buttons = $("button[data-identifier='asset-delete-button']");
       console.log(delete_buttons);
-      if (delete_buttons.length > 0) {
-        delete_buttons[0].click();
+      // Make sure this file doesn't have python_lib.zip in its name.
+      let n = getNextFileWithout('python_lib.zip');
+      if (delete_buttons.length > n) {
+        delete_buttons[n].click();
         console.log('deleted a file');
         // look for a visible confirmation dialog every 500 ms.
         let inner_timer = setInterval(function () {
@@ -99,7 +111,9 @@ $(document).ready(function () {
       'Maybe you want to take a backup of the course first so you can save the SRT files? ' +
         'Maybe you want to search for a specific file type first and run this again to just delete those? ' +
         'There\'s no "undo" button here, FYI, and the dialog is going to flash a lot ' +
-        'for the next ' + duration + ' seconds.'
+        'for the next ' +
+        duration +
+        ' seconds.'
     );
 
     content.append(explanation);
