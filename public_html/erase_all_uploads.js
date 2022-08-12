@@ -50,7 +50,7 @@ $(document).ready(function () {
     let filename = '';
     let all_filenames = $("button[data-identifier='asset-delete-button']")
       .parents('tr')
-      .find('span[data-identifier="asset-file-name"]')[n].textContent;
+      .find('span[data-identifier="asset-file-name"]');
     if (all_filenames.length > 0) {
       filename = all_filenames[n].textContent;
     } else {
