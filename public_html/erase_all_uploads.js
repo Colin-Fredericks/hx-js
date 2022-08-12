@@ -67,7 +67,7 @@ $(document).ready(function () {
       // Make sure this file doesn't have python_lib.zip in its name.
       let n = getNextFileWithout('python_lib.zip');
       console.log(n);
-      if (delete_buttons.length > n) {
+      if (delete_buttons.length >= n) {
         delete_buttons[n].click();
         console.log('deleted a file');
         // look for a visible confirmation dialog every 500 ms.
