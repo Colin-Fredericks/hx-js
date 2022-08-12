@@ -50,6 +50,7 @@ $(document).ready(function () {
     let filename = $("button[data-identifier='asset-delete-button']")
       .parents('tr')
       .find('span[data-identifier="asset-file-name"]');
+    console.log(filename);
     if (filename.text().includes(text)) {
       getNextFile(text, n + 1);
     }
@@ -64,6 +65,7 @@ $(document).ready(function () {
       console.log(delete_buttons);
       // Make sure this file doesn't have python_lib.zip in its name.
       let n = getNextFileWithout('python_lib.zip');
+      console.log(n);
       if (delete_buttons.length > n) {
         delete_buttons[n].click();
         console.log('deleted a file');
