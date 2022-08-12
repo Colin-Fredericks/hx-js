@@ -49,9 +49,10 @@ $(document).ready(function () {
   function getNextFileWithout(text, n = 0) {
     let filename = $("button[data-identifier='asset-delete-button']")
       .parents('tr')
-      .find('span[data-identifier="asset-file-name"]')[n];
+      .find('span[data-identifier="asset-file-name"]')[n].textContent;
     console.log(filename);
-    if (filename.textContent.includes(text)) {
+    console.log(n)
+    if (filename.includes(text)) {
       getNextFileWithout(text, n + 1);
     }
     return n;
