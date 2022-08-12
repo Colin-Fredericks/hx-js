@@ -53,7 +53,7 @@ $(document).ready(function () {
       .find('span[data-identifier="asset-file-name"]');
     console.log(n);
     console.log(all_filenames.length);
-    if (all_filenames.length >= n) {
+    if (all_filenames.length > n) {
       filename = all_filenames[n].textContent;
     } else {
       return n;
