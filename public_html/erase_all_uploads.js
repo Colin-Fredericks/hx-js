@@ -52,7 +52,7 @@ $(document).ready(function () {
       .find('span[data-identifier="asset-file-name"]');
     console.log(filename);
     if (filename.text().includes(text)) {
-      getNextFile(text, n + 1);
+      getNextFileWithout(text, n + 1);
     }
     return n;
   }
