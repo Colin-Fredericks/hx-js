@@ -402,6 +402,46 @@ var HXGlobalJS = function () {
       insertCodeHighlighter();
     }
 
+    // If we have links or iframes to surveys with the hx-survey-url class on this page,
+    // adjust their URLs to include course info.
+    const elements_to_update = Array.from(
+      document.getElementsByClassName('hx-survey-url')
+    );
+    if (elements_to_update.length) {
+      logThatThing({ hx_surveys: 'found' });
+      const elements_to_update = Array.from(
+        document.getElementsByClassName('hx-survey-url')
+      );
+      const old_urls = elements_to_update.map(function (e) {
+        if (e.tagName.toLowerCase() === 'a') {
+          return e.href;
+        } else if (e.tagName.toLowerCase() === 'iframe') {
+          return e.src;
+        } else {
+          return e.innerText;
+        }
+      });
+      const new_urls = old_urls.map(
+        (x) =>
+          x +
+          '&university=' +
+          courseInfo.institution +
+          '&course_id=' +
+          courseInfo.id +
+          '&course_run=' +
+          courseInfo.run
+      );
+      elements_to_update.forEach(function (e, i) {
+        if (e.tagName.toLowerCase() === 'a') {
+          e.href = new_urls[i];
+        } else if (e.tagName.toLowerCase() === 'iframe') {
+          e.src = new_urls[i];
+        } else {
+          e.innerText = new_urls[i];
+        }
+      });
+    }
+
     /**************************************/
     // Jump to time in video on this page.
     // Make a link like <a href="#video1" data-time="mm:ss">link text</a>
