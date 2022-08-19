@@ -74,8 +74,6 @@ $(document).ready(function () {
         $('[data-bkpk-success]').show();
         $('[data-bkpk-loading]').hide();
         $('[data-bkpk-success]').prop('disabled', false);
-
-        // TODO: Add a timeout to say "backpack hasn't loaded"
       }
     }, 250);
   }
