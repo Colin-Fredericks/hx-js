@@ -71,7 +71,7 @@ p>small.hx-caption {
 
 /* For clickable images that pop up dialog boxes. */
 /* Not doing anything here yet, but this is how we change the orange if we want to. */
-.hx-popup-dialog .ui-dialog-titlebar {}
+/* .hx-popup-dialog .ui-dialog-titlebar {} */
 
 /* For pop-up SVGs that we want to show at full size. */
 .hx-svg-view {
@@ -84,10 +84,6 @@ p>small.hx-caption {
   font-size: small !important;
 }
 
-/* Larger UL and OL left-hand margins. */
-  {
-  #;
-}
 
 main .vert .xblock ul {
   margin-left: 1em !important;
@@ -248,12 +244,7 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.hx-redbox h4 {
-  font-variant: small-caps;
-  color: #600;
-}
-
-.hx-redbox h3 {
+.hx-redbox h3, .hx-redbox h4 {
   font-variant: small-caps;
   color: #600;
 }
@@ -265,15 +256,11 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.hx-pinkbox h4 {
+.hx-pinkbox h3, .hx-pinkbox h4 {
   font-variant: small-caps;
   color: #cf5cc2;
 }
 
-.hx-pinkbox h3 {
-  font-variant: small-caps;
-  color: #cf5cc2;
-}
 
 .hx-orangebox {
   border-left: 15px solid #dc5b00;
@@ -282,12 +269,7 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.hx-orangebox h4 {
-  font-variant: small-caps;
-  color: #752900;
-}
-
-.hx-orangebox h3 {
+.hx-orangebox h3 , .hx-orangebox h4 {
   font-variant: small-caps;
   color: #752900;
 }
@@ -299,12 +281,7 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.hx-peachbox h4 {
-  font-variant: small-caps;
-  color: #b6750f;
-}
-
-.hx-peachbox h3 {
+.hx-peachbox h3, .hx-peachbox h4 {
   font-variant: small-caps;
   color: #b6750f;
 }
@@ -320,7 +297,7 @@ h4.hx-superbold {
   font-weight: bold !important;
 }
 
-.hx-yellowbox h4 {
+.hx-yellowbox h3, .hx-yellowbox h4 {
   font-variant: small-caps;
   color: #666600;
 }
@@ -332,12 +309,7 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.hx-greenbox h4 {
-  font-variant: small-caps;
-  color: #013a29;
-}
-
-.hx-greenbox h3 {
+.hx-greenbox h3 , .hx-greenbox h4 {
   font-variant: small-caps;
   color: #013a29;
 }
@@ -349,17 +321,14 @@ h4.hx-superbold {
   margin: 40px;
 }
 
+.hx-bluebox h3,
+.hx-sidebar h3 ,
 .hx-bluebox h4,
 .hx-sidebar h4 {
   font-variant: small-caps;
   color: #036;
 }
 
-.hx-bluebox h3,
-.hx-sidebar h3 {
-  font-variant: small-caps;
-  color: #036;
-}
 
 .hx-bluebox2 {
   border-left: 15px solid #5b93ff;
@@ -368,15 +337,11 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.hx-bluebox2 h4 {
+.hx-bluebox2 h3 , .hx-bluebox2 h4 {
   font-variant: small-caps;
   color: #1e3460;
 }
 
-.hx-bluebox2 h3 {
-  font-variant: small-caps;
-  color: #1e3460;
-}
 
 .hx-purplebox {
   border-left: 15px solid #6c35c0;
@@ -385,15 +350,11 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.hx-purplebox h4 {
+.hx-purplebox h3 , .hx-purplebox h4 {
   font-variant: small-caps;
   color: #330974;
 }
 
-.hx-purplebox h3 {
-  font-variant: small-caps;
-  color: #330974;
-}
 
 .hx-magentabox {
   border-left: 15px solid #a71852;
@@ -402,15 +363,11 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.hx-magentabox h4 {
+.hx-magentabox h3 , .hx-magentabox h4 {
   font-variant: small-caps;
   color: #4d001f;
 }
 
-.hx-magentabox h3 {
-  font-variant: small-caps;
-  color: #4d001f;
-}
 
 .hx-greybox,
 .hx-graybox {
@@ -420,14 +377,10 @@ h4.hx-superbold {
   margin: 40px;
 }
 
+.hx-greybox h3,
+.hx-graybox h3,
 .hx-greybox h4,
 .hx-graybox h4 {
-  font-variant: small-caps;
-  color: #333;
-}
-
-.hx-greybox h3,
-.hx-graybox h3 {
   font-variant: small-caps;
   color: #333;
 }
@@ -441,17 +394,16 @@ h4.hx-superbold {
   margin: 40px;
 }
 
-.xmodule_display .hx-blackbox h4, .hx-blackbox h4 {
+.xmodule_display .hx-blackbox h3, 
+.xmodule_display .hx-blackbox h4, 
+.hx-blackbox h3,
+.hx-blackbox h4 {
   font-variant: small-caps;
   color: #0f0;
 }
 
-.xmodule_display .hx-blackbox h3, .hx-blackbox h3  {
-  font-variant: small-caps;
-  color: #0f0;
-}
-
-.xmodule_display .hx-blackbox p, .hx-blackbox p  {
+.xmodule_display .hx-blackbox p, 
+.hx-blackbox p  {
   color: #eee !important;
 }
 
@@ -690,9 +642,9 @@ span#hx-playpauseword {
 /***************************************/
 /* This block is for HXEditor.
 /***************************************/
-.hxed-save {}
+/* .hxed-save {} */
 
-.hxed-download {}
+/* .hxed-download {} */
 
 .hxed-filemenu {
   background-image: linear-gradient(#f1f1f1, #d9d1d1);
