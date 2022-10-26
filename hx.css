@@ -249,6 +249,10 @@ h4.hx-superbold {
   color: #600;
 }
 
+.hx-redbox .hx-underline{
+  border-bottom-color: darkred;
+}
+
 .hx-pinkbox {
   border-left: 15px solid #ffc0f8;
   background-color: #ffe9f6;
@@ -260,6 +264,10 @@ h4.hx-superbold {
 .hx-pinkbox h4 {
   font-variant: small-caps;
   color: #cf5cc2;
+}
+
+.hx-pinkbox .hx-underline{
+  border-bottom-color: orchid;
 }
 
 .hx-orangebox {
@@ -275,6 +283,10 @@ h4.hx-superbold {
   color: #752900;
 }
 
+.hx-orangebox .hx-underline{
+  border-bottom-color: #752900;
+}
+
 .hx-peachbox {
   border-left: 15px solid #ffdb9c;
   background-color: #ffecd5;
@@ -286,6 +298,10 @@ h4.hx-superbold {
 .hx-peachbox h4 {
   font-variant: small-caps;
   color: #b6750f;
+}
+
+.hx-peachbox .hx-underline{
+  border-bottom-color: #b6750f;
 }
 
 .hx-yellowbox {
@@ -305,6 +321,10 @@ h4.hx-superbold {
   color: #666600;
 }
 
+.hx-yellowbox .hx-underline{
+  border-bottom-color: #666600;
+}
+
 .hx-greenbox {
   border-left: 15px solid #07a878;
   background-color: #c2eade;
@@ -317,6 +337,11 @@ h4.hx-superbold {
   font-variant: small-caps;
   color: #013a29;
 }
+
+.hx-greenbox .hx-underline{
+  border-bottom-color: forestgreen;
+}
+
 
 .hx-bluebox {
   border-left: 15px solid #048;
@@ -346,6 +371,11 @@ h4.hx-superbold {
   color: #1e3460;
 }
 
+/* No change for bluebox underlines. Underlines are already blue. */
+/* .hx-bluebox .hx-underline{} */
+
+
+
 .hx-purplebox {
   border-left: 15px solid #6c35c0;
   background-color: #dbcdef;
@@ -359,6 +389,10 @@ h4.hx-superbold {
   color: #330974;
 }
 
+.hx-purplebox .hx-underline{
+  border-bottom-color: blueviolet;
+}
+
 .hx-magentabox {
   border-left: 15px solid #a71852;
   background-color: #eec6d4;
@@ -370,6 +404,10 @@ h4.hx-superbold {
 .hx-magentabox h4 {
   font-variant: small-caps;
   color: #4d001f;
+}
+
+.hx-magentabox .hx-underline{
+  border-bottom-color: #4d001f;
 }
 
 .hx-greybox,
@@ -387,6 +425,11 @@ h4.hx-superbold {
   font-variant: small-caps;
   color: #333;
 }
+
+.hx-greybox .hx-underline, .hx-graybox .hx-underline{
+  border-bottom-color: #333;
+}
+
 
 /* Blackbox needs more specific targeting to override white text. */
 .xmodule_display .hx-blackbox,
