@@ -74,7 +74,7 @@ $(document).ready(function () {
     });
     console.log(undeletable_filenames);
     
-    return undeletable_filenames.length + 1;
+    return undeletable_filenames.length;
   }
 
   // Delete every file that we can actually delete.
