@@ -92,7 +92,8 @@ $(document).ready(function () {
         clearInterval(ticker);
         console.log(added_users);
         if (lost_users.length > 0) {
-          alert('Could not add these users: ' + lost_users.join(', '));
+          // TODO: Not reporting correctly, not sure why.
+          // alert('Could not add these users: ' + lost_users.join(', '));
           console.log(lost_users);
         }
       }
