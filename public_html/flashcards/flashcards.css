@@ -1,0 +1,148 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+h2 {
+  margin: 0em 0.5em 0.75em 0.5em;
+}
+
+#flashcard-container {
+  width: 70%;
+  max-width: 800px;
+  display: grid;
+  grid-template-columns: 25px 1fr 32px; /* Why 32 px? Not sure. Just need it to balance visually. */
+  font-size: x-large;
+}
+
+.arrow-navigation {
+  flex: 1 0 auto;
+  cursor: pointer;
+  place-self: center;
+  background: none;
+  border: none;
+}
+
+#left-arrow {
+  /* place-self: center end; */
+}
+
+#right-arrow {
+  /* place-self: center; */
+}
+
+.flashcard {
+  background-color: transparent;
+  width: 100%;
+  min-height: 300px;
+  max-height: 800px;
+  perspective: 3000px;
+  /* padding: 0.5em; */
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.flashcard .inner {
+  width: calc(100% - 1em);
+  height: calc(100% - 1em);
+  position: relative;
+  display: inline-block;
+  transform-style: preserve-3d;
+  border: 2px solid black;
+  border-radius: 10px;
+  margin: 0.5em;
+}
+
+.flashcard .front,
+.flashcard .back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+  background-color: white;
+  border-radius: 8px;
+  color: black;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.flashcard .back {
+  transform: rotateY(180deg);
+}
+
+.card-content {
+  height: 100%;
+  border-radius: 8px;
+  display: grid;
+  grid: 1fr 2fr 1fr / 1fr;
+  /* background: linear-gradient(
+    0deg,
+    rgba(163, 0, 0, 1) 0%,
+    rgba(163, 0, 0, 1) 11%,
+    rgba(255, 255, 255, 1) 11%,
+    rgba(255, 255, 255, 1) 100%
+  ); */
+}
+
+.title {
+  text-align: center;
+  padding: 1em 0.5em 0 0.5em;
+  white-space: normal;
+}
+
+.question {
+  text-align: center;
+  padding: 0 1em 0 1em;
+  white-space: normal;
+}
+
+.answer {
+  text-align: center;
+  padding: 0 1em 0 1em;
+  white-space: normal;
+}
+
+.bottom {
+  color: white;
+  background-color: rgba(163, 0, 0, 1);
+  border-radius: 0 0 8px 8px;
+  display: flex;
+  font-size: medium;
+  font-weight: bold;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.number {
+  padding: 0.5em;
+  align-self: end;
+}
+
+.flip-button {
+  background-color: rgba(163, 0, 0, 1);
+  align-self: end;
+  cursor: pointer;
+  height: 100%;
+  border: none;
+  color: white;
+  font-weight: bold;
+  font-size: larger;
+  padding-right: 1em;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

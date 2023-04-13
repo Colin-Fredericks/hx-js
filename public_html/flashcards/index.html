@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Flashcard Demo</title>
+    <link rel="stylesheet" href="flashcards.css" />
+    <script src="lib/hammer.min.js" defer></script>
+    <script src="lib/papaparse.min.js" defer></script>
+    <script src="flashcards.js" defer></script>
+</head>
+
+<body>
+    <main>
+        <h1>Flashcard Demo</h1>
+        <p>
+            Click the question to see the answer. Click the arrows, use the
+            arrow keys, or swipe on mobile to go to the next card or go back.
+        </p>
+
+        <div id="flashcard-container">
+            <button id="left-arrow" class="arrow-navigation left" tabindex="0" role="button" aria-label="Previous card">
+                <!-- SVG left-pointing triangle -->
+                <svg width="25" height="50" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="25,0 0,25 25,50" />
+                </svg>
+            </button>
+            <div class="flashcard"></div>
+            <button id="right-arrow" class="arrow-navigation right" tabindex="0" role="button" aria-label="Next card">
+                <!-- SVG right-pointing triangle -->
+                <svg width="25" height="50" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="0,0 25,25 0,50" />
+                </svg>
+            </button>
+        </div>
+    </main>
+</body>
+
+</html>
