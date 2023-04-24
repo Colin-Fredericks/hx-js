@@ -8,7 +8,7 @@
 $(document).ready(function () {
   console.log('erase_all_uploads called');
 
-  let time_between_deletions = 1500;
+  let time_between_deletions = 2000;
 
   showWarningDialog();
 
@@ -80,8 +80,6 @@ $(document).ready(function () {
         break;
       }
     }
-
-    console.log(undeletable_filenames);
     
     return first_undeletable;
   }
