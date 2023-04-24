@@ -130,9 +130,9 @@ $(document).ready(function () {
       duration = duration % 3600;
     }
     if(duration > 60) {
-      duration_text = Math.round(duration / 60) + ' minutes';
+      duration_text = duration_text + Math.round(duration / 60) + ' minutes';
     } else {
-      duration_text = duration + ' seconds';
+      duration_text = duration_text + duration + ' seconds';
     }
     console.debug(duration);
     console.debug(duration_text);
