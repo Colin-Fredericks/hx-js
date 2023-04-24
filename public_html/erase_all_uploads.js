@@ -129,6 +129,8 @@ $(document).ready(function () {
     } else {
       duration_text = duration + ' seconds';
     }
+    console.debug(duration);
+    console.debug(duration_text);
 
     let d = $('<div>');
     d.attr('id', 'modal-1');
