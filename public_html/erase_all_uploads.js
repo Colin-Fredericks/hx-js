@@ -8,7 +8,7 @@
 $(document).ready(function () {
   console.log('erase_all_uploads called');
 
-  let time_between_deletions = 2000;
+  let time_between_deletions = 3000;
 
   showWarningDialog();
 
