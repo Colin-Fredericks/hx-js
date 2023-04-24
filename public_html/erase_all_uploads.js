@@ -8,6 +8,8 @@
 $(document).ready(function () {
   console.log('erase_all_uploads called');
 
+  let time_between_deletions = 2500;
+
   showWarningDialog();
 
   function showWarningDialog() {
@@ -79,7 +81,7 @@ $(document).ready(function () {
 
   // Delete every file that we can actually delete.
   function destroyEverything() {
-    // Try to delete a file every 2 seconds.
+    // Try to delete a file every X seconds.
 
     let timer = setInterval(function () {
       let delete_buttons = $("button[data-identifier='asset-delete-button']");
@@ -106,7 +108,7 @@ $(document).ready(function () {
         clearInterval(timer);
         $('#modal-1').dialog('destroy');
       }
-    }, 2000);
+    }, time_between_deletions);
   }
 
   // Check to make sure they really want to do this.
@@ -116,11 +118,16 @@ $(document).ready(function () {
       return;
     }
 
-    let duration = Number($('.result-count-wrapper span')[7].innerText) * 2;
+    let duration = Number($('.result-count-wrapper span')[7].innerText) * time_between_deletions / 1000;
+    let duration_text = '';
+    if(duration > 3600) {
+      duration_text = Math.round(duration / 3600) + ' hours andv';
+      duration = duration % 3600;
+    }
     if(duration > 60) {
-      duration = Math.round(duration / 60) + ' minutes';
+      duration_text = Math.round(duration / 60) + ' minutes';
     } else {
-      duration = duration + ' seconds';
+      duration_text = duration + ' seconds';
     }
 
     let d = $('<div>');
