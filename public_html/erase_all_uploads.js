@@ -66,17 +66,24 @@ $(document).ready(function () {
 
   // Not all files can be deleted. Return the index of the first one that can.
   function getNextDeletableFile() {
+    let first_undeletable = 0;
     let all_filenames = $("button[data-identifier='asset-delete-button']")
       .parents('tr')
       .find('span[data-identifier="asset-file-name"]');
     
-    // Filter to just the filenames that cannot be deleted.
-    undeletable_filenames = all_filenames.filter(function (index) {
-      return !canBeDeleted(all_filenames[index].textContent);
-    });
+    // Go through all the files and find the first one that can be deleted.
+
+    for(let i of all_filenames) {
+      if(!canBeDeleted(i.textContent)) {
+        first_undeletable++;
+      } else {
+        break;
+      }
+    }
+
     console.log(undeletable_filenames);
     
-    return undeletable_filenames.length;
+    return first_undeletable;
   }
 
   // Delete every file that we can actually delete.
