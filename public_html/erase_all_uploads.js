@@ -121,7 +121,7 @@ $(document).ready(function () {
     let duration = Number($('.result-count-wrapper span')[7].innerText) * time_between_deletions / 1000;
     let duration_text = '';
     if(duration > 3600) {
-      duration_text = Math.round(duration / 3600) + ' hours andv';
+      duration_text = Math.round(duration / 3600) + ' hours and ';
       duration = duration % 3600;
     }
     if(duration > 60) {
@@ -147,7 +147,7 @@ $(document).ready(function () {
         'Maybe you want to search for a specific file type first and run this again to just delete those? ' +
         'There\'s no "undo" button here, FYI, and the dialog is going to flash a lot ' +
         'for the next ' +
-        duration
+        duration_text
     );
 
     content.append(explanation);
