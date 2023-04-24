@@ -118,7 +118,7 @@ $(document).ready(function () {
       return;
     }
 
-    let duration = Number($('.result-count-wrapper span')[7].innerText) * time_between_deletions / 1000;
+    let duration = Number($('.result-count-wrapper span')[7].innerText.replace(",","")) * time_between_deletions / 1000;
     let duration_text = '';
     if(duration > 3600) {
       duration_text = Math.round(duration / 3600) + ' hours and ';
