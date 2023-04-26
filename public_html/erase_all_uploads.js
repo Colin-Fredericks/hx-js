@@ -52,7 +52,6 @@ $(document).ready(function () {
   function canBeDeleted(filename) {
     let undeletable = [
       'python_lib.zip',
-      '&',
       '%',
     ];
 
