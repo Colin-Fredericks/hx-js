@@ -20,6 +20,11 @@ h2 {
   font-size: x-large;
 }
 
+.slidebox {
+  height: calc(100% - 1em);
+  position: relative;
+}
+
 .arrow-navigation {
   flex: 1 0 auto;
   cursor: pointer;
@@ -28,21 +33,12 @@ h2 {
   border: none;
 }
 
-#left-arrow {
-  /* place-self: center end; */
-}
-
-#right-arrow {
-  /* place-self: center; */
-}
-
 .flashcard {
   background-color: transparent;
   width: 100%;
   min-height: 300px;
   max-height: 800px;
   perspective: 3000px;
-  /* padding: 0.5em; */
   position: relative;
   overflow: hidden;
   white-space: nowrap;
@@ -81,13 +77,6 @@ h2 {
   border-radius: 8px;
   display: grid;
   grid: 1fr 2fr 1fr / 1fr;
-  /* background: linear-gradient(
-    0deg,
-    rgba(163, 0, 0, 1) 0%,
-    rgba(163, 0, 0, 1) 11%,
-    rgba(255, 255, 255, 1) 11%,
-    rgba(255, 255, 255, 1) 100%
-  ); */
 }
 
 .title {

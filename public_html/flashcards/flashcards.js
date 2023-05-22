@@ -17,7 +17,12 @@ window.flashcards_accepting_input = true;
 
 loadCards("source.csv");
 
-// Load the flashcards from csv file using papaparse
+/**
+ * Load the flashcards from csv file using papaparse
+ * and start the rest of the code when complete.
+ * @param {string} filename - The name of the csv file to load
+ * @returns {void}
+ */
 function loadCards(filename) {
   Papa.parse(filename, {
     download: true,
@@ -41,14 +46,24 @@ function loadCards(filename) {
   });
 }
 
+/**
+ * Gets some frequently-used variables, sets up the cards, and
+ * sets up listeners.
+ * @param {array} cards - An array of card objects from the csv file
+ * @returns {void}
+ */
 function readyGo(cards) {
   // Create the flashcards
   let card_array = createCards(cards);
   let current_card = 0;
 
+  let slidebox = document.createElement("div");
+  slidebox.classList.add("slidebox");
+  document.querySelector(".flashcard").appendChild(slidebox);
+
   // Put them on the page.
   for (let i = 0; i < card_array.length; i++) {
-    document.querySelector(".flashcard").appendChild(card_array[i]);
+    slidebox.appendChild(card_array[i]);
   }
   let all_cards = document.querySelectorAll(".flashcard .inner");
   all_cards[0].classList.add("current-card");
@@ -70,7 +85,7 @@ function readyGo(cards) {
 
   // If someone uses the up or down arrow keys, the flashcard flips
   document.addEventListener("keydown", (event) => {
-    if (keyWithoutModifiers(event) === "ArrowUp") { 
+    if (keyWithoutModifiers(event) === "ArrowUp") {
       console.debug(event);
       flip(all_cards[current_card], all_cards, current_card);
     } else if (keyWithoutModifiers(event) === "ArrowDown") {
@@ -108,16 +123,31 @@ function readyGo(cards) {
     });
   });
 
+  let waiter;
   // If someone reizes the window, get the new card width.
-  window.addEventListener("resize", () => {
+  // Reset the left edge of the cards if needed.
+  window.onresize = function () {
+    clearTimeout(waiter);
+    waiter = setTimeout(handleResize, 100);
+  };
+
+  function handleResize() {
+    let old_width = card_width;
     card_width = Math.round(
       all_cards[1].getBoundingClientRect().left -
         all_cards[0].getBoundingClientRect().left
     );
-  });
+    // Move the slidebox so the current card is in the same place after rescale
+    let delta_width = card_width - old_width;
+    moveElement(slidebox, delta_width * current_card, "left", true);
+  }
 }
 
-// Returns the key of the event, or false if there are modifiers
+/**
+ * Returns the key of the event, or false if there are modifiers
+ * @param {*} event
+ * @returns (string|boolean)
+ */
 function keyWithoutModifiers(event) {
   let modifiers = ["altKey", "ctrlKey", "metaKey", "shiftKey"];
   for (let i = 0; i < modifiers.length; i++) {
@@ -128,7 +158,11 @@ function keyWithoutModifiers(event) {
   return event.key;
 }
 
-// Create the flashcards
+/**
+ * Creates the flashcard HTML elements
+ * @param {array} cards - An array of card objects from the csv file
+ * @returns {array} An array of flashcard HTML elements
+ */
 function createCards(cards) {
   let body = document.querySelector("body");
   let cardElements = [];
@@ -196,7 +230,7 @@ function createCards(cards) {
     cardElement.querySelectorAll("*").forEach(function (element) {
       element.setAttribute("tabindex", "-1");
     });
-    if(i === 0) {
+    if (i === 0) {
       front.querySelectorAll(tabbable_classes).forEach(function (element) {
         element.setAttribute("tabindex", "0");
       });
@@ -204,15 +238,16 @@ function createCards(cards) {
 
     cardElements.push(cardElement);
     body.appendChild(cardElement);
-
   }
   return cardElements;
 }
 
-// Set the tab index of certain pieces of
-// the current side of the current card
-// to 0, and all the rest to -1.
-// Then focus the current visible side.
+/**
+ * Set the tab index of certain pieces of the current side of the current card
+ * to 0, and all the rest to -1. Then focus the current visible side.
+ * @param {void}
+ * @returns {void}
+ */
 function updateFocus() {
   let inner = document.querySelector(".flashcard .current-card");
   let front = inner.querySelector(".front");
@@ -230,7 +265,7 @@ function updateFocus() {
     back.querySelectorAll(tabbable_classes).forEach(function (element) {
       element.setAttribute("tabindex", "0");
     });
-    back.querySelector('h2').focus();
+    back.querySelector("h2").focus();
   } else {
     front.querySelectorAll(tabbable_classes).forEach(function (element) {
       element.setAttribute("tabindex", "0");
@@ -238,11 +273,15 @@ function updateFocus() {
     back.querySelectorAll("*").forEach(function (element) {
       element.setAttribute("tabindex", "-1");
     });
-    front.querySelector('h2').focus();
+    front.querySelector("h2").focus();
   }
-
 }
 
+/**
+ * Flips the card and calls updateFocus()
+ * @param {HTMLElement} inner - The inner div of the card to flip
+ * @returns {void}
+ */
 function flip(inner) {
   let flip_options = [];
   inner.classList.toggle("flip");
@@ -255,7 +294,13 @@ function flip(inner) {
   updateFocus();
 }
 
-// Make sure we don't move again in the middle of a move.
+/**
+ * Takes in the command to move a card and waits some
+ * so we don't move again in the middle of a move.
+ * @param {string} direction - The direction to move the card
+ * @param {number} current_card - The current card number
+ * @param {number} card_width - The width of the card
+ */
 function cardMoveBuffer(direction, current_card, card_width) {
   console.debug("cardMoveBuffer");
   if (window.flashcards_accepting_input) {
@@ -270,8 +315,16 @@ function cardMoveBuffer(direction, current_card, card_width) {
   return current_card;
 }
 
+/**
+ * Moves the card in the given direction
+ * @param {string} direction - The direction to move the card
+ * @param {number} current_card - The current card number
+ * @param {number} card_width - The width of the card
+ * @returns {number} - The new current card number
+ */
 function slideCard(class_list, current_card, card_width) {
   console.debug("slideCard");
+  let slidebox = document.querySelector(".flashcard .slidebox");
   let all_cards = document.querySelectorAll(".flashcard .inner");
   let direction = class_list.includes("left") ? "right" : "left";
   let other_direction = direction === "left" ? "right" : "left";
@@ -283,36 +336,55 @@ function slideCard(class_list, current_card, card_width) {
   }
 
   if (current_card < 0) {
-    all_cards.forEach((card) => {
-      moveElement(card, card_width * (all_cards.length - 1), other_direction);
-    });
+    moveElement(slidebox, card_width * (all_cards.length - 1), other_direction);
     current_card = all_cards.length - 1;
   } else if (current_card < all_cards.length) {
-    all_cards.forEach((card) => {
-      moveElement(card, card_width, direction);
-    });
+    moveElement(slidebox, card_width, direction);
   } else {
     // If there's no next element, go back to the beginning
-    all_cards.forEach((card) => {
-      moveElement(card, card_width * (all_cards.length - 1), other_direction);
-    });
+    moveElement(slidebox, card_width * (all_cards.length - 1), other_direction);
     current_card = 0;
   }
 
+  // recenterCards(all_cards, current_card);
+
   // Mark the current card.
-  for(c of all_cards) {
+  for (c of all_cards) {
     c.classList.remove("current-card");
   }
   all_cards[current_card].classList.add("current-card");
   return current_card;
 }
 
-function moveElement(elem, distance, direction) {
+/**
+ * Moves the element in the given direction using .animate()
+ * @param {HTMLElement} elem - The element to move
+ * @param {number} distance - The distance to move the element
+ * @param {string} direction - The direction to move the element
+ * @returns {void}
+ */
+function moveElement(elem, distance, direction, fast=false) {
   let slide_options = makeSlideOptions(elem, distance, direction);
-  console.log(slide_options[1]);
-  elem.animate(slide_options, slide_timing);
+  // console.debug(slide_options[1]);
+  if(fast) {
+    elem.animate(slide_options, {
+      duration: 300,
+      easing: "ease",
+      fill: "forwards",
+      iterations: 1,
+    })
+  } else {
+    elem.animate(slide_options, slide_timing);
+  }
 }
 
+/**
+ * Helper function to create the options for .animate()
+ * @param {*} elem - The element to move
+ * @param {*} distance - The distance to move the element
+ * @param {*} direction - The direction to move the element
+ * @returns {Array} - The options for .animate()
+ */
 function makeSlideOptions(elem, distance, direction) {
   let animate_text = "";
   let current_position = { x: position(elem).x, y: position(elem).y };
@@ -337,7 +409,12 @@ function makeSlideOptions(elem, distance, direction) {
   ];
 }
 
-// Duplicate the jQuery position() function
+/**
+ * Gets the x/y position of an element taking into account bounding
+ * rectangles, offsets, and scroll positions.
+ * @param {HTMLElement} elem - The element to get the position of
+ * @returns {object} - The position of the element {x: number, y: number}
+ */
 function position(elem) {
   return {
     y: Math.round(
