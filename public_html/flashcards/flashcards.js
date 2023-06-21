@@ -131,6 +131,9 @@ function readyGo(cards) {
     waiter = setTimeout(handleResize, 100);
   };
 
+
+  // Old version of handleResize
+  /*
   function handleResize() {
     let old_width = card_width;
     card_width = Math.round(
@@ -141,7 +144,29 @@ function readyGo(cards) {
     let delta_width = card_width - old_width;
     moveElement(slidebox, delta_width * current_card, "left", true);
   }
+  */
 }
+
+  /**
+   * Move the slidebox so the current card is in the center
+   * @param {void}
+   * @returns {void}
+   */
+  function handleResize() {
+    let slidebox = document.querySelector(".slidebox");
+    // Move the left edge of the cards so that the current card is in the center
+    // Get the position of the left edge of the current card
+    let current_card_left = all_cards[current_card].getBoundingClientRect()
+      .left;
+    // Get the position of the left edge of the slidebox
+    let slidebox_left = slidebox.getBoundingClientRect().left;
+    // Slide the slidebox so that the current card is in the center
+    let delta_width = card_width - (current_card_left - slidebox_left);
+    if(delta_width > 0) {
+      moveElement(slidebox, delta_width * current_card, "left", true);
+      updateFocus();
+    }
+  }
 
 /**
  * Returns the key of the event, or false if there are modifiers
@@ -249,32 +274,36 @@ function createCards(cards) {
  * @returns {void}
  */
 function updateFocus() {
-  let inner = document.querySelector(".flashcard .current-card");
-  let front = inner.querySelector(".front");
-  let back = inner.querySelector(".back");
+  // Wait 110ms for the slidebox to finish moving.
+  setTimeout(function () {
 
-  // Set all the tab indexes to -1 before we start.
-  document.querySelectorAll(tabbable_classes).forEach(function (element) {
-    element.setAttribute("tabindex", "-1");
-  });
+    let inner = document.querySelector(".flashcard .current-card");
+    let front = inner.querySelector(".front");
+    let back = inner.querySelector(".back");
 
-  if (inner.classList.contains("flip")) {
-    front.querySelectorAll("*").forEach(function (element) {
+    // Set all the tab indexes to -1 before we start.
+    document.querySelectorAll(tabbable_classes).forEach(function (element) {
       element.setAttribute("tabindex", "-1");
     });
-    back.querySelectorAll(tabbable_classes).forEach(function (element) {
-      element.setAttribute("tabindex", "0");
-    });
-    back.querySelector("h2").focus();
-  } else {
-    front.querySelectorAll(tabbable_classes).forEach(function (element) {
-      element.setAttribute("tabindex", "0");
-    });
-    back.querySelectorAll("*").forEach(function (element) {
-      element.setAttribute("tabindex", "-1");
-    });
-    front.querySelector("h2").focus();
-  }
+
+    if (inner.classList.contains("flip")) {
+      front.querySelectorAll("*").forEach(function (element) {
+        element.setAttribute("tabindex", "-1");
+      });
+      back.querySelectorAll(tabbable_classes).forEach(function (element) {
+        element.setAttribute("tabindex", "0");
+      });
+      back.querySelector("h2").focus();
+    } else {
+      front.querySelectorAll(tabbable_classes).forEach(function (element) {
+        element.setAttribute("tabindex", "0");
+      });
+      back.querySelectorAll("*").forEach(function (element) {
+        element.setAttribute("tabindex", "-1");
+      });
+      front.querySelector("h2").focus();
+    }
+  }, 110);
 }
 
 /**
@@ -302,7 +331,7 @@ function flip(inner) {
  * @param {number} card_width - The width of the card
  */
 function cardMoveBuffer(direction, current_card, card_width) {
-  console.debug("cardMoveBuffer");
+  // console.debug("cardMoveBuffer");
   if (window.flashcards_accepting_input) {
     current_card = slideCard(direction, current_card, card_width);
     window.flashcards_accepting_input = false;
@@ -323,7 +352,7 @@ function cardMoveBuffer(direction, current_card, card_width) {
  * @returns {number} - The new current card number
  */
 function slideCard(class_list, current_card, card_width) {
-  console.debug("slideCard");
+  // console.debug("slideCard");
   let slidebox = document.querySelector(".flashcard .slidebox");
   let all_cards = document.querySelectorAll(".flashcard .inner");
   let direction = class_list.includes("left") ? "right" : "left";
