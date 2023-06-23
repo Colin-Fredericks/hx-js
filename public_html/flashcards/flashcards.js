@@ -128,7 +128,7 @@ function readyGo(cards) {
   // Reset the left edge of the cards if needed.
   window.onresize = function () {
     clearTimeout(waiter);
-    waiter = setTimeout(handleResize, 100);
+    waiter = setTimeout(handleResize, 100, all_cards);
   };
 
   // Old version of handleResize
@@ -151,7 +151,7 @@ function readyGo(cards) {
  * @param {void}
  * @returns {void}
  */
-function handleResize() {
+function handleResize(all_cards) {
   let slidebox = document.querySelector('.slidebox');
   // Move the left edge of the cards so that the current card is in the center
   // Get the position of the left edge of the current card
