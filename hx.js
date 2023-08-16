@@ -1390,5 +1390,13 @@ var HXGlobalJS = function () {
 };
 
 $(document).ready(function () {
+  // If we're already running, don't run again.
+  if (typeof window.hxjs_is_already_running !== 'undefined') {
+    console.log('hx-js is already loaded, skipping this copy.');
+    return;
+  }
+  window.hxjs_is_already_running = true;
+
+
   HXGlobalJS();
 });
