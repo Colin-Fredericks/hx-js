@@ -291,12 +291,14 @@ var HXGlobalJS = function () {
     /**************************************/
     // The "backpack" stores up to 100k of
     // learner data on edX's server.
-    // See https://github.com/Stanford-Online/js-input-samples/tree/master/learner_backpack
+    // See https://github.com/HarvardX/js-input-samples/tree/master/learner_backpack
     /**************************************/
     if ($('#hxbackpackframe').length === 0 && hxOptions.useBackpack) {
       // Add the backpack iframe and hide it.
+      let server_url = getAssetURL(window.location.href, "site");
       let backpackURL =
-        'https://courses.edx.org/xblock/block-v1:' +
+        server_url +
+        "block-v1:" +
         courseInfo.institution +
         '+' +
         courseInfo.id +
@@ -1136,8 +1138,13 @@ var HXGlobalJS = function () {
   // Public function.
   function getAssetURL(windowURL, option) {
     // Sometimes escape characters are not our friends.
-    windowURL = windowURL.replace('%2B', '+');
-    windowURL = windowURL.replace('%3A', ':');
+    // Replace + and : if they're present.
+    if(windowURL.includes('%2B')) {
+      windowURL = windowURL.replace('%2B', '+');
+    }
+    if(windowURL.includes('%3A')) {
+      windowURL = windowURL.replace('%3A', ':');
+    }
 
     // Match the site in case we need it for something later.
     let courseSiteURL = windowURL.match(/https:\/\/.+\//)[0];
