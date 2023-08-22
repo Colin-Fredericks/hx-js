@@ -121,8 +121,22 @@ var HXGlobalJS = function () {
   // Good for logging and grabbing scripts/images.
   /***********************************************/
 
-  var courseAssetURL = getAssetURL(window.location.href, 'complete');
-  logThatThing(courseAssetURL);
+  console.debug("Testing to see whether we've reloaded. 11:06 PM.")
+
+  var course_asset_url = getAssetURL(window.location.href, 'complete');
+  // Get the URL of this script, because not everything is in Files & Uploads.
+  var script_asset_url = course_asset_url;
+  let hx_js_script_tag = $('script')
+    .filter(function () {
+      if (typeof this.attributes.src !== 'undefined') {
+        return this.attributes['src'].value.includes('hx.js');
+      }
+    })[0]
+    .attributes.src.value.replace('hx.js', '');
+  if (hx_js_script_tag.length === 1) {
+    script_asset_url = hx_js_script_tag.src;
+  }
+  logThatThing(script_asset_url);
 
   // Are we in Studio? If so, stop trying to run anything. Just quit.
   var courseSite = getAssetURL(window.location.href, 'site');
@@ -252,7 +266,7 @@ var HXGlobalJS = function () {
   }
 
   // This is where we load all the outside scripts we want.
-  $.getMultiScripts(scriptArray, courseAssetURL)
+  $.getMultiScripts(scriptArray, script_asset_url)
     .done(function () {
       logThatThing({ 'Loaded scripts': scriptArray });
       if (hxGlobalOptions) {
@@ -295,10 +309,10 @@ var HXGlobalJS = function () {
     /**************************************/
     if ($('#hxbackpackframe').length === 0 && hxOptions.useBackpack) {
       // Add the backpack iframe and hide it.
-      let server_url = getAssetURL(window.location.href, "site");
+      let server_url = getAssetURL(window.location.href, 'site');
       let backpackURL =
         server_url +
-        "block-v1:" +
+        'block-v1:' +
         courseInfo.institution +
         '+' +
         courseInfo.id +
@@ -325,7 +339,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+          script_asset_url +
             'summernote-lite.min.css" type="text/css" />'
         )
       );
@@ -356,7 +370,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+          script_asset_url +
             'VideoLinks.css" type="text/css" />'
         )
       );
@@ -603,7 +617,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+          script_asset_url +
             'hx-text-slider.css" type="text/css" />'
         )
       );
@@ -622,14 +636,14 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+          script_asset_url +
             'slick.css" type="text/css" />'
         )
       );
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+          script_asset_url +
             'slick-theme.css" type="text/css" />'
         )
       );
@@ -644,14 +658,14 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+          script_asset_url +
             'slick.css" type="text/css" />'
         )
       );
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+          script_asset_url +
             'slick-theme.css" type="text/css" />'
         )
       );
@@ -866,7 +880,7 @@ var HXGlobalJS = function () {
     $('head').append(
       $(
         '<link rel="stylesheet" href="' +
-          courseAssetURL +
+        script_asset_url +
           'prism.css" type="text/css" />'
       )
     );
@@ -1139,10 +1153,10 @@ var HXGlobalJS = function () {
   function getAssetURL(windowURL, option) {
     // Sometimes escape characters are not our friends.
     // Replace + and : if they're present.
-    if(windowURL.includes('%2B')) {
+    if (windowURL.includes('%2B')) {
       windowURL = windowURL.replace('%2B', '+');
     }
-    if(windowURL.includes('%3A')) {
+    if (windowURL.includes('%3A')) {
       windowURL = windowURL.replace('%3A', ':');
     }
 
@@ -1396,7 +1410,6 @@ $(document).ready(function () {
     return;
   }
   window.hxjs_is_already_running = true;
-
 
   HXGlobalJS();
 });
