@@ -121,20 +121,21 @@ var HXGlobalJS = function () {
   // Good for logging and grabbing scripts/images.
   /***********************************************/
 
-  console.debug("Testing to see whether we've reloaded. 11:06 PM.")
+  console.debug("Testing to see whether we've reloaded. 1:09 PM.")
 
   var course_asset_url = getAssetURL(window.location.href, 'complete');
   // Get the URL of this script, because not everything is in Files & Uploads.
   var script_asset_url = course_asset_url;
-  let hx_js_script_tag = $('script')
+  let all_script_tags = $('script');
+  let hx_js_script_tag = all_script_tags
     .filter(function () {
       if (typeof this.attributes.src !== 'undefined') {
         return this.attributes['src'].value.includes('hx.js');
       }
-    })[0]
-    .attributes.src.value.replace('hx.js', '');
+    });
+  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace('hx.js', '');
   if (hx_js_script_tag.length === 1) {
-    script_asset_url = hx_js_script_tag.src;
+    script_asset_url = hx_js_script_src;
   }
   logThatThing(script_asset_url);
 
@@ -168,8 +169,13 @@ var HXGlobalJS = function () {
 
   // Define the function that gets the outside scripts.
   $.getMultiScripts = function (arr, path) {
-    var _arr = $.map(arr, function (scr) {
-      return $.getScript((path || '') + scr);
+    var _arr = $.map(arr, function (src) {
+      if(src === 'HXGlobalOptions.js') {
+        // This should always get pulled from the course, not the CDN.
+        return $.getScript(getAssetURL(window.location.href) + src);
+      }else{
+        return $.getScript((path || '') + src);
+      }
     });
 
     _arr.push(
@@ -186,7 +192,7 @@ var HXGlobalJS = function () {
   // We definitely want to load the course-wide options file.
   // It overrides defaults in this file, and is overridden by local options.
   var hxOptions = {};
-  scriptArray.push('hxGlobalOptions.js');
+  scriptArray.push(getAssetURL(window.location.href + 'hxGlobalOptions.js'));
 
   // Do we load Prism for code highlighting?
   var codeblocks = $('code');
