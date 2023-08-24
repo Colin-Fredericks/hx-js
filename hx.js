@@ -121,8 +121,6 @@ var HXGlobalJS = function () {
   // Good for logging and grabbing scripts/images.
   /***********************************************/
 
-  console.debug("Testing to see whether we've reloaded. 1:09 PM.")
-
   var course_asset_url = getAssetURL(window.location.href, 'complete');
   // Get the URL of this script, because not everything is in Files & Uploads.
   var script_asset_url = course_asset_url;
