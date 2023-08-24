@@ -190,7 +190,7 @@ var HXGlobalJS = function () {
   // We definitely want to load the course-wide options file.
   // It overrides defaults in this file, and is overridden by local options.
   var hxOptions = {};
-  scriptArray.push(getAssetURL(window.location.href + 'hxGlobalOptions.js'));
+  script_array.push(getAssetURL(window.location.href + 'hxGlobalOptions.js'));
 
   // Do we load Prism for code highlighting?
   var codeblocks = $('code');
@@ -270,7 +270,7 @@ var HXGlobalJS = function () {
   }
 
   // This is where we load all the outside scripts we want.
-  $.getMultiScripts(scriptArray, script_asset_url)
+  $.getMultiScripts(script_array, script_asset_url)
     .done(function () {
       logThatThing({ 'Loaded scripts': script_array });
       if (hxGlobalOptions) {
