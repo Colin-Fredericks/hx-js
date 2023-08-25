@@ -128,14 +128,14 @@ var HXGlobalJS = function () {
     .filter(
       (i,e) => { 
         if(e.src){ 
-          if(e.src.includes("hx_8.js")){ 
+          if(e.src.includes("hx.js")){ 
             return e;
           } 
         } 
       });
 
 
-  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace('hx_8.js', '');
+  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace('hx.js', '');
   if (hx_js_script_tag.length === 1) {
     script_asset_url = hx_js_script_src;
   }
