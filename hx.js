@@ -124,18 +124,22 @@ var HXGlobalJS = function () {
   var course_asset_url = getAssetURL(window.location.href, 'complete');
   // Get the URL of this script, because not everything is in Files & Uploads.
   var script_asset_url = course_asset_url;
-  let all_script_tags = $('script');
-  let hx_js_script_tag = all_script_tags
-    .filter(function () {
-      if (typeof this.attributes.src !== 'undefined') {
-        return this.attributes['src'].value.includes('hx.js');
-      }
-    });
-  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace('hx.js', '');
+  let hx_js_script_tag = $('script')
+    .filter(
+      (i,e) => { 
+        if(e.src){ 
+          if(e.src.includes("hx_8.js")){ 
+            return e;
+          } 
+        } 
+      });
+
+
+  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace('hx_8.js', '');
   if (hx_js_script_tag.length === 1) {
     script_asset_url = hx_js_script_src;
   }
-  logThatThing(script_asset_url);
+  logThatThing({'script asset url': script_asset_url});
 
   // Are we in Studio? If so, stop trying to run anything. Just quit.
   var courseSite = getAssetURL(window.location.href, 'site');
@@ -168,6 +172,7 @@ var HXGlobalJS = function () {
   // Define the function that gets the outside scripts.
   $.getMultiScripts = function (arr, path) {
     var _arr = $.map(arr, function (src) {
+      console.log(src);
       if(src === 'HXGlobalOptions.js') {
         // This should always get pulled from the course, not the CDN.
         return $.getScript(getAssetURL(window.location.href) + src);
