@@ -28,9 +28,6 @@ var HXGlobalJS = function () {
     // Auto-open the on-page discussions.
     openPageDiscussion: false,
 
-    // Resize image maps when an image shrinks because of screen size
-    resizeMaps: true,
-
     // Marks all external links with an icon.
     markExternalLinks: false,
 
@@ -121,8 +118,25 @@ var HXGlobalJS = function () {
   // Good for logging and grabbing scripts/images.
   /***********************************************/
 
-  var courseAssetURL = getAssetURL(window.location.href, 'complete');
-  logThatThing(courseAssetURL);
+  var course_asset_url = getAssetURL(window.location.href, 'complete');
+  // Get the URL of this script, because not everything is in Files & Uploads.
+  var script_asset_url = course_asset_url;
+  let hx_js_script_tag = $('script').filter((i, e) => {
+    if (e.src) {
+      if (e.src.includes('hx_17.js')) {
+        return e;
+      }
+    }
+  });
+
+  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace(
+    'hx_17.js',
+    ''
+  );
+  if (hx_js_script_tag.length === 1) {
+    script_asset_url = hx_js_script_src;
+  }
+  logThatThing({ 'script asset url': script_asset_url });
 
   // Are we in Studio? If so, stop trying to run anything. Just quit.
   var courseSite = getAssetURL(window.location.href, 'site');
@@ -138,7 +152,7 @@ var HXGlobalJS = function () {
     courseInfo.institution + '.' + courseInfo.id + '_' + courseInfo.run;
 
   logThatThing({ 'HX.js': 'enabled' });
-  logThatThing({ 'course log id': courseLogID });
+  logThatThing({ course_log_id: courseLogID });
 
   // Listen for events that rewrite problem HTML.
   Logger.listen('problem_check', null, (en, es) => onProblemRewrite(en, es));
@@ -154,8 +168,18 @@ var HXGlobalJS = function () {
 
   // Define the function that gets the outside scripts.
   $.getMultiScripts = function (arr, path) {
-    var _arr = $.map(arr, function (scr) {
-      return $.getScript((path || '') + scr);
+    console.log(arr);
+    var _arr = $.map(arr, function (src) {
+      console.log(src);
+      console.log(path);
+      let loc = path;
+      if (src === 'hxGlobalOptions.js') {
+        // This should always get pulled from the course, not the CDN.
+        loc = getAssetURL(window.location.href);
+      }
+      console.log(loc);
+      logThatThing({ loading_script: loc + src });
+      return $.getScript((loc || '') + src);
     });
 
     _arr.push(
@@ -197,13 +221,6 @@ var HXGlobalJS = function () {
     var HXDTS;
     script_array.push('papaparse.js'); // CSV parser
     script_array.push('hx-text-slider.js');
-  }
-
-  // Do we load the Image Map Resizer?
-  var theMaps = $('map');
-  if (theMaps.length) {
-    logThatThing({ image_map: 'found' });
-    script_array.push('imageMapResizer.min.js');
   }
 
   // Do we load the Summernote editor?
@@ -252,7 +269,7 @@ var HXGlobalJS = function () {
   }
 
   // This is where we load all the outside scripts we want.
-  $.getMultiScripts(script_array, courseAssetURL)
+  $.getMultiScripts(script_array, script_asset_url)
     .done(function () {
       logThatThing({ 'Loaded scripts': script_array });
       if (hxGlobalOptions) {
@@ -274,7 +291,7 @@ var HXGlobalJS = function () {
       console.log(jqxhr);
       console.log(settings);
       console.log(exception);
-      logThatThing({ script_load_error: settings });
+      logThatThing({ scripts: script_array, script_load_error: settings });
       hxOptions = setDefaultOptions(
         window.hxLocalOptions,
         {},
@@ -295,10 +312,10 @@ var HXGlobalJS = function () {
     /**************************************/
     if ($('#hxbackpackframe').length === 0 && hxOptions.useBackpack) {
       // Add the backpack iframe and hide it.
-      let server_url = getAssetURL(window.location.href, "site");
+      let server_url = getAssetURL(window.location.href, 'site');
       let backpackURL =
         server_url +
-        "block-v1:" +
+        'block-v1:' +
         courseInfo.institution +
         '+' +
         courseInfo.id +
@@ -325,7 +342,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+            script_asset_url +
             'summernote-lite.min.css" type="text/css" />'
         )
       );
@@ -356,7 +373,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+            script_asset_url +
             'VideoLinks.css" type="text/css" />'
         )
       );
@@ -392,11 +409,6 @@ var HXGlobalJS = function () {
           window.HXChimeTimer
         );
       }
-    }
-
-    // If we have image maps, scale them.
-    if (theMaps.length && hxOptions.resizeMaps) {
-      $('map').imageMapResize();
     }
 
     // If we have code blocks, highlight them.
@@ -602,7 +614,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+            script_asset_url +
             'hx-text-slider.css" type="text/css" />'
         )
       );
@@ -621,19 +633,33 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+            script_asset_url +
             'slick.css" type="text/css" />'
         )
       );
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+            script_asset_url +
             'slick-theme.css" type="text/css" />'
         )
       );
-      slider.slick(hxOptions.slickOptions);
-      logThatThing({ slider: 'created' });
+
+      // Wait for slick to be ready.
+      // If it's not ready after 30 tries, give up.
+      let slick_ready_counter = 0;
+      let slick_ready = setInterval(function () {
+        if (typeof $.fn.slick !== 'undefined') {
+          clearInterval(slick_ready);
+          slider.slick(hxOptions.slickOptions);
+          logThatThing({ slider: 'created' });
+        }
+        slick_ready_counter++;
+        if (slick_ready_counter > 30) {
+          clearInterval(slick_ready);
+          logThatThing('Slick not ready after 30 tries. Giving up.');
+        }
+      }, 100);
     }
 
     // This set is for matched sliders, where one is the
@@ -643,14 +669,14 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+            script_asset_url +
             'slick.css" type="text/css" />'
         )
       );
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-            courseAssetURL +
+            script_asset_url +
             'slick-theme.css" type="text/css" />'
         )
       );
@@ -865,7 +891,7 @@ var HXGlobalJS = function () {
     $('head').append(
       $(
         '<link rel="stylesheet" href="' +
-          courseAssetURL +
+          script_asset_url +
           'prism.css" type="text/css" />'
       )
     );
@@ -1134,10 +1160,10 @@ var HXGlobalJS = function () {
   function getAssetURL(windowURL, option) {
     // Sometimes escape characters are not our friends.
     // Replace + and : if they're present.
-    if(windowURL.includes('%2B')) {
+    if (windowURL.includes('%2B')) {
       windowURL = windowURL.replace('%2B', '+');
     }
-    if(windowURL.includes('%3A')) {
+    if (windowURL.includes('%3A')) {
       windowURL = windowURL.replace('%3A', ':');
     }
 
@@ -1391,7 +1417,6 @@ $(document).ready(function () {
     return;
   }
   window.hxjs_is_already_running = true;
-
 
   HXGlobalJS();
 });
