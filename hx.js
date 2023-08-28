@@ -28,9 +28,6 @@ var HXGlobalJS = function () {
     // Auto-open the on-page discussions.
     openPageDiscussion: false,
 
-    // Resize image maps when an image shrinks because of screen size
-    resizeMaps: true,
-
     // Marks all external links with an icon.
     markExternalLinks: false,
 
@@ -124,22 +121,22 @@ var HXGlobalJS = function () {
   var course_asset_url = getAssetURL(window.location.href, 'complete');
   // Get the URL of this script, because not everything is in Files & Uploads.
   var script_asset_url = course_asset_url;
-  let hx_js_script_tag = $('script')
-    .filter(
-      (i,e) => { 
-        if(e.src){ 
-          if(e.src.includes("hx.js")){ 
-            return e;
-          } 
-        } 
-      });
+  let hx_js_script_tag = $('script').filter((i, e) => {
+    if (e.src) {
+      if (e.src.includes('hx_17.js')) {
+        return e;
+      }
+    }
+  });
 
-
-  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace('hx.js', '');
+  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace(
+    'hx_17.js',
+    ''
+  );
   if (hx_js_script_tag.length === 1) {
     script_asset_url = hx_js_script_src;
   }
-  logThatThing({'script asset url': script_asset_url});
+  logThatThing({ 'script asset url': script_asset_url });
 
   // Are we in Studio? If so, stop trying to run anything. Just quit.
   var courseSite = getAssetURL(window.location.href, 'site');
@@ -155,7 +152,7 @@ var HXGlobalJS = function () {
     courseInfo.institution + '.' + courseInfo.id + '_' + courseInfo.run;
 
   logThatThing({ 'HX.js': 'enabled' });
-  logThatThing({ 'course log id': courseLogID });
+  logThatThing({ course_log_id: courseLogID });
 
   // Listen for events that rewrite problem HTML.
   Logger.listen('problem_check', null, (en, es) => onProblemRewrite(en, es));
@@ -171,14 +168,18 @@ var HXGlobalJS = function () {
 
   // Define the function that gets the outside scripts.
   $.getMultiScripts = function (arr, path) {
+    console.log(arr);
     var _arr = $.map(arr, function (src) {
       console.log(src);
-      if(src === 'HXGlobalOptions.js') {
+      console.log(path);
+      let loc = path;
+      if (src === 'hxGlobalOptions.js') {
         // This should always get pulled from the course, not the CDN.
-        return $.getScript(getAssetURL(window.location.href) + src);
-      }else{
-        return $.getScript((path || '') + src);
+        loc = getAssetURL(window.location.href);
       }
+      console.log(loc);
+      logThatThing({ loading_script: loc + src });
+      return $.getScript((loc || '') + src);
     });
 
     _arr.push(
@@ -195,7 +196,7 @@ var HXGlobalJS = function () {
   // We definitely want to load the course-wide options file.
   // It overrides defaults in this file, and is overridden by local options.
   var hxOptions = {};
-  script_array.push(getAssetURL(window.location.href + 'hxGlobalOptions.js'));
+  script_array.push('hxGlobalOptions.js');
 
   // Do we load Prism for code highlighting?
   var codeblocks = $('code');
@@ -220,13 +221,6 @@ var HXGlobalJS = function () {
     var HXDTS;
     script_array.push('papaparse.js'); // CSV parser
     script_array.push('hx-text-slider.js');
-  }
-
-  // Do we load the Image Map Resizer?
-  var theMaps = $('map');
-  if (theMaps.length) {
-    logThatThing({ image_map: 'found' });
-    script_array.push('imageMapResizer.min.js');
   }
 
   // Do we load the Summernote editor?
@@ -297,7 +291,7 @@ var HXGlobalJS = function () {
       console.log(jqxhr);
       console.log(settings);
       console.log(exception);
-      logThatThing({ script_load_error: settings });
+      logThatThing({ scripts: script_array, script_load_error: settings });
       hxOptions = setDefaultOptions(
         window.hxLocalOptions,
         {},
@@ -348,7 +342,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-          script_asset_url +
+            script_asset_url +
             'summernote-lite.min.css" type="text/css" />'
         )
       );
@@ -379,7 +373,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-          script_asset_url +
+            script_asset_url +
             'VideoLinks.css" type="text/css" />'
         )
       );
@@ -415,11 +409,6 @@ var HXGlobalJS = function () {
           window.HXChimeTimer
         );
       }
-    }
-
-    // If we have image maps, scale them.
-    if (theMaps.length && hxOptions.resizeMaps) {
-      $('map').imageMapResize();
     }
 
     // If we have code blocks, highlight them.
@@ -625,7 +614,7 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-          script_asset_url +
+            script_asset_url +
             'hx-text-slider.css" type="text/css" />'
         )
       );
@@ -644,19 +633,33 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-          script_asset_url +
+            script_asset_url +
             'slick.css" type="text/css" />'
         )
       );
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-          script_asset_url +
+            script_asset_url +
             'slick-theme.css" type="text/css" />'
         )
       );
-      slider.slick(hxOptions.slickOptions);
-      logThatThing({ slider: 'created' });
+
+      // Wait for slick to be ready.
+      // If it's not ready after 30 tries, give up.
+      let slick_ready_counter = 0;
+      let slick_ready = setInterval(function () {
+        if (typeof $.fn.slick !== 'undefined') {
+          clearInterval(slick_ready);
+          slider.slick(hxOptions.slickOptions);
+          logThatThing({ slider: 'created' });
+        }
+        slick_ready_counter++;
+        if (slick_ready_counter > 30) {
+          clearInterval(slick_ready);
+          logThatThing('Slick not ready after 30 tries. Giving up.');
+        }
+      }, 100);
     }
 
     // This set is for matched sliders, where one is the
@@ -666,14 +669,14 @@ var HXGlobalJS = function () {
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-          script_asset_url +
+            script_asset_url +
             'slick.css" type="text/css" />'
         )
       );
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
-          script_asset_url +
+            script_asset_url +
             'slick-theme.css" type="text/css" />'
         )
       );
@@ -888,7 +891,7 @@ var HXGlobalJS = function () {
     $('head').append(
       $(
         '<link rel="stylesheet" href="' +
-        script_asset_url +
+          script_asset_url +
           'prism.css" type="text/css" />'
       )
     );
