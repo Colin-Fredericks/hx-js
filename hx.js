@@ -123,14 +123,14 @@ var HXGlobalJS = function () {
   var script_asset_url = course_asset_url;
   let hx_js_script_tag = $('script').filter((i, e) => {
     if (e.src) {
-      if (e.src.includes('hx_17.js')) {
+      if (e.src.includes('hx.js')) {
         return e;
       }
     }
   });
 
   let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace(
-    'hx_17.js',
+    'hx.js',
     ''
   );
   if (hx_js_script_tag.length === 1) {
