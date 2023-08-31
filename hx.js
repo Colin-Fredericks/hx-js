@@ -129,13 +129,19 @@ var HXGlobalJS = function () {
     }
   });
 
-  let hx_js_script_src = hx_js_script_tag[0].attributes.src.value.replace(
-    'hx.js',
-    ''
-  );
-  if (hx_js_script_tag.length === 1) {
-    script_asset_url = hx_js_script_src;
+  // If there's no script tag, we are running locally from /static/
+  if (hx_js_script_tag.length === 0) {
+    script_asset_url = course_asset_url;
+  } else {
+    script_asset_url = hx_js_script_tag[0].attributes.src.value.replace(
+      'hx.js',
+      ''
+    );
+  } 
+  if (hx_js_script_tag.length > 1){
+    logThatThing({ error: 'More than one hx.js script tag on this page.' });
   }
+
   logThatThing({ 'script asset url': script_asset_url });
 
   // Are we in Studio? If so, stop trying to run anything. Just quit.
