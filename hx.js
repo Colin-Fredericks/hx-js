@@ -161,9 +161,13 @@ var HXGlobalJS = function () {
   logThatThing({ course_log_id: courseLogID });
 
   // Listen for events that rewrite problem HTML.
-  Logger.listen('problem_check', null, (en, es) => onProblemRewrite(en, es));
-  Logger.listen('problem_show', null, (en, es) => onProblemRewrite(en, es));
-  Logger.listen('problem_reset', null, (en, es) => onProblemRewrite(en, es));
+  if( typeof Logger !== 'undefined' ){
+    Logger.listen('problem_check', null, (en, es) => onProblemRewrite(en, es));
+    Logger.listen('problem_show', null, (en, es) => onProblemRewrite(en, es));
+    Logger.listen('problem_reset', null, (en, es) => onProblemRewrite(en, es));  
+  }else{
+    console.log('Logger is not available.');
+  }
 
   /**************************************/
   // Load outside scripts.
@@ -1401,7 +1405,11 @@ var HXGlobalJS = function () {
   // Send logs both to the console and to the official edX logamajig.
   function logThatThing(ThatThing) {
     console.log(JSON.stringify(ThatThing));
-    Logger.log(courseLogID + '.hxjs', ThatThing);
+    if(typeof Logger !== 'undefined') {
+      Logger.log(courseLogID + '.hxjs', ThatThing);
+    }else{
+      console.log('Logger is not available.');
+    }
   }
 
   // Let's publish a few of these.
