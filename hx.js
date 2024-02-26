@@ -1178,7 +1178,7 @@ var HXGlobalJS = function () {
     }
 
     // Match the site in case we need it for something later.
-    let courseSiteURL = windowURL.match(/https:\/\/.+\//)[0];
+    let courseSiteURL = windowURL.match(/https?:\/\/.+\//)[0];
 
     if (option == 'site') {
       return courseSiteURL;
