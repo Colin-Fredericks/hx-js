@@ -661,7 +661,9 @@ var HXGlobalJS = function () {
       let slick_ready = setInterval(function () {
         if (typeof $.fn.slick !== 'undefined') {
           clearInterval(slick_ready);
-          slider.slick(hxOptions.slickOptions);
+          slider.each(function (i, s) {
+            $(s).slick(hxOptions.slickOptions);
+          });
           logThatThing({ slider: 'created' });
         }
         slick_ready_counter++;
