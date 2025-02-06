@@ -445,7 +445,9 @@ var HXGlobalJS = function () {
           return e.innerText;
         }
       });
-      const new_urls = old_urls.map(
+      // Don't add URL parameters unless we have a question mark.
+      const urls_question_mark = old_urls.map((x) => x + (x.includes('?') ? '' : '?'));
+      const new_urls = urls_question_mark.map(
         (x) =>
           x +
           '&university=' +
