@@ -638,7 +638,6 @@ var HXGlobalJS = function () {
     /***********************************/
 
     // Only do slider things if there are actually sliders to create.
-    // Would be good to handle multiple sliders later on.
     if (slider.length) {
       $('head').append(
         $(
