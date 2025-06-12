@@ -55,15 +55,5 @@
   }
 
   console.log('Course structure:');
-  for (let key in course_structure) {
-    let spacing = '  ';
-    if (key.includes('PAGE')) {
-      spacing = '    ';
-    }
-    console.log(
-      `${spacing}${makeKeyPretty(key)}: ${JSON.stringify(
-        course_structure[key]
-      )}`
-    );
-  }
+  console.log(course_structure);
 })();
