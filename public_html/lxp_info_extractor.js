@@ -55,5 +55,7 @@
   }
 
   console.log('Course structure:');
+  // Need to rearrange this in order to pretty-print it.
+  // Right now it's a flat list of objects with IDs and parents; we'll need a tree.
   console.log(course_structure);
 })();
