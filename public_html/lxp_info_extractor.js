@@ -5,8 +5,6 @@
  * MIT licensed
  ****************************/
 
-javascript:(function(){s=document.createElement('script');s.type='text/javascript';s.src='https://colin-fredericks.github.io/hx-js/public_html/course_staff_adder.js?v='+parseInt(Math.random()*99999999);document.body.appendChild(s);})();
-
 (function() {
   let data = __NUXT__.data;
   let keys = Object.keys(__NUXT__.data);
