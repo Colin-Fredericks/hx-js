@@ -55,7 +55,7 @@
   }
 
   console.log('Course structure:');
-  for (let key in course_info) {
+  for (let key in course_structure) {
     let spacing = '  ';
     if (key.includes('PAGE')) {
       spacing = '    ';
