@@ -5,13 +5,13 @@
  * MIT licensed
  ****************************/
 
-(function() {
+(function () {
   let data = __NUXT__.data;
   let keys = Object.keys(__NUXT__.data);
   let learner_info = {
     name: {
       first: data[keys[6]].firstName,
-      last: data[keys[6]].lastName
+      last: data[keys[6]].lastName,
     },
     anonymous_id: data[keys[6]].id,
     email: data[keys[0]].email,
@@ -33,12 +33,37 @@
   let course_structure = data[keys[1]].children;
 
   console.log('Learner:');
-  console.log(learner_info);
-  console.log('Course:');
-  console.log(course_info);
-  console.log('Location:');
-  console.log(location);
-  console.log('Course structure:');
-  console.log(course_structure);
+  for (let key in learner_info) {
+    console.log(
+      `  ${makeKeyPretty(key)}: ${JSON.stringify(learner_info[key])}`
+    );
+  }
 
+  console.log('Course:');
+  for (let key in course_info) {
+    console.log(`  ${makeKeyPretty(key)}: ${JSON.stringify(course_info[key])}`);
+  }
+
+  console.log('Location:');
+  for (let key in location) {
+    console.log(`  ${makeKeyPretty(key)}: ${JSON.stringify(location[key])}`);
+  }
+
+  console.log('Course structure:');
+  for (let key in course_info) {
+    let spacing = '  ';
+    if (key.includes('PAGE')) {
+      spacing = '    ';
+    }
+    console.log(
+      `${spacing}${makeKeyPretty(key)}: ${JSON.stringify(
+        course_structure[key]
+      )}`
+    );
+  }
 })();
+
+makeKeyPretty = (key) => {
+  let key_pretty = key.charAt(0).toUpperCase() + key.slice(1);
+  return key_pretty.replace(/_/g, ' ');
+};
