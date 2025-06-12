@@ -63,7 +63,7 @@
   }
 })();
 
-makeKeyPretty = (key) => {
+function makeKeyPretty(key) {
   let key_pretty = key.charAt(0).toUpperCase() + key.slice(1);
   return key_pretty.replace(/_/g, ' ');
-};
+}
