@@ -6,6 +6,11 @@
  ****************************/
 
 (function () {
+  function makeKeyPretty(key) {
+    let key_pretty = key.charAt(0).toUpperCase() + key.slice(1);
+    return key_pretty.replace(/_/g, ' ');
+  }
+
   let data = __NUXT__.data;
   let keys = Object.keys(__NUXT__.data);
   let learner_info = {
@@ -62,8 +67,3 @@
     );
   }
 })();
-
-function makeKeyPretty(key) {
-  let key_pretty = key.charAt(0).toUpperCase() + key.slice(1);
-  return key_pretty.replace(/_/g, ' ');
-}
