@@ -29,11 +29,15 @@
     swift_course_id: data[keys[1]].id,
   };
   let location = {
-    name: data[keys[4]].meta.name,
+    name: $('a.active-page').text,
+    page_id: window.location.href.split("/").slice(-1)[0],
+    // I had thought that those were in the item below, but apparently not.
+    // name: data[keys[4]].meta.name, 
+    // page_id: data[keys[4]].id,
     open_date: data[keys[4]].gating.openAt,
     due_date: data[keys[4]].gating.dueAt,
-    page_id: data[keys[4]].id,
-    parent_id: data[keys[4]].parentId,
+    // Will need to rewrite parent to search for page ID in the course structure.
+    // parent_id: data[keys[4]].parentId,
   };
   let course_structure = data[keys[1]].children;
 
