@@ -6,9 +6,15 @@
  ****************************/
 
 (function () {
+  // Make key pretty for printing to console or as text
   function makeKeyPretty(key) {
     let key_pretty = key.charAt(0).toUpperCase() + key.slice(1);
     return key_pretty.replace(/_/g, ' ');
+  }
+  // Get value or default if undefined
+  function ifDef(v, def = null) {
+    if (typeof v !== 'undefined') return v;
+    else return def;
   }
 
   let data = __NUXT__.data;
@@ -34,10 +40,9 @@
     // I had thought that those were in the item below, but apparently not.
     // name: data[keys[4]].meta.name,
     // page_id: data[keys[4]].id,
-    open_date: data[keys[4]].gating.openAt,
-    due_date: data[keys[4]].gating.dueAt,
-    // Will need to rewrite parent to search for page ID in the course structure.
-    // parent_id: data[keys[4]].parentId,
+    open_date: ifDef(data[keys[4]].gating.openAt, 'No open date'),
+    due_date: ifDef(data[keys[4]].gating.dueAt, 'No due date'),
+    parent_id: data[keys[1]].children.filter((x) => x.id == 220444)[0].parentId,
     authoring_link:
       'https://author.harvardonline.harvard.edu/repository/' +
       data[keys[1]].id +
