@@ -29,7 +29,7 @@
     swift_course_id: data[keys[1]].id,
   };
   let location = {
-    name: $('a.active-page').text,
+    name: document.querySelector('a.active-page').text,
     page_id: window.location.href.split("/").slice(-1)[0],
     // I had thought that those were in the item below, but apparently not.
     // name: data[keys[4]].meta.name, 
