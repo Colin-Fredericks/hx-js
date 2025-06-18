@@ -42,7 +42,9 @@
     // page_id: data[keys[4]].id,
     open_date: ifDef(data[keys[4]].gating.openAt, 'No open date'),
     due_date: ifDef(data[keys[4]].gating.dueAt, 'No due date'),
-    parent_id: data[keys[1]].children.filter((x) => x.id == 220444)[0].parentId,
+    parent_id: data[keys[1]].children.filter(
+      (x) => x.id == window.location.href.split('/').slice(-1)[0]
+    )[0].parentId,
     authoring_link:
       'https://author.harvardonline.harvard.edu/repository/' +
       data[keys[1]].id +
