@@ -17,32 +17,32 @@
     else return def;
   }
 
-  function makeModal(title, content){
+  function makeModal(title, content) {
     let modal = document.createElement('div');
     modal.className = 'vpal-modal';
     modal.innerHTML = `
       <div class="vpal-modal-content" style="display: none; position: fixed; z-index: 1000; left: 50%; top: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-        <span class="vpal-modal-close">&times;</span>
+        <span class="vpal-modal-close"
+            style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+        >&times;</span>
         <h2>${title}</h2>
         <p>${content}</p>
       </div>
     `;
     document.body.appendChild(modal);
-    
+
     // Close the modal when the user clicks on <span> (x)
-    modal.querySelector('.vpal-modal-close').onclick = function() {
+    modal.querySelector('.vpal-modal-close').onclick = function () {
       modal.remove();
     };
-    
+
     // Close the modal when the user clicks anywhere outside of it
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       if (event.target == modal) {
         modal.remove();
       }
     };
-
   }
-
 
   let data = __NUXT__.data;
   let keys = Object.keys(__NUXT__.data);
@@ -102,7 +102,7 @@
   // Right now it's a flat list of objects with IDs and parents; we'll need a tree.
   console.log(course_structure);
 
-  makeModal("LXP Course Info Extractor", "<p>Testing</p>");
+  makeModal('LXP Course Info Extractor', '<p>Testing</p>');
   document.querySelector('.vpal-modal-content').style.display = 'block';
   document.querySelector('.vpal-modal-content').style.position = 'absolute';
 })();
