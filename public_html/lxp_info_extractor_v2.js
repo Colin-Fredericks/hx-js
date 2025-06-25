@@ -23,7 +23,7 @@
     modal.innerHTML = `
       <div class="vpal-modal-content" style="display: none; position: fixed; z-index: 1000; left: 50%; top: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
         <span class="vpal-modal-close"
-            style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+            style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">
         >&times;</span>
         <h2>${title}</h2>
         <p>${content}</p>
@@ -101,6 +101,33 @@
   // Need to rearrange this in order to pretty-print it.
   // Right now it's a flat list of objects with IDs and parents; we'll need a tree.
   console.log(course_structure);
+
+  let html_content = `
+    <h3>Learner Info</h3>
+    <ul>
+      <li><strong>First Name:</strong> ${learner_info.name.first}</li>
+      <li><strong>Last Name:</strong> ${learner_info.name.last}</li>
+      <li><strong>Anonymous ID:</strong> ${learner_info.anonymous_id}</li>
+      <li><strong>Email:</strong> ${learner_info.email}</li>
+      <li><strong>Role:</strong> ${learner_info.role}</li>
+    </ul>
+    <h3>Course Info</h3>
+    <ul>
+      <li><strong>Tenant:</strong> ${course_info.tenant}</li>
+      <li><strong>Course Name:</strong> ${course_info.name}</li>
+      <li><strong>Wave ID:</strong> ${course_info.wave}</li>
+      <li><strong>Swift Course ID:</strong> ${course_info.swift_course_id}</li>
+    </ul>
+    <h3>Location Info</h3>
+    <ul>
+      <li><strong>Page Name:</strong> ${location.name}</li>
+      <li><strong>Page ID:</strong> ${location.page_id}</li>
+      <li><strong>Open Date:</strong> ${location.open_date}</li>
+      <li><strong>Due Date:</strong> ${location.due_date}</li>
+      <li><strong>Parent ID:</strong> ${location.parent_id}</li>
+      <li><strong>Authoring Link:</strong> <a href="${location.authoring_link}" target="_blank">${location.authoring_link}</a></li>
+    </ul>
+  `;
 
   makeModal('LXP Course Info Extractor', '<p>Testing</p>');
   document.querySelector('.vpal-modal-content').style.display = 'block';
