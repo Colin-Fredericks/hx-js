@@ -23,7 +23,7 @@
     modal.innerHTML = `
       <div class="vpal-modal-content" style="display: none; position: fixed; z-index: 1000; left: 50%; top: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
         <span class="vpal-modal-close"
-            style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">
+            style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;"
         >&times;</span>
         <h2>${title}</h2>
         <p>${content}</p>
@@ -129,7 +129,7 @@
     </ul>
   `;
 
-  makeModal('LXP Course Info Extractor', '<p>Testing</p>');
+  makeModal('LXP Course Info Extractor', html_content);
   document.querySelector('.vpal-modal-content').style.display = 'block';
   document.querySelector('.vpal-modal-content').style.position = 'absolute';
 })();
