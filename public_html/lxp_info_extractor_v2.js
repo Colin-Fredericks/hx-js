@@ -21,7 +21,7 @@
     let modal = document.createElement('div');
     modal.className = 'vpal-modal';
     modal.innerHTML = `
-      <div class="vpal-modal-content" style="display:none;">
+      <div class="vpal-modal-content">
         <span class="vpal-close">&times;</span>
         <h2>${title}</h2>
         <p>${content}</p>
@@ -103,6 +103,4 @@
   console.log(course_structure);
 
   makeModal("LXP Course Info Extractor", "<p>Testing</p>");
-  document.querySelector('.vpal-modal-content').style.display = 'block';
-  document.querySelector('.vpal-modal-content').style.position = 'absolute';
 })();
