@@ -21,7 +21,7 @@
     let modal = document.createElement('div');
     modal.className = 'vpal-modal';
     modal.innerHTML = `
-      <div class="vpal-modal-content" style="display: none; position: fixed; z-index: 1000; left: 50%; top: 50%; transform: translate(-50%, -50%); background-color: #DDD; padding: 20px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+      <div class="vpal-modal-content" style="display: none; position: fixed; z-index: 1000; left: 50%; top: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 3px solid grey; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
         <span class="vpal-modal-close"
             style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;"
         >&times;</span>
@@ -64,14 +64,11 @@
   let location = {
     name: document.querySelector('a.active-page').text,
     page_id: window.location.href.split('/').slice(-1)[0],
-    // I had thought that those were in the item below, but apparently not.
-    // name: data[keys[4]].meta.name,
-    // page_id: data[keys[4]].id,
-    open_date: ifDef(data[keys[4]].gating.openAt, 'No open date'),
-    due_date: ifDef(data[keys[4]].gating.dueAt, 'No due date'),
     parent_id: data[keys[1]].children.filter(
       (x) => x.id == window.location.href.split('/').slice(-1)[0]
     )[0].parentId,
+    open_date: ifDef(data[keys[4]].gating.openAt, 'No open date'),
+    due_date: ifDef(data[keys[4]].gating.dueAt, 'No due date'),
     authoring_link:
       'https://author.harvardonline.harvard.edu/repository/' +
       data[keys[1]].id +
@@ -103,7 +100,7 @@
   console.log(course_structure);
 
   let html_content = `
-    <h3>Learner Info</h3>
+    <h3 style="margin-top: 0.5em;">Learner Info</h3>
     <ul>
       <li style="margin-left: 2em;"><strong>First Name:</strong> ${learner_info.name.first}</li>
       <li style="margin-left: 2em;"><strong>Last Name:</strong> ${learner_info.name.last}</li>
@@ -111,20 +108,20 @@
       <li style="margin-left: 2em;"><strong>Email:</strong> ${learner_info.email}</li>
       <li style="margin-left: 2em;"><strong>Role:</strong> ${learner_info.role}</li>
     </ul>
-    <h3>Course Info</h3>
+    <h3 style="margin-top: 0.5em;">Course Info</h3>
     <ul>
       <li style="margin-left: 2em;"><strong>Tenant:</strong> ${course_info.tenant}</li>
       <li style="margin-left: 2em;"><strong>Course Name:</strong> ${course_info.name}</li>
       <li style="margin-left: 2em;"><strong>Wave ID:</strong> ${course_info.wave}</li>
       <li style="margin-left: 2em;"><strong>Swift Course ID:</strong> ${course_info.swift_course_id}</li>
     </ul>
-    <h3>Location Info</h3>
+    <h3 style="margin-top: 0.5em;">Location Info</h3>
     <ul>
       <li style="margin-left: 2em;"><strong>Page Name:</strong> ${location.name}</li>
       <li style="margin-left: 2em;"><strong>Page ID:</strong> ${location.page_id}</li>
+      <li style="margin-left: 2em;"><strong>Parent ID:</strong> ${location.parent_id}</li>
       <li style="margin-left: 2em;"><strong>Open Date:</strong> ${location.open_date}</li>
       <li style="margin-left: 2em;"><strong>Due Date:</strong> ${location.due_date}</li>
-      <li style="margin-left: 2em;"><strong>Parent ID:</strong> ${location.parent_id}</li>
       <li style="margin-left: 2em;"><strong>Authoring Link:</strong> <a href="${location.authoring_link}" target="_blank">${location.authoring_link}</a></li>
     </ul>
   `;
