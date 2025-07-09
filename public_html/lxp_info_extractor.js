@@ -71,7 +71,7 @@
     due_date: ifDef(data[keys[4]].gating.dueAt, 'No due date'),
     authoring_link:
       'https://' +
-      window.location.host +
+      window.location.host.replace("learn", "author") +
       '/repository/' +
       data[keys[1]].id +
       '/editor/' +
