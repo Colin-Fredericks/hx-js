@@ -130,5 +130,5 @@
 
   makeModal('LXP Course Info Extractor', html_content);
   document.querySelector('.vpal-modal-content').style.display = 'block';
-  document.querySelector('.vpal-modal-content').style.position = 'absolute';
+  document.querySelector('.vpal-modal-content').style.position = 'fixed';
 })();
