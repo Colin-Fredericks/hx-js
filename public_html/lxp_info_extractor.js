@@ -21,15 +21,22 @@
     let modal = document.createElement('div');
     modal.className = 'vpal-modal';
     modal.innerHTML = `
-      <div class="vpal-modal-content" style="display: none; position: fixed; z-index: 1000; left: 50%; top: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 3px solid grey; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+      <div class="vpal-modal-content" style="display: none; position: fixed; z-index: 100000; left: 50%; top: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 3px solid grey; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
         <span class="vpal-modal-close"
             style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;"
         >&times;</span>
         <h2>${title}</h2>
         <div>${content}</div>
+        <p style='font-size: small;'>Press Escape to close</p>
       </div>
     `;
     document.body.appendChild(modal);
+    // If the escape key is pressed, close the modal
+    window.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') {
+        modal.remove();
+      }
+    });
 
     // Close the modal when the user clicks on <span> (x)
     modal.querySelector('.vpal-modal-close').onclick = function () {
@@ -71,7 +78,7 @@
     due_date: ifDef(data[keys[4]].gating.dueAt, 'No due date'),
     authoring_link:
       'https://' +
-      window.location.host.replace("learn", "author") +
+      window.location.host.replace('learn', 'author') +
       '/repository/' +
       data[keys[1]].id +
       '/editor/' +
