@@ -1147,15 +1147,15 @@ var HXGlobalJS = function () {
       return false;
     } else {
       if (
-        url.includes('edx.org') ||
+        url.includes('.edx.org') ||
         url.includes('edxapp') ||
-        url.includes('edx-cdn.org') ||
-        url.includes('edx-video.net') ||
+        url.includes('.edx-cdn.org') ||
+        url.includes('.edx-video.net') ||
         url.includes('/courses/') ||
         url.includes('/assets/courseware/') ||
         url.includes('jump_to_id') ||
-        url.includes('cloudfront.net') ||
-        url.includes('mailto') ||
+        url.includes('.cloudfront.net') ||
+        url.includes('mailto:') ||
         url.includes('javascript:void') ||
         url.includes('javascript:;') ||
         url.slice(0, 1) == '#'
