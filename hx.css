@@ -84,11 +84,8 @@ p > small.hx-caption {
   font-size: small !important;
 }
 
-main .vert .xblock ul {
-  margin-left: 1em !important;
-}
-
-#main .vert .xblock ol {
+main .vert .xblock ul,
+main .vert .xblock ol {
   margin-left: 1em !important;
 }
 
@@ -132,10 +129,10 @@ table.hx-hangright {
   float: right !important;
   margin-left: 20px !important;
   margin-top: 5px !important;
-}
 
-table.hx-hangright th {
-  text-align: center;
+  th {
+    text-align: center;
+  }
 }
 
 table.hx-hangleft {
@@ -143,18 +140,19 @@ table.hx-hangleft {
   float: left !important;
   margin-right: 20px !important;
   margin-top: 5px !important;
+
+  th {
+    text-align: center;
+  }
 }
 
-table.hx-hangleft th {
-  text-align: center;
-}
-
-table.hx-compact-table td {
-  padding: 3px !important;
-}
-
-table.hx-compact-table th {
-  padding: 3px !important;
+table.hx-compact-table {
+  td {
+    padding: 3px !important;
+  }
+  th {
+    padding: 3px !important;
+  }
 }
 
 /************** End sidebar table Block *******************/
@@ -169,26 +167,26 @@ table.hx-compact-table th {
   margin: 8px;
   font-size: 14px;
   max-width: 300px;
-}
 
-.hx-autotoc h3 {
-  color: #08b;
-  font-size: 20px;
-  margin-bottom: 6px !important;
-}
+  h3 {
+    color: #08b;
+    font-size: 20px;
+    margin-bottom: 6px !important;
+  }
 
-.hx-autotoc ul {
-  list-style-type: none !important;
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-  padding-left: 0px !important;
-  margin-top: 0px !important;
-  margin-bottom: 0px !important;
-}
+  ul {
+    list-style-type: none !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    padding-left: 0px !important;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+  }
 
-.hx-autotoc li {
-  padding: 1px !important;
-  margin: 1px !important;
+  li {
+    padding: 1px !important;
+    margin: 1px !important;
+  }
 }
 
 /************** End auto-TOC Block *******************/
@@ -231,26 +229,22 @@ h4.hx-superbold {
 /*********************************************/
 /* For boxes of material separated from the regular text. */
 /* Use h4 for headers inside. */
-.hx-yellowbox h3 {
-  font-variant: small-caps;
-  color: #666600;
-}
 
 .hx-redbox {
   border-left: 15px solid #800;
   background-color: #fdd;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-redbox h3,
-.hx-redbox h4 {
-  font-variant: small-caps;
-  color: #600;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #600;
+  }
 
-.hx-redbox .hx-underline{
-  border-bottom-color: darkred;
+  .hx-underline {
+    border-bottom-color: darkred;
+  }
 }
 
 .hx-pinkbox {
@@ -258,16 +252,16 @@ h4.hx-superbold {
   background-color: #ffe9f6;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-pinkbox h3,
-.hx-pinkbox h4 {
-  font-variant: small-caps;
-  color: #cf5cc2;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #cf5cc2;
+  }
 
-.hx-pinkbox .hx-underline{
-  border-bottom-color: orchid;
+  .hx-underline {
+    border-bottom-color: orchid;
+  }
 }
 
 .hx-orangebox {
@@ -275,16 +269,16 @@ h4.hx-superbold {
   background-color: #ffddc5;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-orangebox h3,
-.hx-orangebox h4 {
-  font-variant: small-caps;
-  color: #752900;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #752900;
+  }
 
-.hx-orangebox .hx-underline{
-  border-bottom-color: #752900;
+  .hx-underline {
+    border-bottom-color: #752900;
+  }
 }
 
 .hx-peachbox {
@@ -292,16 +286,16 @@ h4.hx-superbold {
   background-color: #ffecd5;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-peachbox h3,
-.hx-peachbox h4 {
-  font-variant: small-caps;
-  color: #b6750f;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #b6750f;
+  }
 
-.hx-peachbox .hx-underline{
-  border-bottom-color: #b6750f;
+  .hx-underline {
+    border-bottom-color: #b6750f;
+  }
 }
 
 .hx-yellowbox {
@@ -309,20 +303,20 @@ h4.hx-superbold {
   background-color: #ffffd1;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-yellowbox a {
-  font-weight: bold !important;
-}
+  a {
+    font-weight: bold !important;
+  }
 
-.hx-yellowbox h3,
-.hx-yellowbox h4 {
-  font-variant: small-caps;
-  color: #666600;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #666600;
+  }
 
-.hx-yellowbox .hx-underline{
-  border-bottom-color: #666600;
+  .hx-underline {
+    border-bottom-color: #666600;
+  }
 }
 
 .hx-greenbox {
@@ -330,32 +324,29 @@ h4.hx-superbold {
   background-color: #c2eade;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-greenbox h3,
-.hx-greenbox h4 {
-  font-variant: small-caps;
-  color: #013a29;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #013a29;
+  }
 
-.hx-greenbox .hx-underline{
-  border-bottom-color: forestgreen;
+  .hx-underline {
+    border-bottom-color: forestgreen;
+  }
 }
-
 
 .hx-bluebox {
   border-left: 15px solid #048;
   background-color: #def;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-bluebox h3,
-.hx-sidebar h3,
-.hx-bluebox h4,
-.hx-sidebar h4 {
-  font-variant: small-caps;
-  color: #036;
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #036;
+  }
 }
 
 .hx-bluebox2 {
@@ -363,34 +354,32 @@ h4.hx-superbold {
   background-color: #d6e4ff;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-bluebox2 h3,
-.hx-bluebox2 h4 {
-  font-variant: small-caps;
-  color: #1e3460;
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #1e3460;
+  }
 }
 
 /* No change for bluebox underlines. Underlines are already blue. */
 /* .hx-bluebox .hx-underline{} */
-
-
 
 .hx-purplebox {
   border-left: 15px solid #6c35c0;
   background-color: #dbcdef;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-purplebox h3,
-.hx-purplebox h4 {
-  font-variant: small-caps;
-  color: #330974;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #330974;
+  }
 
-.hx-purplebox .hx-underline{
-  border-bottom-color: blueviolet;
+  .hx-underline {
+    border-bottom-color: blueviolet;
+  }
 }
 
 .hx-magentabox {
@@ -398,16 +387,16 @@ h4.hx-superbold {
   background-color: #eec6d4;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-magentabox h3,
-.hx-magentabox h4 {
-  font-variant: small-caps;
-  color: #4d001f;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #4d001f;
+  }
 
-.hx-magentabox .hx-underline{
-  border-bottom-color: #4d001f;
+  .hx-underline {
+    border-bottom-color: #4d001f;
+  }
 }
 
 .hx-greybox,
@@ -416,20 +405,17 @@ h4.hx-superbold {
   background-color: #ddd;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.hx-greybox h3,
-.hx-graybox h3,
-.hx-greybox h4,
-.hx-graybox h4 {
-  font-variant: small-caps;
-  color: #333;
-}
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #333;
+  }
 
-.hx-greybox .hx-underline, .hx-graybox .hx-underline{
-  border-bottom-color: #333;
+  .hx-underline {
+    border-bottom-color: #333;
+  }
 }
-
 
 /* Blackbox needs more specific targeting to override white text. */
 .xmodule_display .hx-blackbox,
@@ -439,14 +425,12 @@ h4.hx-superbold {
   color: #eee !important;
   padding: 10px 10px 5px 15px;
   margin: 40px;
-}
 
-.xmodule_display .hx-blackbox h3,
-.xmodule_display .hx-blackbox h4,
-.hx-blackbox h3,
-.hx-blackbox h4 {
-  font-variant: small-caps;
-  color: #0f0;
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #0f0;
+  }
 }
 
 .xmodule_display .hx-blackbox p,
@@ -460,6 +444,12 @@ h4.hx-superbold {
   margin: 3px 20px 20px 20px;
   float: right;
   width: 45%;
+
+  h3,
+  h4 {
+    font-variant: small-caps;
+    color: #036;
+  }
 }
 
 /* For boxes that contain big quote marks in the background. Stylish. */
@@ -468,26 +458,22 @@ h4.hx-superbold {
   background-image: url(quote-right.png);
   background-repeat: no-repeat;
   background-position: bottom right;
-}
 
-.hx-excerpt .hx-quote-source {
-  text-align: right;
-  font-style: italic;
-}
-
-/* Helps with above. */
-.hx-excerpt p {
-  background-image: url(quote-left.png);
-  background-repeat: no-repeat;
-  margin-top: 0;
-  padding: 1em 60px 0;
-  min-height: 37px;
-}
-
-/* Helps with above. */
-.hx-excerpt p + p {
-  padding-top: 0;
-  background-image: none;
+  .hx-quote-source {
+    text-align: right;
+    font-style: italic;
+  }
+  p {
+    background-image: url(quote-left.png);
+    background-repeat: no-repeat;
+    margin-top: 0;
+    padding: 1em 60px 0;
+    min-height: 37px;
+  }
+  p + p {
+    padding-top: 0;
+    background-image: none;
+  }
 }
 
 /************** End pretty-box Block *******************/
