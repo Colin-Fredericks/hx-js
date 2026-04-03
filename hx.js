@@ -135,10 +135,10 @@ var HXGlobalJS = function () {
   } else {
     script_asset_url = hx_js_script_tag[0].attributes.src.value.replace(
       'hx.js',
-      ''
+      '',
     );
-  } 
-  if (hx_js_script_tag.length > 1){
+  }
+  if (hx_js_script_tag.length > 1) {
     logThatThing({ error: 'More than one hx.js script tag on this page.' });
   }
 
@@ -161,11 +161,11 @@ var HXGlobalJS = function () {
   logThatThing({ course_log_id: courseLogID });
 
   // Listen for events that rewrite problem HTML.
-  if( typeof Logger !== 'undefined' ){
+  if (typeof Logger !== 'undefined') {
     Logger.listen('problem_check', null, (en, es) => onProblemRewrite(en, es));
     Logger.listen('problem_show', null, (en, es) => onProblemRewrite(en, es));
-    Logger.listen('problem_reset', null, (en, es) => onProblemRewrite(en, es));  
-  }else{
+    Logger.listen('problem_reset', null, (en, es) => onProblemRewrite(en, es));
+  } else {
     console.log('Logger is not available.');
   }
 
@@ -195,7 +195,7 @@ var HXGlobalJS = function () {
     _arr.push(
       $.Deferred(function (deferred) {
         $(deferred.resolve);
-      })
+      }),
     );
 
     return $.when.apply($, _arr);
@@ -286,13 +286,13 @@ var HXGlobalJS = function () {
         hxOptions = setDefaultOptions(
           window.hxLocalOptions,
           hxGlobalOptions,
-          hxDefaultOptions
+          hxDefaultOptions,
         );
       } else {
         hxOptions = setDefaultOptions(
           window.hxLocalOptions,
           {},
-          hxDefaultOptions
+          hxDefaultOptions,
         );
       }
       keepGoing(hxOptions);
@@ -305,7 +305,7 @@ var HXGlobalJS = function () {
       hxOptions = setDefaultOptions(
         window.hxLocalOptions,
         {},
-        hxDefaultOptions
+        hxDefaultOptions,
       );
       keepGoing(hxOptions);
     });
@@ -353,12 +353,12 @@ var HXGlobalJS = function () {
         $(
           '<link rel="stylesheet" href="' +
             script_asset_url +
-            'summernote-lite.min.css" type="text/css" />'
-        )
+            'summernote-lite.min.css" type="text/css" />',
+        ),
       );
       // Insert a loading indicator.
       let edit_box = $(
-        '<div class="hx-loading-indicator"> Editor loading...</div>'
+        '<div class="hx-loading-indicator"> Editor loading...</div>',
       );
       let spinner = $('<span class="fa fa-spinner fa-pulse"></span>');
       edit_box.prepend(spinner);
@@ -370,7 +370,7 @@ var HXGlobalJS = function () {
       } else {
         console.log('Backpack: ' + hxBackpackLoaded);
         console.log(
-          'HXED: ' + typeof HXED === 'undefined' ? 'undefined' : 'ok'
+          'HXED: ' + typeof HXED === 'undefined' ? 'undefined' : 'ok',
         );
       }
     }
@@ -384,8 +384,8 @@ var HXGlobalJS = function () {
         $(
           '<link rel="stylesheet" href="' +
             script_asset_url +
-            'VideoLinks.css" type="text/css" />'
-        )
+            'VideoLinks.css" type="text/css" />',
+        ),
       );
       HXVL = new HXVideoLinks(hxOptions.VidLinkOptions);
 
@@ -409,14 +409,14 @@ var HXGlobalJS = function () {
       if (window.HXPUPTimer.length !== 0) {
         HXPUP = new HXPopUpProblems(
           hxDefaultOptions.PUPOptions,
-          window.HXPUPTimer
+          window.HXPUPTimer,
         );
       }
       // Only do pop-up problems if there's a timer in place.
       if (window.HXChimeTimer.length !== 0) {
         HXVC = new HXVideoChime(
           hxDefaultOptions.ChimeOptions,
-          window.HXChimeTimer
+          window.HXChimeTimer,
         );
       }
     }
@@ -429,12 +429,12 @@ var HXGlobalJS = function () {
     // If we have links or iframes to surveys with the hx-survey-url class on this page,
     // adjust their URLs to include course info.
     const elements_to_update = Array.from(
-      document.getElementsByClassName('hx-survey-url')
+      document.getElementsByClassName('hx-survey-url'),
     );
     if (elements_to_update.length) {
       logThatThing({ hx_surveys: 'found' });
       const elements_to_update = Array.from(
-        document.getElementsByClassName('hx-survey-url')
+        document.getElementsByClassName('hx-survey-url'),
       );
       const old_urls = elements_to_update.map(function (e) {
         if (e.tagName.toLowerCase() === 'a') {
@@ -446,7 +446,9 @@ var HXGlobalJS = function () {
         }
       });
       // Don't add URL parameters unless we have a question mark.
-      const urls_question_mark = old_urls.map((x) => x + (x.includes('?') ? '' : '?'));
+      const urls_question_mark = old_urls.map(
+        (x) => x + (x.includes('?') ? '' : '?'),
+      );
       const new_urls = urls_question_mark.map(
         (x) =>
           x +
@@ -455,7 +457,7 @@ var HXGlobalJS = function () {
           '&course_id=' +
           courseInfo.id +
           '&course_run=' +
-          courseInfo.run
+          courseInfo.run,
       );
       elements_to_update.forEach(function (e, i) {
         if (e.tagName.toLowerCase() === 'a') {
@@ -482,7 +484,7 @@ var HXGlobalJS = function () {
       let vid_number = anchor.replace('#video', '');
       let unit_number = href.slice(
         href.indexOf('/jump_to_id/') + 13,
-        href.indexOf('#video')
+        href.indexOf('#video'),
       );
       let startsWithHash = href.indexOf('#') === 0 ? true : false;
 
@@ -549,17 +551,16 @@ var HXGlobalJS = function () {
     /**************************************/
     if (hxOptions.markExternalLinks) {
       logThatThing('marking external links');
-      $('.vert .xblock a, .static_tab_wrapper .xblock a').each(function (
-        i,
-        linky
-      ) {
-        var destination = $(linky).attr('href');
-        if (isExternalLink(destination)) {
-          $(linky).append(
-            ' <span class="fa fa-external-link"><span class="sr">External link</span></span>'
-          );
-        }
-      });
+      $('.vert .xblock a, .static_tab_wrapper .xblock a').each(
+        function (i, linky) {
+          var destination = $(linky).attr('href');
+          if (isExternalLink(destination)) {
+            $(linky).append(
+              ' <span class="fa fa-external-link"><span class="sr">External link</span></span>',
+            );
+          }
+        },
+      );
     }
 
     /**************************************/
@@ -627,8 +628,8 @@ var HXGlobalJS = function () {
         $(
           '<link rel="stylesheet" href="' +
             script_asset_url +
-            'hx-text-slider.css" type="text/css" />'
-        )
+            'hx-text-slider.css" type="text/css" />',
+        ),
       );
       console.log(hxOptions.textSliderOptions);
       HXDTS = new HXTextSlider(hxOptions.textSliderOptions);
@@ -645,15 +646,15 @@ var HXGlobalJS = function () {
         $(
           '<link rel="stylesheet" href="' +
             script_asset_url +
-            'slick.css" type="text/css" />'
-        )
+            'slick.css" type="text/css" />',
+        ),
       );
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
             script_asset_url +
-            'slick-theme.css" type="text/css" />'
-        )
+            'slick-theme.css" type="text/css" />',
+        ),
       );
 
       // Wait for slick to be ready.
@@ -683,15 +684,15 @@ var HXGlobalJS = function () {
         $(
           '<link rel="stylesheet" href="' +
             script_asset_url +
-            'slick.css" type="text/css" />'
-        )
+            'slick.css" type="text/css" />',
+        ),
       );
       $('head').append(
         $(
           '<link rel="stylesheet" href="' +
             script_asset_url +
-            'slick-theme.css" type="text/css" />'
-        )
+            'slick-theme.css" type="text/css" />',
+        ),
       );
       navslider.slick(hxOptions.slickNavOptions);
       bigslider.slick(hxOptions.slickBigOptions);
@@ -905,8 +906,8 @@ var HXGlobalJS = function () {
       $(
         '<link rel="stylesheet" href="' +
           script_asset_url +
-          'prism.css" type="text/css" />'
-      )
+          'prism.css" type="text/css" />',
+      ),
     );
   }
 
@@ -919,11 +920,11 @@ var HXGlobalJS = function () {
     // Add the container for the TOC
     if ($('.edx-notes-wrapper-content').length) {
       $('.edx-notes-wrapper-content:first-of-type').prepend(
-        '<div id="auto_toc" class="hx-autotoc"></div>'
+        '<div id="auto_toc" class="hx-autotoc"></div>',
       );
     } else {
       $($('#seq_content .vert .xblock')[0]).prepend(
-        '<div id="auto_toc" class="hx-autotoc"></div>'
+        '<div id="auto_toc" class="hx-autotoc"></div>',
       );
     }
     // Using text instead of objects to make nesting easier.
@@ -1021,7 +1022,7 @@ var HXGlobalJS = function () {
       // Move the footnote target divs to the appropriate location
       footnote_components = $('h3:contains("Footnote")');
       destination_component = $(
-        footnote_components[footnote_components.length - 1]
+        footnote_components[footnote_components.length - 1],
       ).parent();
       $(this_target).detach().appendTo(destination_component);
 
@@ -1032,14 +1033,14 @@ var HXGlobalJS = function () {
             this_number +
             '" name="hxfootback' +
             this_number +
-            '"></a>'
+            '"></a>',
         )
         .wrap();
 
       // Add targets and back-links to the footnotes
       this_target.prepend('<a name="hxfoot' + this_number + '"></a>');
       this_target.append(
-        '<p><a href="#hxfootback' + this_number + '">(back)</a></p>'
+        '<p><a href="#hxfootback' + this_number + '">(back)</a></p>',
       );
     }
   }
@@ -1065,7 +1066,7 @@ var HXGlobalJS = function () {
               this.title +
               '"><a href="javascript:;">' +
               this.title +
-              '</a></li>'
+              '</a></li>',
           );
         });
 
@@ -1115,7 +1116,7 @@ var HXGlobalJS = function () {
         function (boxName) {
           $('div.' + boxName).css({ display: '' });
           alert(boxName);
-        }
+        },
       );
 
       logThatThing({
@@ -1255,7 +1256,7 @@ var HXGlobalJS = function () {
         {},
         fallbackOptions,
         globalOptions,
-        localOptions
+        localOptions,
       );
     }
 
@@ -1319,7 +1320,7 @@ var HXGlobalJS = function () {
           ) {
             HXED = new HXEditor(
               hxOptions.useBackpack,
-              hxOptions.HXEditorOptions
+              hxOptions.HXEditorOptions,
             );
           }
         }
@@ -1400,7 +1401,7 @@ var HXGlobalJS = function () {
     var rect = elm.getBoundingClientRect();
     var viewHeight = Math.max(
       document.documentElement.clientHeight,
-      window.innerHeight
+      window.innerHeight,
     );
     return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
   }
@@ -1408,9 +1409,9 @@ var HXGlobalJS = function () {
   // Send logs both to the console and to the official edX logamajig.
   function logThatThing(ThatThing) {
     console.log(JSON.stringify(ThatThing));
-    if(typeof Logger !== 'undefined') {
+    if (typeof Logger !== 'undefined') {
       Logger.log(courseLogID + '.hxjs', ThatThing);
-    }else{
+    } else {
       console.log('Logger is not available.');
     }
   }
