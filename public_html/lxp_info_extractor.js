@@ -55,36 +55,36 @@
   let keys = Object.keys(__NUXT__.data);
   let learner_info = {
     name: {
-      first: data[keys[6]].firstName,
-      last: data[keys[6]].lastName,
+      first: data[keys[7]]?.firstName,
+      last: data[keys[7]]?.lastName,
     },
-    anonymous_id: data[keys[6]].id,
-    email: data[keys[0]].email,
-    role: data[keys[0]].role,
+    anonymous_id: data[keys[7]]?.id,
+    email: data[keys[0]]?.email,
+    role: data[keys[0]]?.role,
   };
   let course_info = {
-    tenant: data[keys[0]].tenant.name,
-    name: data[keys[1]].data.name,
-    wave: data[keys[3]].id,
-    swift_course_id: data[keys[1]].id,
+    tenant: data[keys[0]]?.tenant?.name,
+    name: data[keys[1]]?.data?.name,
+    wave: data[keys[3]]?.id,
+    swift_course_id: data[keys[1]]?.id,
   };
   let location = {
-    name: document.querySelector('a.active-page').text,
+    name: document.querySelector('a.active-page')?.text,
     page_id: window.location.href.split('/').slice(-1)[0],
-    parent_id: data[keys[1]].children.filter(
+    parent_id: data[keys[1]]?.children?.filter(
       (x) => x.id == window.location.href.split('/').slice(-1)[0]
-    )[0].parentId,
-    open_date: ifDef(data[keys[4]].gating.openAt, 'No open date'),
-    due_date: ifDef(data[keys[4]].gating.dueAt, 'No due date'),
+    )[0]?.parentId,
+    open_date: ifDef(data[keys[4]]?.gating?.openAt, 'No open date'),
+    due_date: ifDef(data[keys[4]]?.gating?.dueAt, 'No due date'),
     authoring_link:
       'https://' +
       window.location.host.replace('learn', 'author') +
       '/repository/' +
-      data[keys[1]].id +
+      data[keys[1]]?.id +
       '/editor/' +
       window.location.href.split('/').slice(-1)[0],
   };
-  let course_structure = data[keys[1]].children;
+  let course_structure = data[keys[1]]?.children;
 
   console.log('Learner:');
   for (let key in learner_info) {
