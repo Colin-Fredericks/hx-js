@@ -65,7 +65,7 @@
   let course_info = {
     tenant: data[keys[0]]?.tenant?.name,
     name: data[keys[1]]?.data?.name,
-    wave: data[keys[3]]?.id,
+    wave: data[keys[4]]?.id,
     swift_course_id: data[keys[1]]?.id,
   };
   let location = {
