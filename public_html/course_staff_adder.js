@@ -5,7 +5,7 @@
  * MIT licensed
  ****************************/
 
-$(document).ready(function () {
+$(function () {
   console.log('course_staff_adder called');
 
   showInputDialog();
@@ -22,7 +22,7 @@ $(document).ready(function () {
       width: '50%',
       buttons: [
         {
-          text: 'Cancel',
+          text: 'Done',
           click: function () {
             $('#modal-1').dialog('destroy');
           },
@@ -57,23 +57,24 @@ $(document).ready(function () {
     });
     console.log(user_list);
 
-    // Try to add a user every .2 seconds.
+    // Try to add a user every .25 seconds.
     let i = 0;
     let timer = 0;
     let max_time = 2; //seconds
     let added_users = [];
     let lost_users = [];
     // Get the username entry box and the submit button
-    let entry_box = $('.bottom-bar input.add-field:visible');
-    let add_button = $('.bottom-bar input.add:visible');
-
+    let entry_boxes = $('.bottom-bar input.add-field:visible');
+    let current_entry_box = Array.from(entry_boxes).filter(x => x.checkVisibility())[0];
+    let add_buttons = document.querySelectorAll('.bottom-bar input.add:visible');
+    let current_add_button = Array.from(add_buttons).filter(x => x.checkVisibility())[0];
     let ticker = setInterval(function () {
       let user = user_list[i];
 
       // If we haven't tried to add this user yet, go for it.
       if (added_users[i] === undefined) {
-        entry_box.val(user);
-        add_button.click();
+        current_entry_box.value = user;
+        current_add_button.click();
       }
 
       // Move on once the username is added or the max time is past.
@@ -97,8 +98,8 @@ $(document).ready(function () {
           console.log(lost_users);
         }
       }
-      timer += 0.2;
-    }, 200);
+      timer += 0.25;
+    }, 250);
   }
 
   function makeModal() {
@@ -126,7 +127,7 @@ $(document).ready(function () {
         '. To switch between staff/admin/other, go back and change the dropdown on this page.'
     );
 
-    let listbox = $('<textarea rows="5" style="width: 100%;"></textarea>');
+    let listbox = $('<textarea rows="5" style="width: 100%; height: 5em;"></textarea>');
     listbox.attr('id', 'new_user_list');
 
     content.append(explanation);
