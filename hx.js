@@ -320,7 +320,11 @@ var HXGlobalJS = function () {
     // learner data on edX's server.
     // See https://github.com/HarvardX/js-input-samples/tree/master/learner_backpack
     /**************************************/
-    if ($('#hxbackpackframe').length === 0 && hxOptions.useBackpack) {
+    if (
+      $('#hxbackpackframe').length === 0 && // There are no backpack frames yet
+      hxOptions.useBackpack && // We've decided to use it
+      !window.location.href.includes('backpack.html') // We're not in the backpack iframe itself
+    ) {
       // Add the backpack iframe and hide it.
       let server_url = getAssetURL(window.location.href, 'site');
       let backpackURL =
