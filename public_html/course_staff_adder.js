@@ -37,10 +37,12 @@ $(function () {
       ],
       open: function (event, ui) {
         $('.ui-dialog-titlebar-close').hide();
-        $('.ui-dialog').focus();
+        $('.ui-dialog')[0].focus();
         $('.ui-widget-overlay').on('click', function () {
           $('#modal-1').dialog('close');
         });
+        // Pick up current user type
+        $("#hx-user-type").text($('#member-lists-selector option:selected').text());
       },
     });
     console.log('testing');
@@ -122,9 +124,9 @@ $(function () {
     let user_type = $('#member-lists-selector option:selected').text();
     let details = $('<p style="font-size: small;"></p>');
     details.text(
-      'Separate with commas or newlines. Users will be added as ' +
+      'Separate with commas or newlines. Users will be added as <span id="hx-user-type">' +
         user_type +
-        '. To switch between staff/admin/other, go back and change the dropdown on this page.'
+        '</span>. To switch between staff/admin/other, go back and change the dropdown on this page.'
     );
 
     let listbox = $('<textarea rows="5" style="width: 100%; height: 5em;"></textarea>');
