@@ -66,9 +66,9 @@ $(function () {
     let added_users = [];
     let lost_users = [];
     // Get the username entry box and the submit button
-    let entry_boxes = $('.bottom-bar input.add-field:visible');
+    let entry_boxes = $('.bottom-bar input.add-field');
     let current_entry_box = Array.from(entry_boxes).filter(x => x.checkVisibility())[0];
-    let add_buttons = document.querySelectorAll('.bottom-bar input.add:visible');
+    let add_buttons = document.querySelectorAll('.bottom-bar input.add');
     let current_add_button = Array.from(add_buttons).filter(x => x.checkVisibility())[0];
     let ticker = setInterval(function () {
       let user = user_list[i];
